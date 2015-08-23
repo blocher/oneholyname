@@ -1,0 +1,10 @@
+/* BUTTON LOCATION */
+.xlii-smt-location { margin : 0px; padding : 10px 0px 10px 0px !important; }
+.xlii-smt-location * { margin : 0px; padding : 0px; }
+.xlii-smt-location .xlii-smt-left { float : left; }
+.xlii-smt-location .xlii-smt-right { float : right; }
+
+.xlii-smt-location ul { list-style : none; }
+.xlii-smt-location ul li { display : block; float : left; padding-right : 5px; }
+
+.xlii-smt-location ._clear { clear : both; font-size:0; line-height:0; height:1px; margin-top:-1px; display : block; }

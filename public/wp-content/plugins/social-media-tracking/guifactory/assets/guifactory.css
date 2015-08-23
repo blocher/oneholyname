@@ -1,0 +1,70 @@
+/** 
+ * @author 42functions | Ferdy Perdaan
+ * @version 1.0
+ */
+
+/* LABELS */
+label.xlii-checkbox, label.xlii-radio { margin-left : 5px; }
+
+/* MEDIASELECTOR ------------------------------------------------------------------------------------------------------------------------------------ */
+.xlii-mediaselector .element { width : 798px; border : 1px solid #999997; position : relative; }
+.xlii-mediaselector .element li { margin-bottom : 0px; }
+
+.xlii-mediaselector .element > .navigation { background-color : #222; height : 30px; clear : left; color : #CFCFCF; }
+.xlii-mediaselector .element > .content { background-color : #F6F6F6; min-height : 50px; } 
+.xlii-mediaselector .element > .navigation > .searchbox { float : right; vertical-align : middle; line-height : 30px; padding-right : 4px; }
+
+.xlii_placeholder_layer { height: 61px; width : 100%; background-color : #999997; margin-bottom : -5px; }
+
+/* POPUP STATE */
+.xlii-mediaselector .frontend { border : 1px solid #999997; }
+.xlii-mediaselector .frontend li.tab { background-color : #F6F6F6 !important; display : block !important; }
+.xlii-mediaselector .frontend .change { color : #21759B; cursor : pointer; padding : 5px 0px 5px 5px; }
+    
+/* CONTROLLS */
+.xlii-mediaselector .controlls { padding-left : 5px; background-color : #F6F6F6; }
+.xlii-mediaselector .controlls .item { color : #21759B; cursor : pointer; padding : 5px 0px 5px; }
+.xlii-mediaselector .controlls .item:hover { text-decoration : underline; }
+
+/* NAVIGATION TABS */
+.xlii-mediaselector li.nav { display : block; float : left; height : 20px; padding : 5px 8px 5px 8px; font-size : 1.2em; }
+.xlii-mediaselector li.nav:hover, .xlii-mediaselector li.nav.active { background-color : #F6F6F6; cursor : pointer; color : #222; }
+
+/* TAB */
+.xlii-mediaselector li.tab { background-color : #F6F6F6; height : 50px; clear : left; padding : 5px 0px 5px 5px; margin : 0px; border-bottom : 1px solid #999997; display : none; }
+.xlii-mediaselector li.tab.visible.paged { display : block; }
+.xlii-mediaselector li.tab.filtered { display : none !important; }
+.xlii-mediaselector li.tab.active { background-color : #b8faff; }
+.xlii-mediaselector li.tab:hover { background-color : #999997; cursor : pointer; }
+
+.xlii-mediaselector li.tab > * { display : block; float : left; }
+.xlii-mediaselector li.tab .xlii-input { margin : 18px 10px; } 
+.xlii-mediaselector li.tab .image { width : 50px; height : 50px; padding-right : 10px; }
+.xlii-mediaselector li.tab .full { display : none; }
+
+/* POPUP OVERLAY */
+.xlii-popup {
+    position: fixed !important; z-index: 102; display: none; top: 50%; left: 50%; border: 1px solid #555; 
+    -moz-box-shadow: rgba(0,0,0,1) 0 4px 30px;
+    -webkit-box-shadow: rgba(0,0,0,1) 0 4px 30px;
+    -khtml-box-shadow: rgba(0,0,0,1) 0 4px 30px;
+    box-shadow: rgba(0,0,0,1) 0 4px 30px;
+}
+
+.xlii-showPopup { text-decoration : none; }
+
+#xlii-popupOverlay {
+    display : none;
+    position: fixed;
+    z-index: 100;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    
+    background-color: #000;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+    filter: alpha(opacity=75);
+    -moz-opacity: 0.75;
+    opacity: 0.75;
+}

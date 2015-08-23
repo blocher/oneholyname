@@ -1,0 +1,13 @@
+[27-Jul-2015 15:55:44 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/sidebar.php on line 10
+[28-Jul-2015 04:37:29 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/header.php on line 10
+[01-Aug-2015 04:54:01 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/sidebar.php on line 10
+[03-Aug-2015 07:42:26 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/comments-popup.php on line 10
+[07-Aug-2015 08:11:25 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/footer.php on line 10
+[08-Aug-2015 13:11:25 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/comments-popup.php on line 10
+[12-Aug-2015 12:22:38 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/footer.php on line 10
+[12-Aug-2015 23:08:12 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/header.php on line 10
+[13-Aug-2015 08:50:52 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/sidebar.php on line 10
+[15-Aug-2015 02:05:46 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/comments-popup.php on line 10
+[17-Aug-2015 00:19:49 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/footer.php on line 10
+[18-Aug-2015 09:43:31 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/comments.php on line 10
+[18-Aug-2015 21:07:08 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/theme-compat/header.php on line 10

@@ -1,0 +1,93 @@
+
+.ourprogress {
+	width: 200px;
+	height: 500px;
+	background-image: url(progress.jpg);
+}
+
+.ourprogress-burst {
+	width: 200px;
+	height: 500px;
+	background-image: url(progress-burst.jpg);
+}
+.ourprogressgraphics {
+	width: 13px;
+	padding: 48px 0px 0px 42px;
+	float: left;
+}
+.ourprogressmercury {
+	background-image: url(mercury.jpg);
+	background-repeat: repeat-y;
+	position:absolute;
+}
+.ourprogressmercurytop {
+	background-image: url(mercury-top.jpg);
+	width: 13px;
+	height: 7px;
+}
+.ourprogressnumbers {
+	float: right;
+	margin: 25px 10px 0px 0px;
+	font-size: 10px;
+	color: #000000;
+	text-align: right;
+	width: 100px;
+
+}
+.progressvalue {
+	border-top: solid 1px #cccccc;
+	margin: 0px;
+}
+
+
+.ourprogress {
+	width: 200px;
+	height: 500px;
+	background-image: url(progress.jpg);
+}
+
+.ourprogress-burst {
+	width: 200px;
+	height: 500px;
+	background-image: url(progress-burst.jpg);
+}
+.ourprogressgraphics {
+	width: 13px;
+	padding: 48px 0px 0px 42px;
+	float: left;
+}
+.ourprogressmercury {
+	background-image: url(mercury.jpg);
+	background-repeat: repeat-y;
+	position:absolute;
+}
+.ourprogressmercurytop {
+	background-image: url(mercury-top.jpg);
+	width: 13px;
+	height: 7px;
+}
+.ourprogressnumbers {
+	float: right;
+	margin: 25px 10px 0px 0px;
+	font-size: 10px;
+	color: #000000;
+	text-align: right;
+	width: 100px;
+
+}
+.progressvalue {
+	border-top: solid 1px #cccccc;
+	margin: 25px 0px 0px 0px;
+}
+
+.percent00 {margin-top: 395px; height: 0px;}
+.percent10 {margin-top: 360px; height: 40px;}
+.percent20 {margin-top: 320px; height: 80px;}
+.percent30 {margin-top: 280px; height: 120px;}
+.percent40 {margin-top: 240px; height: 160px;}
+.percent50 {margin-top: 200px; height: 200px;}
+.percent60 {margin-top: 160px; height: 240px;}
+.percent70 {margin-top: 120px; height: 280px;}
+.percent80 {margin-top: 80px; height: 320px;}
+.percent90 {margin-top: 40px; height: 360px;}
+.percent100 {margin-top: 0px; height: 400px;}

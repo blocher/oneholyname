@@ -1,0 +1,22 @@
+[12-May-2012 06:43:58] PHP Fatal error:  Call to undefined function  magic() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_sub.php on line 96
+[12-May-2012 06:44:00] PHP Fatal error:  Call to undefined function  add_filter() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_aux.php on line 635
+[12-May-2012 06:44:02] PHP Fatal error:  Call to undefined function  db() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_validate.php on line 15
+[12-May-2012 06:44:04] PHP Fatal error:  Call to undefined function  post_password_required() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/cforms-example-comments.php.txt on line 7
+[12-May-2012 06:44:07] PHP Fatal error:  Call to undefined function  db() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_validate.php on line 15
+[12-May-2012 06:44:07] PHP Fatal error:  Call to undefined function  get_cf_plugindir() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_activate.php on line 8
+[12-May-2012 06:44:09] PHP Fatal error:  Call to undefined function  __() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_add.php on line 22
+[12-May-2012 06:44:12] PHP Fatal error:  Call to undefined function  get_option() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/cforms.php on line 39
+[12-May-2012 06:44:17] PHP Fatal error:  Call to undefined function  __() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_up.php on line 16
+[12-May-2012 06:44:18] PHP Fatal error:  Call to undefined function  _e() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/update-pre-9.php on line 7
+[12-May-2012 06:44:20] PHP Fatal error:  Call to undefined function  get_option() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/cforms-css.php on line 11
+[12-May-2012 06:44:26] PHP Fatal error:  Call to undefined function  __() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_err.php on line 22
+[12-May-2012 06:44:27] PHP Fatal error:  Call to undefined function  update_option() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_del.php on line 31
+[12-May-2012 06:44:29] PHP Warning:  array_keys() [<a href='function.array-keys'>function.array-keys</a>]: The first argument should be an array in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_dup.php on line 12
+[12-May-2012 06:44:29] PHP Warning:  Invalid argument supplied for foreach() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_dup.php on line 12
+[12-May-2012 06:44:29] PHP Fatal error:  Call to undefined function  __() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_dup.php on line 20
+[12-May-2012 06:44:30] PHP Fatal error:  Call to undefined function  __() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/lib_options_presets.php on line 9
+[12-May-2012 06:44:33] PHP Fatal error:  Call to undefined function  check_access_priv() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/cforms-corrupted.php on line 7
+[12-May-2012 06:44:46] PHP Fatal error:  Call to undefined function  get_option() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/cforms-options.php on line 8
+[12-May-2012 06:45:03] PHP Fatal error:  Call to undefined function  get_option() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/cforms-help.php on line 7
+[12-May-2012 06:46:19] PHP Fatal error:  Call to undefined function  check_access_priv() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/cforms-database.php on line 12
+[12-May-2012 06:46:32] PHP Fatal error:  Call to undefined function  get_option() in /home1/benloche/public_html/yasc/wp-content/plugins/cforms/cforms-global-settings.php on line 12

@@ -1,0 +1,178 @@
+/**
+ * NextGEN Gallery Optimizer Basic
+ *
+ * NextGEN Gallery Optimizer improves your site's page load speed, by
+ * preventing NextGEN's scripts and stylesheets from loading on posts and pages
+ * *without* NextGEN Gallery content.
+ *
+ * Additionally...
+ *
+ * If you're using NextGEN v2.x.xx, Optimizer also provides you with complete
+ * granular control of the scripts and stylesheets that load on posts and pages
+ * *with* NextGEN Gallery content. For a live example of these settings in action,
+ * please view the source of Optimizer's homepage (a NextGEN v2.x.xx gallery
+ * page with AJAX pagination) in your browser.
+ *
+ * If you're using NextGEN Legacy (v1.6.2 to v1.9.13) or the NextCellent
+ * Gallery fork, Optimizer will intelligently fine-tune all your posts and pages
+ * *with* NextGEN Gallery content automatically... detecting every shortcode
+ * and setting, to only load the scripts and stylesheets required on each page.
+ *
+ * For a full overview of the optimization process, please see...
+ * http://www.nextgengalleryoptimizer.com/optimization-flowcharts/
+ *
+ * Optimizer also includes an *enhanced* version of the fantastic Fancybox
+ * lightbox script, and only loads it on appropriate posts and pages *with*
+ * NextGEN Gallery content. The result? Gorgeous galleries *and* a speedy site.
+ *
+ * Optimizer v2.1.1 currently supports (and is tested compatible with) NextGEN
+ * Gallery (v2.0.0 to v2.1.0), NextGEN Legacy (v1.6.2 to v1.9.13) and
+ * NextCellent Gallery (v1.9.14 to v1.9.26).
+ *
+ * NextGEN Gallery Optimizer Pro
+ *
+ * Upgrade to Optimizer Pro for the new "NextGEN Gallery Deactivator" feature.
+ * A whole new level of speed optimization.
+ * Only load NextGEN’s PHP *code* on posts/pages *with* NextGEN Gallery content.
+ * http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator
+ *
+ * Upgrade to Optimizer Pro for the new "Dynamic Fancybox Settings Interface".
+ * The fastest and easiest way to customize Fancybox.
+ * Set title styles, background color & opacity, make Fancybox responsive & more.
+ * http://www.nextgengalleryoptimizer.com/#dynamic-fancybox-settings-interface
+ *
+ * For more information, please see the following...
+ * http://www.nextgengalleryoptimizer.com
+ * http://www.nextgengalleryoptimizer.com/documentation/
+ * http://www.nextgengalleryoptimizer.com/nextgen-gallery-optimizer-pro/
+ * http://www.nextgengalleryoptimizer.com/purchase/
+ *
+ * @package		NextGEN_Gallery_Optimizer_Basic
+ * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
+ * @link				http://www.nextgengalleryoptimizer.com
+ * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ */
+
+/**
+ * Admin Settings Page CSS
+ *
+ * @package		NextGEN_Gallery_Optimizer_Basic
+ * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
+ * @link				http://www.nextgengalleryoptimizer.com
+ * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @since 			2.0.0
+ */
+.error, .updated {
+	margin-top: 10px !important;
+	margin-bottom: 20px !important;
+}
+
+#nggobasic-upgrade-to-pro-button {
+	margin: 10px 0 20px;
+	font-weight: bold;
+}
+
+h2 {
+	text-shadow: none !important; /* Clear the text-shadow from headings in the old admin (WordPress v3.7). */
+}
+
+.nggobasic-select-style, .nggobasic-custom-style {
+    float: left;
+}
+
+.nggobasic-custom-style {
+    margin-left: 20px;
+    border-left: 1px solid #EEE;
+    padding-left: 20px
+}
+
+.nggobasic-box {
+	background-color: #ddd;
+	color: #333;
+	margin: 15px 0 20px;
+	padding: 12px 25px 25px;
+}
+
+.nggobasic-box h2 {
+	color: #333;
+	margin: 0 0 10px;
+}
+
+.nggobasic-inner {
+	padding: 25px 0 0;
+}
+
+.nggobasic-optimization-description {
+	color: #333;
+	font-style: italic;
+}
+
+/**
+ * Advanced settings
+ */
+
+#nggobasic-nextgen-v1-advanced-settings,
+#nggobasic-nextgen-v2-advanced-settings {
+	display: none;
+}
+
+#nggobasic-nextgen-v2-advanced-settings-inner {
+	padding: 20px 0 0;
+}
+
+#nggobasic-optimization-header-box {
+	padding: 12px 15px;
+	background-color: #0074A2;
+	color: #fff;
+}
+
+#nggobasic-optimization-description-box {
+	padding: 12px 15px 15px;
+	background-color: #f1f1f1;
+}
+
+#nggobasic-optimization-description-box a {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.nggobasic-optimization-title-box {
+	padding: 12px 15px;
+	margin: 20px 0 0;
+	background-color: #0074A2;
+	color: #fff;
+}
+
+.nggobasic-optimization-options-box {
+	padding: 18px 20px 5px;
+	background-color: #f1f1f1;
+}
+
+.nggobasic-optimization-option {
+	padding: 0 0 15px 0;
+}
+
+#nggobasic-dfsi-box, #nggobasic-deactivator-box {
+	background-color: #222;
+	color: #fff;
+	margin: 20px 0 0;
+	padding: 12px 25px 25px;
+}
+
+#nggobasic-dfsi-box h2, #nggobasic-deactivator-box h2 {
+	color: #ccc;
+	margin: 0 0 10px;
+}
+
+#nggobasic-dfsi-description, #nggobasic-deactivator-description {
+	color: #999;
+	font-style: italic;
+	display: block;
+	padding: 0 0 20px;
+}
+
+#nggobasic-save-box {
+	background-color: #ddd;
+	padding: 25px;
+	margin: 20px 0 20px;
+}

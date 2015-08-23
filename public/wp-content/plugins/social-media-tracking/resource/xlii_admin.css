@@ -1,0 +1,77 @@
+#xlii-admin { padding-top : 10px; }
+#xlii-admin ._clear { clear : both; font-size:0; line-height:0; height:1px; margin-top:-1px; display : block; }
+#xlii-admin .link { color : #21759B; cursor : pointer; }
+
+#xlii-admin input.xlii-checkbox { margin-right : 3px; }
+
+/** GLOBAL ADMIN ------------------------------------------------------------------------------------------------------------------------------------------ **/
+#xlii-smt-nav { list-style : none; margin-top : 5px; margin-bottom : 10px; }
+#xlii-smt-nav li { display : block; float : left; margin-right : 15px; font-size : 1.3em; cursor : pointer; }
+#xlii-smt-nav li a { color : #333; text-decoration : none; }
+#xlii-smt-nav li.active a, #xlii-smt-nav li:hover a { color : #21759B; }
+
+#xlii-admin > .wrapper > .left { width : 655px; float : left; }
+#xlii-admin > .wrapper > .left > li { padding-bottom : 10px; }
+
+#xlii-admin > .wrapper > .right { float : left; padding-left : 20px;  width : 400px; }
+#xlii-admin > .wrapper > .right > li { padding-bottom : 10px; }
+#xlii-admin > .wrapper > .right .description { font-size : 0.9em; font-style : italic; padding-bottom : 10px; }
+
+/* BUTTONS */
+#xlii-admin .buttons li { cursor : pointer; line-height : 20px; }
+#xlii-admin .buttons li:hover { background-color : #aeaeae; font-style : italic; }
+#xlii-admin .buttons li .icon { float : right; }
+#xlii-admin .buttons li .form { display : none !important; }
+
+#xlii-admin .buttons .placeholder { display : block; background-color : #000; width : 100%; height : 20px; }
+#xlii-admin .buttons .ui-draggable-dragging .name { display : none; }
+
+/* LOCATION */
+#xlii-admin .location .xlii-smt-location ul.empty { min-height : 20px; min-width : 50px; background-color : #aeaeae; }
+#xlii-admin .location .xlii-smt-location li .icon { cursor : pointer; }
+#xlii-admin .location .xlii-smt-location li .name { display : none; }
+#xlii-admin .location .xlii-smt-location li .form { display : none; position : absolute; }
+
+#xlii-admin .location .xlii-smt-location .placeholder { display : block; width : 50px; height : 20px; background-color : #21759B; margin : 0px; padding : 0px; }
+
+/* OPTIONS */
+#xlii-admin .options { display : none; }
+#xlii-admin .options > .right { float : right; }
+#xlii-admin .options > .right > * { display : block; float : left; font-style : italic; padding-right : 10px; } 
+#xlii-admin .options .right .remove { color : red; cursor : pointer; }
+#xlii-admin .options .right .remove:hover { text-decoration : underline;}
+
+/* FORMS - GLOBAL */
+#xlii-admin .form .radiogroup input.xlii-radio { margin: 0px 10px 10px; }
+#xlii-admin .form .radiogroup .xlii-icon { display : inline-block; }
+#xlii-admin .form .radiogroup .icontext { display : inline-block; padding-left : 10px; }
+#xlii-admin .form .buttonselect .entity:nth-child(even) { background-color : #ececec; }
+#xlii-admin .form .buttonselect .entity { padding : 3px 5px 3px 0px; }
+
+/* SOCIAL MEDIA */
+.xlii-icon { height : 20px; background-repeat : no-repeat; }
+
+.xlii-icon.facebook { background-image: url('../media/facebook.png'); width : 136px; width : 49px; } 
+.xlii-icon.facebook.plain { background-position : 0px -26px; width : 129px; height : 24px;}
+.xlii-icon.facebook.horizontal { width : 136px; }
+.xlii-icon.facebook.vertical { background-position : -144px 0px; width : 52px; height : 92px; }
+
+.xlii-icon.google { background-image: url('../media/google.png'); width : 38px; height : 24px; }
+.xlii-icon.google.bubble { width : 79px; }
+
+.xlii-icon.twitter { background-image: url('../media/twitter.png'); width : 55px; height : 20px; }
+.xlii-icon.twitter.horizontal { width : 107px; }
+.xlii-icon.twitter.vertical { background-position : 0px -22px; height : 62px; }
+
+/* OTHER */
+#recyclebin { height : 60px; padding : 10px; color : red; font-style : italic; border : 1px dashed #AEAEAE; display : none; }
+#recyclebin.active { background-color : #F6F6F6; }
+
+/** ANALYTICS ADMIN --------------------------------------------------------------------------------------------------------------------------------------- **/
+#xlii-admin.analytics p { width : 655px; }
+
+#xlii-admin.analytics .form { padding-top : 10px; }
+#xlii-admin.analytics .form .row { padding-bottom : 5px; }
+#xlii-admin.analytics label.xlii-textarea { font-weight: bold;}
+#xlii-admin.analytics textarea { margin-top : 8px; }
+#xlii-admin.analytics .xlii-submit { margin-top : 8px; }

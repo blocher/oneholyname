@@ -1,0 +1,166 @@
+[30-Jun-2015 12:35:03 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/shortcodes.php on line 410
+[30-Jun-2015 18:43:10 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/comment-template.php on line 1563
+[02-Jul-2015 16:21:47 America/Denver] PHP Fatal error:  Call to undefined function is_main_site() in /home1/benloche/public_html/yascbackup/wp-includes/update.php on line 651
+[03-Jul-2015 05:56:57 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss2.php on line 8
+[03-Jul-2015 11:20:13 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/default-filters.php on line 17
+[03-Jul-2015 15:54:21 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/general-template.php on line 1626
+[04-Jul-2015 10:53:35 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/registration.php on line 7
+[04-Jul-2015 11:08:35 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/ms-default-constants.php on line 153
+[04-Jul-2015 12:26:20 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/class-snoopy.php on line 6
+[04-Jul-2015 15:21:32 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss2-comments.php on line 8
+[04-Jul-2015 18:23:34 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/theme.php on line 679
+[04-Jul-2015 23:37:11 America/Denver] PHP Fatal error:  Call to undefined function is_admin() in /home1/benloche/public_html/yascbackup/wp-includes/vars.php on line 23
+[05-Jul-2015 00:07:10 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/kses.php on line 1428
+[05-Jul-2015 20:53:50 America/Denver] PHP Fatal error:  Class 'IXR_Server' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-xmlrpc-server.php on line 23
+[05-Jul-2015 23:29:58 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/author-template.php on line 471
+[06-Jul-2015 01:54:50 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/rss.php on line 19
+[06-Jul-2015 03:06:13 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[06-Jul-2015 03:06:13 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[06-Jul-2015 03:06:13 America/Denver] PHP Warning:  require_once(ABSPATHWPINC/ms-load.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[06-Jul-2015 03:06:13 America/Denver] PHP Fatal error:  require_once(): Failed opening required 'ABSPATHWPINC/ms-load.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[06-Jul-2015 05:45:26 America/Denver] PHP Fatal error:  Class 'WP_Dependencies' not found in /home1/benloche/public_html/yascbackup/wp-includes/class.wp-styles.php on line 19
+[06-Jul-2015 06:53:24 America/Denver] PHP Fatal error:  Class 'WP_Image_Editor' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-image-editor-gd.php on line 17
+[06-Jul-2015 12:23:30 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-atom.php on line 8
+[06-Jul-2015 13:04:15 America/Denver] PHP Fatal error:  Call to undefined function is_main_site() in /home1/benloche/public_html/yascbackup/wp-includes/update.php on line 651
+[06-Jul-2015 13:43:37 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss.php on line 8
+[07-Jul-2015 07:45:22 America/Denver] PHP Fatal error:  Class 'IXR_Client' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-http-ixr-client.php on line 9
+[07-Jul-2015 11:32:45 America/Denver] PHP Fatal error:  Class 'WP_Image_Editor' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-image-editor-imagick.php on line 17
+[07-Jul-2015 15:28:12 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-embed.php on line 26
+[07-Jul-2015 18:26:30 America/Denver] PHP Fatal error:  Call to undefined function is_robots() in /home1/benloche/public_html/yascbackup/wp-includes/template-loader.php on line 28
+[08-Jul-2015 07:51:39 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rdf.php on line 8
+[08-Jul-2015 14:07:48 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/post-formats.php on line 170
+[09-Jul-2015 02:08:39 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/theme.php on line 679
+[09-Jul-2015 06:48:27 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss2.php on line 8
+[09-Jul-2015 10:35:48 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/admin-bar.php on line 48
+[09-Jul-2015 13:48:08 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/ms-default-filters.php on line 17
+[09-Jul-2015 17:59:03 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/rss.php on line 19
+[10-Jul-2015 05:52:18 America/Denver] PHP Fatal error:  Class 'WP_Image_Editor' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-image-editor-gd.php on line 17
+[10-Jul-2015 07:23:09 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/general-template.php on line 1626
+[10-Jul-2015 14:59:50 America/Denver] PHP Fatal error:  Call to undefined function is_admin() in /home1/benloche/public_html/yascbackup/wp-includes/vars.php on line 23
+[10-Jul-2015 16:15:16 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/registration-functions.php on line 7
+[11-Jul-2015 02:10:31 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/registration.php on line 7
+[11-Jul-2015 10:38:10 America/Denver] PHP Fatal error:  Class 'WP_Image_Editor' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-image-editor-imagick.php on line 17
+[11-Jul-2015 15:32:40 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-embed.php on line 26
+[11-Jul-2015 18:26:53 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[11-Jul-2015 18:26:53 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[11-Jul-2015 18:26:53 America/Denver] PHP Warning:  require(ABSPATHWPINC/SimplePie/Misc.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[11-Jul-2015 18:26:53 America/Denver] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/SimplePie/Misc.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[12-Jul-2015 00:35:18 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/nav-menu-template.php on line 16
+[12-Jul-2015 08:20:24 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/author-template.php on line 471
+[12-Jul-2015 15:08:07 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/category-template.php on line 893
+[12-Jul-2015 16:43:00 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/theme.php on line 679
+[13-Jul-2015 00:53:50 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/comment-template.php on line 1563
+[13-Jul-2015 02:04:17 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/kses.php on line 1428
+[13-Jul-2015 20:30:24 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[13-Jul-2015 20:30:24 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[13-Jul-2015 20:30:24 America/Denver] PHP Warning:  require(ABSPATHWPINC/option.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[13-Jul-2015 20:30:24 America/Denver] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/option.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[14-Jul-2015 04:54:27 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rdf.php on line 8
+[14-Jul-2015 12:45:28 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/class-snoopy.php on line 6
+[14-Jul-2015 14:03:02 America/Denver] PHP Fatal error:  Class 'IXR_Client' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-http-ixr-client.php on line 9
+[14-Jul-2015 19:34:20 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-atom.php on line 8
+[15-Jul-2015 01:57:10 America/Denver] PHP Fatal error:  Call to undefined function is_main_site() in /home1/benloche/public_html/yascbackup/wp-includes/update.php on line 651
+[15-Jul-2015 03:20:42 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/ms-default-constants.php on line 153
+[15-Jul-2015 11:12:55 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[15-Jul-2015 11:12:55 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[15-Jul-2015 11:12:55 America/Denver] PHP Warning:  require_once(ABSPATHWPINC/ms-load.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[15-Jul-2015 11:12:55 America/Denver] PHP Fatal error:  require_once(): Failed opening required 'ABSPATHWPINC/ms-load.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[15-Jul-2015 14:36:41 America/Denver] PHP Fatal error:  Call to undefined function add_shortcode() in /home1/benloche/public_html/yascbackup/wp-includes/media.php on line 769
+[15-Jul-2015 23:26:22 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/nav-menu-template.php on line 16
+[16-Jul-2015 11:41:51 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/post-formats.php on line 170
+[16-Jul-2015 16:14:43 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/rss-functions.php on line 8
+[17-Jul-2015 10:44:06 America/Denver] PHP Fatal error:  Class 'WP_Dependencies' not found in /home1/benloche/public_html/yascbackup/wp-includes/class.wp-styles.php on line 19
+[17-Jul-2015 16:23:44 America/Denver] PHP Fatal error:  Class 'WP_Image_Editor' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-image-editor-gd.php on line 17
+[18-Jul-2015 06:11:50 America/Denver] PHP Fatal error:  Class 'WP_Dependencies' not found in /home1/benloche/public_html/yascbackup/wp-includes/class.wp-scripts.php on line 19
+[18-Jul-2015 09:59:51 America/Denver] PHP Fatal error:  Class 'IXR_Client' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-http-ixr-client.php on line 9
+[18-Jul-2015 22:31:51 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-atom-comments.php on line 8
+[19-Jul-2015 07:09:36 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/kses.php on line 1428
+[19-Jul-2015 10:11:26 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-embed.php on line 26
+[19-Jul-2015 13:59:36 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/admin-bar.php on line 48
+[20-Jul-2015 00:34:37 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/ms-functions.php on line 2066
+[21-Jul-2015 16:58:25 America/Denver] PHP Fatal error:  Class 'IXR_Server' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-xmlrpc-server.php on line 23
+[22-Jul-2015 04:04:04 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rdf.php on line 8
+[22-Jul-2015 15:34:10 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss.php on line 8
+[22-Jul-2015 16:44:20 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/category-template.php on line 893
+[22-Jul-2015 21:38:46 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-atom.php on line 8
+[23-Jul-2015 01:03:09 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/registration.php on line 7
+[23-Jul-2015 01:16:44 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/script-loader.php on line 25
+[23-Jul-2015 01:16:44 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/script-loader.php on line 25
+[23-Jul-2015 01:16:44 America/Denver] PHP Warning:  require(ABSPATHWPINC/class.wp-dependencies.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/script-loader.php on line 25
+[23-Jul-2015 01:16:44 America/Denver] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/class.wp-dependencies.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/script-loader.php on line 25
+[23-Jul-2015 07:31:41 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss2-comments.php on line 8
+[23-Jul-2015 07:58:51 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/ms-default-constants.php on line 153
+[23-Jul-2015 11:20:11 America/Denver] PHP Fatal error:  Call to undefined function is_robots() in /home1/benloche/public_html/yascbackup/wp-includes/template-loader.php on line 28
+[23-Jul-2015 12:00:56 America/Denver] PHP Fatal error:  Class 'WP_Widget' not found in /home1/benloche/public_html/yascbackup/wp-includes/default-widgets.php on line 14
+[23-Jul-2015 17:24:27 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/rss.php on line 19
+[23-Jul-2015 21:27:04 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/admin-bar.php on line 48
+[24-Jul-2015 03:37:04 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/nav-menu-template.php on line 16
+[24-Jul-2015 05:23:13 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[24-Jul-2015 05:23:13 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[24-Jul-2015 05:23:13 America/Denver] PHP Warning:  require(ABSPATHWPINC/SimplePie/Misc.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[24-Jul-2015 05:23:13 America/Denver] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/SimplePie/Misc.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[24-Jul-2015 08:46:55 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/default-filters.php on line 17
+[24-Jul-2015 16:55:56 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/post-formats.php on line 170
+[24-Jul-2015 22:29:12 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/class-snoopy.php on line 6
+[25-Jul-2015 04:09:45 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/comment-template.php on line 1563
+[25-Jul-2015 07:20:26 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/rss-functions.php on line 8
+[25-Jul-2015 13:00:30 America/Denver] PHP Fatal error:  Class 'IXR_Server' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-xmlrpc-server.php on line 23
+[25-Jul-2015 15:49:43 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/ms-default-filters.php on line 17
+[25-Jul-2015 17:48:45 America/Denver] PHP Fatal error:  Class 'WP_Dependencies' not found in /home1/benloche/public_html/yascbackup/wp-includes/class.wp-styles.php on line 19
+[26-Jul-2015 04:27:43 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/author-template.php on line 471
+[26-Jul-2015 19:52:17 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/post-template.php on line 1232
+[27-Jul-2015 01:58:49 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss.php on line 8
+[27-Jul-2015 02:39:34 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/canonical.php on line 552
+[27-Jul-2015 15:14:59 America/Denver] PHP Fatal error:  Class 'WP_Widget' not found in /home1/benloche/public_html/yascbackup/wp-includes/default-widgets.php on line 14
+[28-Jul-2015 13:38:45 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss2-comments.php on line 8
+[28-Jul-2015 16:34:36 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/rss-functions.php on line 8
+[30-Jul-2015 02:43:37 America/Denver] PHP Fatal error:  Call to undefined function add_shortcode() in /home1/benloche/public_html/yascbackup/wp-includes/media.php on line 769
+[30-Jul-2015 03:46:49 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/ms-default-filters.php on line 17
+[31-Jul-2015 10:03:14 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[31-Jul-2015 10:03:14 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[31-Jul-2015 10:03:14 America/Denver] PHP Warning:  require_once(ABSPATHWPINC/ms-load.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[31-Jul-2015 10:03:14 America/Denver] PHP Fatal error:  require_once(): Failed opening required 'ABSPATHWPINC/ms-load.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/ms-settings.php on line 14
+[01-Aug-2015 07:08:35 America/Denver] PHP Fatal error:  Class 'WP_Image_Editor' not found in /home1/benloche/public_html/yascbackup/wp-includes/class-wp-image-editor-imagick.php on line 17
+[02-Aug-2015 07:14:59 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/post-template.php on line 1232
+[02-Aug-2015 07:28:34 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[02-Aug-2015 07:28:34 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[02-Aug-2015 07:28:34 America/Denver] PHP Warning:  require_once(ABSPATHWPINC/class-simplepie.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[02-Aug-2015 07:28:34 America/Denver] PHP Fatal error:  require_once(): Failed opening required 'ABSPATHWPINC/class-simplepie.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[02-Aug-2015 08:50:59 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/shortcodes.php on line 568
+[02-Aug-2015 13:46:40 America/Denver] PHP Fatal error:  Call to undefined function is_robots() in /home1/benloche/public_html/yascbackup/wp-includes/template-loader.php on line 28
+[02-Aug-2015 20:43:46 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/default-filters.php on line 17
+[03-Aug-2015 04:37:12 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/general-template.php on line 1626
+[03-Aug-2015 11:58:53 America/Denver] PHP Fatal error:  Call to undefined function is_admin() in /home1/benloche/public_html/yascbackup/wp-includes/vars.php on line 23
+[04-Aug-2015 08:04:09 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-atom-comments.php on line 8
+[05-Aug-2015 01:37:33 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[05-Aug-2015 01:37:33 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[05-Aug-2015 01:37:33 America/Denver] PHP Warning:  require(ABSPATHWPINC/SimplePie/Misc.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[05-Aug-2015 01:37:33 America/Denver] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/SimplePie/Misc.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/class-simplepie.php on line 5
+[05-Aug-2015 08:00:03 America/Denver] PHP Fatal error:  Call to undefined function add_shortcode() in /home1/benloche/public_html/yascbackup/wp-includes/media.php on line 769
+[05-Aug-2015 10:43:04 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/category-template.php on line 893
+[06-Aug-2015 21:06:12 America/Denver] PHP Fatal error:  Class 'WP_Widget' not found in /home1/benloche/public_html/yascbackup/wp-includes/default-widgets.php on line 14
+[07-Aug-2015 18:39:01 America/Denver] PHP Fatal error:  Call to undefined function feed_content_type() in /home1/benloche/public_html/yascbackup/wp-includes/feed-rss2.php on line 8
+[07-Aug-2015 18:52:36 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/canonical.php on line 552
+[09-Aug-2015 08:19:59 America/Denver] PHP Fatal error:  Call to undefined function add_shortcode() in /home1/benloche/public_html/yascbackup/wp-includes/media.php on line 769
+[11-Aug-2015 15:32:28 America/Denver] PHP Fatal error:  Call to undefined function _deprecated_file() in /home1/benloche/public_html/yascbackup/wp-includes/registration-functions.php on line 7
+[11-Aug-2015 20:33:00 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/taxonomy.php on line 129
+[13-Aug-2015 08:23:42 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[13-Aug-2015 08:23:42 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[13-Aug-2015 08:23:42 America/Denver] PHP Warning:  require(ABSPATHWPINC/option.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[13-Aug-2015 08:23:42 America/Denver] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/option.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[13-Aug-2015 20:50:39 America/Denver] PHP Fatal error:  Call to undefined function add_action() in /home1/benloche/public_html/yascbackup/wp-includes/canonical.php on line 552
+[14-Aug-2015 01:38:14 America/Denver] PHP Fatal error:  Call to undefined function add_filter() in /home1/benloche/public_html/yascbackup/wp-includes/shortcodes.php on line 554
+[14-Aug-2015 17:27:33 America/Denver] PHP Fatal error:  Class 'WP_Widget' not found in /home1/benloche/public_html/yascbackup/wp-includes/default-widgets.php on line 14
+[16-Aug-2015 04:53:15 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[16-Aug-2015 04:53:15 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[16-Aug-2015 04:53:15 America/Denver] PHP Warning:  require_once(ABSPATHWPINC/class-simplepie.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[16-Aug-2015 04:53:15 America/Denver] PHP Fatal error:  require_once(): Failed opening required 'ABSPATHWPINC/class-simplepie.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[18-Aug-2015 04:23:14 America/Denver] PHP Fatal error:  Class 'Walker' not found in /home1/benloche/public_html/yascbackup/wp-includes/post-template.php on line 1232
+[19-Aug-2015 07:42:52 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[19-Aug-2015 07:42:52 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[19-Aug-2015 07:42:52 America/Denver] PHP Warning:  require(ABSPATHWPINC/option.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[19-Aug-2015 07:42:52 America/Denver] PHP Fatal error:  require(): Failed opening required 'ABSPATHWPINC/option.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/functions.php on line 8
+[21-Aug-2015 20:33:14 America/Denver] PHP Notice:  Use of undefined constant ABSPATH - assumed 'ABSPATH' in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[21-Aug-2015 20:33:14 America/Denver] PHP Notice:  Use of undefined constant WPINC - assumed 'WPINC' in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[21-Aug-2015 20:33:14 America/Denver] PHP Warning:  require_once(ABSPATHWPINC/class-simplepie.php): failed to open stream: No such file or directory in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
+[21-Aug-2015 20:33:14 America/Denver] PHP Fatal error:  require_once(): Failed opening required 'ABSPATHWPINC/class-simplepie.php' (include_path='.:/usr/php/54/usr/lib64:/usr/php/54/usr/share/pear') in /home1/benloche/public_html/yascbackup/wp-includes/class-feed.php on line 4
