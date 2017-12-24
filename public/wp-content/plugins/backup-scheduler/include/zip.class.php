@@ -18,7 +18,7 @@ if (!class_exists("SL_Zip")) {
 		var $dirlist = array();
 		var $starttime =0 ; 
 		
-		function SL_Zip() {
+		function __construct() {
 			$this->starttime = microtime(true) ; 
 			if (!@function_exists('gzcompress')) {
 				die(sprintf(__('Error: %s function is not found', 'SL_framework'), "<code>gzcompress()</code>"));

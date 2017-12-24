@@ -3,7 +3,8 @@ Contributors: neoxx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=J6ZGWTZT4M29U
 Tags: time, date, timezone, calendar, world clock, clock, travel, widget, sidebar, dashboard, shortcode, multisite, multi-site, ajax, javascript, jquery, bar, admin bar
 Requires at least: 3.8
-Tested up to: 4.3
+Tested up to: 4.9
+Requires PHP: 5.3
 Stable tag: trunk
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -33,9 +34,9 @@ Please find the version for WordPress
 * 2.8 to 3.2 [here](https://downloads.wordpress.org/plugin/timezonecalculator.wordpress2.8-3.2.zip)
 * 1.5 to 2.7 [here](https://downloads.wordpress.org/plugin/timezonecalculator.wordpress1.5-2.7.zip)
 
-**Plugin's website:** [http://www.bernhard-riedl.com/projects/](http://www.bernhard-riedl.com/projects/)
+**Plugin's website:** [https://www.bernhard-riedl.com/projects/](https://www.bernhard-riedl.com/projects/)
 
-**Author's website:** [http://www.bernhard-riedl.com/](http://www.bernhard-riedl.com/)
+**Author's website:** [https://www.bernhard-riedl.com/](https://www.bernhard-riedl.com/)
 
 == Installation ==
 
@@ -47,15 +48,15 @@ Please find the version for WordPress
 
 4. If you have widget functionality just drag and drop TimeZoneCalculator on your widget area in the Appearance Menu. Add additional [function and shortcode calls](https://wordpress.org/plugins/timezonecalculator/other_notes/) according to your desires.
 
-5. Be happy and celebrate! (and maybe you want to add a link to [http://www.bernhard-riedl.com/projects/](http://www.bernhard-riedl.com/projects/))
+5. Be happy and celebrate! (and maybe you want to add a link to [https://www.bernhard-riedl.com/projects/](https://www.bernhard-riedl.com/projects/))
 
 == Frequently Asked Questions ==
 
 = I get the error-message `Fatal error: Class 'DateTimeZone' not found in` [..] =
 
-TimeZoneCalculator uses the [PHP timezones library](https://php.net/manual/en/timezones.php). Thus, please make sure that you have a recent version of PHP including this library installed and enabled.
+TimeZoneCalculator uses the [PHP timezones library](https://secure.php.net/manual/en/timezones.php). Thus, please make sure that you have a recent version of PHP including this library installed and enabled.
 
-If any timezone information like offset, abbreviations, etc. appears to be wrong, please leave a message for the PHP guys on [their board](https://php.net/manual/en/timezones.php).
+If any timezone information like offset, abbreviations, etc. appears to be wrong, please leave a message for the PHP guys on [their board](https://secure.php.net/manual/en/timezones.php).
 
 = Why can't I see the 'Selection GUI' section? =
 
@@ -69,15 +70,15 @@ This section is based on JavaScript. Thus, you have to enable JavaScript in your
 
 With TimeZoneCalculator 2.00 and higher you can also realize a html select which displays for example the airtime of your internet radio station or your broadcasts in your users' local time. Another possibility for the usage of the upcoming function is the integration of date, time and timezone information into your travelling blog.
 
-Parameters can either be passed [as an array or a URL query type string (e.g. "display=0&format=0")](https://codex.wordpress.org/Function_Reference/wp_parse_args). Please note that WordPress parses all arguments as strings, thus booleans have to be 0 or 1 if used in query type strings whereas for arrays [real booleans](https://php.net/manual/en/language.types.boolean.php) should be used. - Furthermore you have to break your timezones with \n : `America/New_York;EST;EWT;New York, NY, US;New York, NY, US;0;0\nEurope/Vienna;;;sleep longer in winter;get up earlier to enjoy the sun;1;0` if you want to use different timezones in a query_string. In case you use an array, an array should also be used for the timezones.
+Parameters can either be passed [as an array or a URL query type string (e.g. "display=0&format=0")](https://codex.wordpress.org/Function_Reference/wp_parse_args). Please note that WordPress parses all arguments as strings, thus booleans have to be 0 or 1 if used in query type strings whereas for arrays [real booleans](https://secure.php.net/manual/en/language.types.boolean.php) should be used. - Furthermore you have to break your timezones with \n : `America/New_York;EST;EWT;New York, NY, US;New York, NY, US;0;0\nEurope/Vienna;;;sleep longer in winter;get up earlier to enjoy the sun;1;0` if you want to use different timezones in a query_string. In case you use an array, an array should also be used for the timezones.
 
 **`function $timezonecalculator->output($params=array())`**
 
 $params:
 
-- `query_time`: any unix timestamp (where `-1262304000 <= query_time <= 2145916800`) or any English textual datetime description in the range of `1930-01-01` and `2038-01-01` which can be parsed with [PHP's strtotime function](https://php.net/manual/en/function.strtotime.php); default is set to current UTC
+- `query_time`: any unix timestamp (where `-1262304000 <= query_time <= 2145916800`) or any English textual datetime description in the range of `1930-01-01` and `2038-01-01` which can be parsed with [PHP's strtotime function](https://secure.php.net/manual/en/function.strtotime.php); default is set to current UTC
 
-- `query_timezone`: origin-timezone of `query_time`; you can choose a [PHP timezone_string](https://php.net/manual/en/timezones.php); otherwise `UTC` will be used
+- `query_timezone`: origin-timezone of `query_time`; you can choose a [PHP timezone_string](https://secure.php.net/manual/en/timezones.php); otherwise `UTC` will be used
 
 - `before_list`: default `<ul>`
 
@@ -217,6 +218,35 @@ This is not only a feature but also a security update. - Thus, I'd strongly reco
 
 == Changelog ==
 
+= 3.37 =
+
+* SSLified further links
+
+= 3.36 =
+
+* replaced deprecated function calls to wp_get_current_user() and removed $user_ID-globals - thanks for the [notification](https://wordpress.org/support/topic/get_currentuserinfo-is-deprecated-9/) to highgatecreative
+
+= 3.35 =
+
+* SSLified further links
+
+= 3.34 =
+
+* changed the permission-denied message in uninstall.php [core-trac #14530](https://core.trac.wordpress.org/ticket/14530)
+* removed support link
+* fixed some typos
+
+= 3.33 =
+
+* adapted trigger of error-messages on settings-page to work with copy & paste
+* fixed a warning with clock in Admin Bar - thanks for the [notification](https://wordpress.org/support/topic/wordpress-44-giving-errors) to bnizette
+* fixed some typos
+
+= 3.32 =
+
+* changed h3 to h2 on profile-page as follow-up to this post about [hierarchy of headings in admin screens](https://make.wordpress.org/core/2015/10/28/headings-hierarchy-changes-in-the-admin-screens)
+* small clean-up
+
 = 3.31 =
 
 * small security improvements
@@ -237,7 +267,7 @@ This is not only a feature but also a security update. - Thus, I'd strongly reco
 = 3.20 =
 
 * made settings-page retina/hdpi-display ready
-* adopted settings-page to be fully touch-display enabled
+* adapted settings-page to be fully touch-display enabled
 * renamed settings-page sections
 * moved vendor-code to separate directory
 * fixed small potential bug
@@ -271,7 +301,7 @@ This is not only a feature but also a security update. - Thus, I'd strongly reco
 * tested with PHP 5.4
 * removed PHP closing tag before EOF
 * removed reference sign on function calls
-* adopted plugin-links to the new structure of wordpress.org
+* adapted plugin-links to the new structure of wordpress.org
 * cleaned-up code
 
 = 2.45 =
@@ -280,7 +310,7 @@ This is not only a feature but also a security update. - Thus, I'd strongly reco
 
 = 2.44 =
 * extended length of format_timezone-string to 150 chars
-* adopted 'Defaults'-string to use WordPress internal i18n
+* adapted 'Defaults'-string to use WordPress internal i18n
 * updated support section
 * updated project-information
 
@@ -288,7 +318,7 @@ This is not only a feature but also a security update. - Thus, I'd strongly reco
 
 * changed handling of contextual help for WordPress 3.3
 * implemented WordPress 3.3 Admin Bar add_node() function
-* adopted handling of default settings
+* adapted handling of default settings
 * external files are now registered in init-hook
 
 = 2.42 =
@@ -298,7 +328,7 @@ This is not only a feature but also a security update. - Thus, I'd strongly reco
 = 2.41 =
 
 * fixed a bug with Ajax-update functionality in a SSL-environment. Thanks to huyz who has mentioned this in the forum https://wordpress.org/support/topic/plugin-generalstats-makes-https-call-to-admin-ajax-even-if-site-is-http
-* adopted Admin Header Clock to WordPress 3.2 Admin Menu
+* adapted Admin Header Clock to WordPress 3.2 Admin Menu
 
 = 2.40 =
 
@@ -308,7 +338,7 @@ This is not only a feature but also a security update. - Thus, I'd strongly reco
 
 = 2.31 =
 
-* adopted Admin Bar implementation to re-worked WordPress code
+* adapted Admin Bar implementation to re-worked WordPress code
 
 = 2.30 =
 

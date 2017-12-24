@@ -19,7 +19,7 @@ if (!class_exists("SLFramework_OtherPlugins")) {
 		* @return void 
 		*/
 		
-		public function SLFramework_OtherPlugins($nameAuthor="", $exclu=array()) {
+		public function __construct($nameAuthor="", $exclu=array()) {
 			$this->nameAuthor = $nameAuthor ; 
 			$this->exclu = $exclu ; 
 		}

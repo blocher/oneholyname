@@ -1,4 +1,7 @@
 <?php
+if (!defined('ABSPATH'))
+    exit;
+
 require_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
 $controls = new NewsletterControls();
 $module = NewsletterEmails::instance();
@@ -45,35 +48,56 @@ function newsletter_emails_get_theme_options($theme) {
 $themes = $module->themes->get_all_with_data();
 ?>
 
-<div class="wrap">
+<div class="wrap tnp-emails tnp-emails-theme" id="tnp-wrap">
 
-    <?php $help_url = 'http://www.thenewsletterplugin.com/plugins/newsletter/newsletters-module'; ?>
-    <?php include NEWSLETTER_DIR . '/header-new.php'; ?>
+    <?php include NEWSLETTER_DIR . '/tnp-header.php'; ?>
 
-    <div id="newsletter-title">
-        <h2><?php _e('Select a theme', 'newsletter-emails') ?>
-            <a class="add-new-h2" href="http://www.thenewsletterplugin.com/plugins/newsletter/newsletter-themes" target="_blank">Custom themes</a>
+    <div id="tnp-heading">
+
+        <h2><?php _e('Select a theme', 'newsletter') ?>
+            <a class="tnp-btn-h1" href="https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-themes" target="_blank">Custom themes</a>
         </h2>
+
     </div>
+    <div id="tnp-body" class="tnp-darkbg">
 
-    <div class="newsletter-separator"></div>
+        <form method="post" id="newsletter-form" action="<?php echo $module->get_admin_page_url('new'); ?>">
+            <?php $controls->init(); ?>
+            <?php $controls->hidden('theme'); ?>
 
-    <?php $controls->show(); ?>
-
-    <form method="post" id="newsletter-form" action="<?php echo $module->get_admin_page_url('new'); ?>">
-        <?php $controls->init(); ?>
-        <?php $controls->hidden('theme'); ?>
-        <?php foreach ($themes as $key => &$data) { ?>
             <div class="tnp-theme-preview">
-                <p><?php echo $data['name']; ?></p>
-                <a href="#" onclick="var f = document.getElementById('newsletter-form');
-                        f.act.value = 'theme';
-                        f.elements['options[theme]'].value = '<?php echo $data['name']; ?>';
-                        f.submit();
-                        return false;" style="margin-right: 20px; margin-bottom: 20px">
-                    <img src="<?php echo $data['screenshot'] ?>" width="200" height="200">
+                <p><?php echo _e('Responsive Drag & Drop Composer', 'newsletter') ?></p>
+                <a href="<?php echo $module->get_admin_page_url('composer'); ?>" style="margin-right: 20px; margin-bottom: 20px">
+                    <img src="<?php echo plugins_url('newsletter') . '/emails/themes/composer.gif' ?>" width="420" height="200">
                 </a>
             </div>
-        <?php } ?>
-    </form>
+            
+            <div class="tnp-theme-preview">
+                 <p>&lt;&gt; Raw HTML</p>
+                    <a href="#" onclick="var f = document.getElementById('newsletter-form');
+                            f.act.value = 'theme';
+                            f.elements['options[theme]'].value = 'rawhtml';
+                            f.submit();
+                            return false;" style="margin-right: 20px; margin-bottom: 20px">
+                        <img src="<?php echo plugins_url('newsletter') . '/emails/images/html.png' ?>" width="200" height="200">
+                    </a>
+            </div>
+
+            <?php foreach ($themes as $key => $data) { ?>
+                <div class="tnp-theme-preview">
+                    <p><?php echo esc_html($data['name']) ?></p>
+                    <a href="#" onclick="var f = document.getElementById('newsletter-form');
+                            f.act.value = 'theme';
+                            f.elements['options[theme]'].value = '<?php echo esc_js($data['id']) ?>';
+                            f.submit();
+                            return false;" style="margin-right: 20px; margin-bottom: 20px">
+                        <img src="<?php echo esc_attr($data['screenshot']) ?>" width="200" height="200">
+                    </a>
+                </div>
+            <?php } ?>
+        </form>
+    </div>
+
+    <?php include NEWSLETTER_DIR . '/tnp-footer.php'; ?>
+
 </div>

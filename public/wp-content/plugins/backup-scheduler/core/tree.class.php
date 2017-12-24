@@ -17,7 +17,7 @@ if (!class_exists("SLFramework_Treelist")) {
 		* @access private
 		* @return void
 		*/
-		function SLFramework_Treelist() {
+		function __construct() {
 		}
 		
 		/** ====================================================================================================================================================

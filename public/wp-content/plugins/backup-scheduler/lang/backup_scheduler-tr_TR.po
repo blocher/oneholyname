@@ -4,15 +4,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2012-09-21T21:39:27+00:00\n"
-"Last-Translator: UfukArt <http://www.ufukart.com>\n"
+"PO-Revision-Date: 2017-08-22T18:23:02+00:00\n"
+"Last-Translator: SedLex <http://www.sedlex.fr/>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"
-"
+"X-Poedit-Language: Turkish\n"
+"X-Poedit-Country: Turkey\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: __;\n"
 "X-Poedit-Basepath: \n"
@@ -20,8 +20,11 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes\n"
 
-msgid "This plugin enables scheduled backup of important part of your website : simple to use and efficient !"
-msgstr "Bu eklenti web sitenizin önemli bir ihtiyacı olan zamanlanmış yedekleme sağlar : kullanımı kolay ve etkilidir!"
+msgid "This plugin enables scheduled backups of important parts of your website!"
+msgstr ""
+
+msgid "Just configure the schedule and the content to be save and enjoy: a background process will be triggered by the person who visits your website!"
+msgstr ""
 
 msgid "Sorry, but you should install/activate %s on your website. Otherwise, this plugin will not work properly!"
 msgstr "Üzgünüm, ama web sitenize %s kurup etkinleştirmelisiniz. Aksi halde, bu eklenti düzgün çalışmayacaktır."
@@ -38,8 +41,32 @@ msgstr "Yedekleme zamanı:"
 msgid "Please note that 0 means midnight, 1 means 1am, 13 means 1pm, etc. The backup will occur at that time (server time) so make sure that your website is not too overloaded at that time."
 msgstr "0&#039;ın anlamı gece yarısıdır. 1 Gece 1 demektir. 13 yazarsanız öğleden sonra 1 anlamına gelir. Yedekleme için ziyaretçi sayılarınızın en az olduğu saati seçin"
 
+msgid "Please also note that the backup won't be end exactly at that time. The backup process could take up to 6h especially if you do not have a lot of traffic on your website and/or if the backup is quite huge."
+msgstr ""
+
 msgid "Keep the backup files for (in days):"
 msgstr "Yedekleme dosyalarını koru (gün):"
+
+msgid "If you want to be notify when the backup process is finished, please enter your email:"
+msgstr ""
+
+msgid "Customize the name of the files?"
+msgstr ""
+
+msgid "Add this string to the name of the files:"
+msgstr ""
+
+msgid "The name of the files will be %s."
+msgstr ""
+
+msgid "%s is the string of the present option. You may set this option to %s."
+msgstr ""
+
+msgid "%s is a random string for security reasons."
+msgstr ""
+
+msgid "%s is the extension (i.e. %s)."
+msgstr ""
 
 msgid "What do you want to save?"
 msgstr "Neleri yedeklemek istiyorsunuz?"
@@ -63,16 +90,28 @@ msgid "The themes directory:"
 msgstr "Temalar (themes) Dizini"
 
 msgid "Check this option if you want to save all themes that you have installed and that you use on this website."
-msgstr "Web sitenizde kullandığınız  kurulu tüm temaları kaydetmek istiyorsanız bu seçeneği seçin."
+msgstr "Web sitenizde kullandığınız kurulu tüm temaları kaydetmek istiyorsanız bu seçeneği seçin."
 
 msgid "The upload directory for this blog:"
 msgstr "Bu blog için yükleme dizini:"
 
+msgid "(i.e. %s and %s)"
+msgstr ""
+
+msgid "Check this option if you want to save the images, the files, etc. that you have uploaded on your website to create your articles/posts/pages."
+msgstr ""
+
 msgid "All upload directories (for this site and the sub-blogs):"
 msgstr "Tüm yükleme dizinleri (Bu site ve alt bloglar için):"
 
+msgid "Check this option if you want to save the images, the files, etc. that people have uploaded on their websites to create articles/posts/pages."
+msgstr ""
+
 msgid "The upload directory for the main site:"
 msgstr "Ana site için yükleme dizini:"
+
+msgid "Check this option if you want to save the images, the files, etc. that you have uploaded on your main website to create your articles/posts/pages."
+msgstr ""
 
 msgid "The upload directory:"
 msgstr "Yükleme dizini:"
@@ -80,14 +119,47 @@ msgstr "Yükleme dizini:"
 msgid "The SQL database:"
 msgstr "SQL Veritabanı:"
 
+msgid "Check this option if you want to save the text of your posts, your configurations, etc. for this blog"
+msgstr ""
+
 msgid "All SQL databases:"
 msgstr "Tüm SQL veritabanları:"
+
+msgid "Check this option if you want to save all texts of posts, configurations, etc. for all blogs in this website"
+msgstr ""
 
 msgid "Only your SQL database:"
 msgstr "Sadece sizin SQL veritabanınız:"
 
-msgid "The maximum file size (in MB):"
-msgstr "Maksimum dosya boyutu (MB):"
+msgid "Check this option if you want to save the text of your posts, your configurations, etc. for the main website"
+msgstr ""
+
+msgid "Save the SQL content of the sub-sites in different files:"
+msgstr ""
+
+msgid "Check this option if you want to save the text of your posts, your configurations, etc."
+msgstr ""
+
+msgid "The maximum zip file size (in MB, namely the chunck size):"
+msgstr ""
+
+msgid "Please note that the zip file will be split into multiple files to comply with the maximum file size you have indicated"
+msgstr ""
+
+msgid "Exclude these folders:"
+msgstr ""
+
+msgid "Please enter one name of folder to be excluded per line"
+msgstr ""
+
+msgid "By default, the line should exactely match the folder name or the folder path to exclude said folder (for instance %s or %s, to exclude the content folder)"
+msgstr ""
+
+msgid "If the line begins with %s, the line will be consider as a regexp (for instance %s, to exclude the content folder)"
+msgstr ""
+
+msgid "For now, the following folder are exluded (please refresh the page if you just upfdate the options to see the correct list):"
+msgstr ""
 
 msgid "Do you want that the backup is sent by email?"
 msgstr "Bu yedeğin e-posta yoluyla gönderilmesini istiyor musunuz?"
@@ -100,6 +172,9 @@ msgstr "Öyleyse lütfen e-posta adresinizi girin:"
 
 msgid "Do you want to add a suffix to sent files:"
 msgstr "Size gönderilen dosyalara bir sonek eklemek istiyor musunuz:"
+
+msgid "This option allows going round the blocking feature of some mail provider that block the mails with zip attachments (like GMail)."
+msgstr ""
 
 msgid "You do not need to fill this field if no mail is to be sent."
 msgstr "Mail istemiyorsanız bu alanı doldurmak zorunda değilsiniz."
@@ -116,6 +191,15 @@ msgstr "FTP sunucu:"
 msgid "Should be at the form %s or %s"
 msgstr "Form %s veya %s olmalı"
 
+msgid "If %s is omitted then it is automatically added when connecting to your FTP. This is useful if you get an 404 error submitting these parameters with %s."
+msgstr ""
+
+msgid "FTP port:"
+msgstr ""
+
+msgid "By default the port is %s"
+msgstr ""
+
 msgid "Your FTP login:"
 msgstr "FTP kullanıcı adı:"
 
@@ -128,8 +212,11 @@ msgstr "Yukarıdaki bilgilerin doğru olup olmadığını test etmek için %s d�
 msgid "Test"
 msgstr "Test"
 
-msgid "If you want to be notify when the FTP storage is finished, please enter your email:"
-msgstr "FTP depolama bittiğinde haberdar olmak istiyorsanız, e-posta giriniz:"
+msgid "Create sub-folder with date in your FTP repository for all backup files:"
+msgstr ""
+
+msgid "Add a prefix to the created folder:"
+msgstr ""
 
 msgid "Your PHP installation does not support FTP features, thus this option has been disabled! Sorry..."
 msgstr "PHP kurulumunuz FTP özellikleri desteklemiyor, bu nedenle bu seçenek devre dışı bırakıldı! Üzgünüm..."
@@ -140,11 +227,17 @@ msgstr "Gelişmiş - Bellek (RAM) ve zaman yönetimi"
 msgid "What is the maximum size of allocated memory (in MB):"
 msgstr "En fazla RAM bellek kullanımı (MB):"
 
-msgid "Please note that the files greater than this limit won't be included in the zip file!"
-msgstr "Dikkat edin, bu sınırdan daha büyük dosyaları zip dosyasına dahil edilmeyecektir!"
+msgid "The files greater than this limit won't be included in the zip file!"
+msgstr ""
+
+msgid "On some Wordpress installation, you may have memory issues. Thus, try to reduce this number if you face such error."
+msgstr ""
 
 msgid "What is the maximum time for the php scripts execution (in seconds):"
 msgstr "Php dosyalarının en fazla çalışma süresini belirtin (saniye):"
+
+msgid "Even if you do not have time restriction, it is recommended to set this value to 15sec in order to avoid any killing of the php scripts by your web hoster."
+msgstr ""
 
 msgid "Here is the backup files. You can force a new backup or download previous backup files."
 msgstr "Yedek dosyalarınız buradadır. Yeni bir yedekleme başlatabilir veya önceki yedekleme dosyalarını indirebilirsiniz"
@@ -164,41 +257,140 @@ msgstr "Yeni bir yedekleme başlat (Posta/FTP ile)"
 msgid "Force a new backup (without any external storage or sending)"
 msgstr "Yeni bir yedekleme başlat (Posta/FTP olmaksızın)"
 
-msgid "How to restore the backup files?"
-msgstr "Yedekleme dosyaları nasıl geri yüklenir?"
-
-msgid "To restore the backups, and if you have backuped the full installation, you will have to execute the following steps:"
-msgstr "Yedekleri geri yükleme için ve Tam yedek aldıysanız aşağıdaki adımları takip etmelisiniz."
-
-msgid "Save all zip files (i.e. *.zip, *.z01, *.z02, etc.) in a single folder on your hard disk."
-msgstr "Tüm zip dosyalarını (örn: *.zip, *.z01, *.z02 gibi) bilgisayarınızdaki bir klasöre kaydedin."
-
-msgid "Unzip these files by using IZArc, Winzip, or Winrar (others software could not support these multipart zip and consider that the archive is corrupted)."
-msgstr "Winrar, Winzip, IZArc gibi bir programla bu dosyaları çıkarın. (Diğer yazılımlar çok parçalı zip dosyaları açmayı desteklemez ve arşivi bozabilir.)"
-
-msgid "Save the extracted files on your webserver."
-msgstr "Çıkardığınız dosyaları web sunucunuza kaydedin."
-
-msgid "Reimport the SQL files (i.e. *.sql1, *sql2, etc.) with phpmyadmin (it is recommended to save your database first)."
-msgstr "Phpmyadmin kullanarak SQL dosyalarınızı (örn: *.sql1, *sql2, gibi)  içe aktarın. (Veritabanını kaydetmek için bu önerilir.)"
-
-msgid "To restore the backups, and if you have backuped only some folders, you will have to execute the following steps:"
-msgstr "Yedekleri geri yüklemek için ve eğer sadece bazı klasörleri yedeklediyseniz, aşağıdaki adımları takip etmeniz gerekir:"
-
-msgid "Install a fresh version of Wordpress on your webserver."
-msgstr "Web sunucunuza Wordpress&#039;in yeni bir sürümünü yükleyin."
-
-msgid "Replace the folders (i.e. 'plugins',  'themes', and/or 'uploads') of the root of your webserver by the extracted folders."
-msgstr "Çıkartılan klasörleri (örn: &#039;plugins&#039;, &#039;themes&#039;, ve/veya &#039;uploads&#039;) web sunucunuzun ilgili klasörlerindekilerle değiştirin."
-
-msgid "Replace the wp-config.php (at the root of your webserver) with the extracted one."
-msgstr "wp-config.php dosyasını sunucunuzun ana dizinindekiyle değiştirin."
-
 msgid "Backups"
 msgstr "Yedekler"
 
 msgid "Parameters"
 msgstr "Parametreler"
+
+msgid "There is two different ways to create a backup:"
+msgstr ""
+
+msgid "an automatic process (namely background process):"
+msgstr ""
+
+msgid "Every time a user visits a page of the frontside of your website, a small portion of the backup process is performed;"
+msgstr ""
+
+msgid "Note that if you have very few visits, a complete backup may be quite long."
+msgstr ""
+
+msgid "a forced process:"
+msgstr ""
+
+msgid "The button that triggers this forced process may be found in the Backup tab;"
+msgstr ""
+
+msgid "You have to stay on that page for processing all attachments: if you go on another page (or if you reload the page), the process will be stopped."
+msgstr ""
+
+msgid "How to backup the site?"
+msgstr ""
+
+msgid "When forcing a backup process, the plugin indicates that another process is running."
+msgstr ""
+
+msgid "99% of the time, it means that the memory limit and/or the chunck size have been increased and that you exceed the maximum memory limit authorized by your server: therefore, the PHP process related to the backup is killed."
+msgstr ""
+
+msgid "Most of the time, this chunk size and memory limit do not have to be higher than 15Mo."
+msgstr ""
+
+msgid "DO NOT contact me before trying to reduce the chunk size and the memory limit: 250Mo is, for instance, often not a good idea..."
+msgstr ""
+
+msgid "The backup process cannot end"
+msgstr ""
+
+msgid "This plugin create a plurality of split zip."
+msgstr ""
+
+msgid "Indeed, a PHP process is not able, most of the time, to create, manipulate and handle files that exceed a certain amount of data."
+msgstr ""
+
+msgid "In order to be able to backup websites of a size of a couple gigabytes, the plugin create different files."
+msgstr ""
+
+msgid "Why the plugin creates multi-part zip?"
+msgstr ""
+
+msgid "To open the backups, you will have to execute the following steps:"
+msgstr ""
+
+msgid "Save all zip files (i.e. *.zip, *.z01, *.z02, etc.) in a single folder on your hard disk."
+msgstr "Tüm zip dosyalarını (örn: *.zip, *.z01, *.z02 gibi) bilgisayarınızdaki bir klasöre kaydedin."
+
+msgid "Unzip these files by using a software that support multi-part zip files (it is often indicated in the readme):"
+msgstr ""
+
+msgid "Other software may works ... do not hesitate to inform me!"
+msgstr ""
+
+msgid "How to open the split zip files?"
+msgstr ""
+
+msgid "No this plugin does not propose a 'one-click restoration'."
+msgstr ""
+
+msgid "Indeed, how a plugin may restore an installation of Wordpress if Wordpress does not exists (it has to be restored) to run the plugin? I believe I made my point ..."
+msgstr ""
+
+msgid "Keep in mind that the restoration of a website may be a technical and long process (it depends on what you want to restore). For instance, you need to be familiar with manipulating FTP for accessing your website."
+msgstr ""
+
+msgid "One click restoration?"
+msgstr ""
+
+msgid "In the zip, you will find some sql files."
+msgstr ""
+
+msgid "You could either:"
+msgstr ""
+
+msgid "Import each file in your new database (for instance, thanks to %s), in the alphabetical order of the files."
+msgstr ""
+
+msgid "Concatenate the sql files in one big file and import this latter file in your new database (for instance, thanks to %s)."
+msgstr ""
+
+msgid "Please note that if you choose to save the SQL content of the sub-sites in different files, you will also have some %s files (with %s the index of the blog). You can separately handle these files."
+msgstr ""
+
+msgid "How to restore the database?"
+msgstr ""
+
+msgid "If you have backuped the entire website, the restoration is quite simple: you just have to copy the files in the zip files into your webserver."
+msgstr ""
+
+msgid "If you have backuped only some folders, you will have to execute the following steps:"
+msgstr ""
+
+msgid "Install a fresh version of Wordpress on your webserver."
+msgstr "Web sunucunuza Wordpress&#039;in yeni bir sürümünü yükleyin."
+
+msgid "Replace the folders (i.e. %s,  %s, and/or %s) of the root of your webserver by the extracted folders."
+msgstr ""
+
+msgid "Replace the %s (at the root of your webserver) with the extracted one."
+msgstr ""
+
+msgid "How to restore the other files?"
+msgstr ""
+
+msgid "The backup files are stored in %s."
+msgstr ""
+
+msgid "In addition, the plugin may store the files on a distant FTP."
+msgstr ""
+
+msgid "Finally, you can configure the plugin to send the backup files by mail but be informed that there is some difficulties with most of mail provider (size issue, extension rejection, etc.)."
+msgstr ""
+
+msgid "Where the backup are stored?"
+msgstr ""
+
+msgid "How To"
+msgstr ""
 
 msgid "Manage translations"
 msgstr "Çevirileri yönet"
@@ -214,6 +406,15 @@ msgstr "Yedekleme tarihi"
 
 msgid "Backup files"
 msgstr "Yedek dosyaları"
+
+msgid "FTP transfer OK"
+msgstr ""
+
+msgid "FTP transfer KO: %s"
+msgstr ""
+
+msgid "FTP transfer reset"
+msgstr ""
 
 msgid "Part %s"
 msgstr "Part %s"
@@ -233,11 +434,11 @@ msgstr "Bu yedek dosyaları silin"
 msgid "The process is still in progress for this backup (begun %s at %s)."
 msgstr "Bu yedekleme işlemi devam etmektedir (%s tarihinde %s&#039;te başladı)."
 
-msgid "The SQL extraction is in progress (%s tables extracted)."
-msgstr "SQL çıkarma devam ediyor (%s tabloları çıkarıldı)."
+msgid "The SQL extraction is in progress (%s entries extracted)."
+msgstr ""
 
-msgid "The ZIP creation is in progress (%s files has been added in the zip file and the current size of the zip is %s)."
-msgstr "ZIP oluşturma devam ediyor (%s dosya eklendi ve dosyanın şu anki boyutu %s oldu)."
+msgid "The ZIP creation is in progress (%s files has been added in %s zip files and the current size of the zip files is %s)."
+msgstr ""
 
 msgid "The FTP sending is in progress (%s files has been stored in the FTP)."
 msgstr "FTP gönderme devam ediyor (%s dosya FTP&#039;ye gönderildi)."
@@ -254,20 +455,20 @@ msgstr "Lütfen bekleyin..."
 msgid "(For now, there is no backup files... You should wait or force a backup (see below) )"
 msgstr "(Şu anda yedek dosya yok... Bekleyebilir veya yeni bir yedekleme başlatabilirsiniz. (aşağıya bakınız))"
 
-msgid "Please wait, a backup is in progress! If you want to force a new backup, refresh this page and end the current backup first."
-msgstr "Lütfen bekleyin, bir yedekleme işlemi devam ediyor! Yeni bir yedekleme başlatmak istiyorsanız önce bu sayfayı yenileyin ve mevcut yedeklemeyi bitirin."
+msgid "Please wait, a backup is in progress for %s seconds! Wait until %s seconds for an automatic restart."
+msgstr ""
 
-msgid "It is impossible to create the %s file in the %s folder. Please check folder/file permissions."
-msgstr "%s klasöründe %s dosyası oluşturmak mümkün değildir. Lütfen Klasör/Dosya izinlerini kontrol edin."
+msgid "This error message may also be generated if the chunk size is too big: try first to set the chunk size to 1Mo in order to avoid any memory saturation of your server and then increase it slowly..."
+msgstr ""
 
-msgid "An other SQL extraction is still in progress (for %s seconds)... Please wait!"
-msgstr "Bir diğer SQL çıkarma (%s saniye) halen devam etmektedir... Lütfen bekleyin!"
+msgid "(SQL extraction - ending)"
+msgstr ""
 
 msgid "(SQL extraction)"
 msgstr "(SQL çıkarma)"
 
-msgid "An other backup is still in progress (for %s seconds)... Please wait!"
-msgstr "Bir diğer yedekleme (%s saniye) halen devam etmektedir... Lütfen bekleyin!"
+msgid "(SQL extraction - nothing to be done)"
+msgstr ""
 
 msgid "(ZIP creation)"
 msgstr "(ZIP oluşturma)"
@@ -275,20 +476,32 @@ msgstr "(ZIP oluşturma)"
 msgid "(FTP sending)"
 msgstr "(FTP&#039;ye gönderme)"
 
+msgid "(FTP sending - ending)"
+msgstr ""
+
+msgid "(FTP sending - nothing to be done)"
+msgstr ""
+
+msgid "Backup of %s on %s (%s)"
+msgstr ""
+
 msgid "(MAIL sending)"
 msgstr "(Mail&#039;e gönderme)"
 
 msgid "Your Wordpress installation cannot send emails (with heavy attachments)!"
 msgstr "Wordpress kurulumunuz e-posta ile gönderilemez! (Büyük boyut)"
 
-msgid "The file %s cannot be deleted. You should have a problem with file permissions or security restrictions."
-msgstr "%s dosyası silinemedi. Dosya izinleri veya güvenlik kısıtlamaları ile ilgili bir sorun olmalı."
+msgid "(MAIL sending - ending)"
+msgstr ""
+
+msgid "(MAIL sending - nothing to be done)"
+msgstr ""
+
+msgid "(END - ending)"
+msgstr ""
 
 msgid "An unknown error occured!"
 msgstr "Bilinmeyen bir hata oluştu!"
-
-msgid "The process has been canceled by a third person"
-msgstr "İşlem üçüncü bir kişi tarafından iptal edildi"
 
 msgid "A new backup has been generated!"
 msgstr "Yeni bir yedek oluşturuldu!"
@@ -302,11 +515,59 @@ msgstr "İşte bugün için %s %s yedek dosyaları"
 msgid "Best regards,"
 msgstr "Saygılarımızla,"
 
-msgid "%s backup files has been successfully saved on your FTP (%s)"
-msgstr "%s yedekleme dosyaları başarıyla FTP&#039;ye (%s) kaydedildi"
+msgid "Please find hereafter a summary of the backup process."
+msgstr ""
 
-msgid "To download them, please click on the following links:"
-msgstr "İndirmek için aşağıdaki linklere tıklayınız:"
+msgid "Global synthesis"
+msgstr ""
+
+msgid "The backup process has started on %s and have lasted %s minutes and %s seconds"
+msgstr ""
+
+msgid "SQL synthesis"
+msgstr ""
+
+msgid "The SQL extraction has started on %s and have lasted %s minutes and %s seconds"
+msgstr ""
+
+msgid "%s entries have been extracted and have been stored in %s files."
+msgstr ""
+
+msgid "%s created on %s"
+msgstr ""
+
+msgid "ZIP synthesis"
+msgstr ""
+
+msgid "The ZIP creation phase has started on %s and have lasted %s minutes and %s seconds"
+msgstr ""
+
+msgid "%s files have been stored into %s split files (zip, z01, z02, etc.)."
+msgstr ""
+
+msgid "Please note that %s files have been excluded from the backup process because their sizes exceed the chunk size (i.e. %s Mo)."
+msgstr ""
+
+msgid "%s (size %s)"
+msgstr ""
+
+msgid "These zip files are accessible for %s days at the following path:"
+msgstr ""
+
+msgid "FTP synthesis"
+msgstr ""
+
+msgid "The %s zip files have been stored on the specified FTP: %s"
+msgstr ""
+
+msgid "%s stored on %s"
+msgstr ""
+
+msgid "ERROR: %s has not been stored. The error message was: %s"
+msgstr ""
+
+msgid "Backup of %s on %s"
+msgstr ""
 
 msgid "No host has been defined"
 msgstr "Hiç sunucu oluşturulmadı"
@@ -316,6 +577,15 @@ msgstr "PHP kurulumunuz SSL özellikleri desteklemiyor... Lütfen standart FTP k
 
 msgid "The host %s cannot be resolved!"
 msgstr "%s sunucusu çözülemedi!"
+
+msgid "The folder %s cannot be created on the FTP repository!"
+msgstr ""
+
+msgid "The file %s cannot be transfered to the FTP repository %s! The ftp_put function returns: %s"
+msgstr ""
+
+msgid "The file %s cannot be transfered to the FTP repository and PASV mode cannot be entered : %s"
+msgstr ""
 
 msgid "The specified folder %s does not exists. Please create it so that the transfer may start!"
 msgstr "Belirtilen %s klasörü yok. Lütfen oluşturun!"

@@ -32,14 +32,21 @@ function jetpack_facebook_embed_handler( $matches, $attr, $url ) {
 	if ( false !== strpos( $url, 'video.php' ) || false !== strpos( $url, '/videos/' ) ) {
 		$embed = sprintf( '<div class="fb-video" data-allowfullscreen="true" data-href="%s"></div>', esc_url( $url ) );
 	} else {
-		$embed = sprintf( '<fb:post href="%s"></fb:post>', esc_url( $url ) );
+		$width = 552; // As of 01/2017, the default width of Facebook embeds when no width attribute provided
+
+		global $content_width;
+		if ( isset( $content_width ) ) {
+			$width = min( $width, $content_width );
+		}
+
+		$embed = sprintf( '<fb:post href="%s" data-width="%s"></fb:post>', esc_url( $url ), esc_attr( $width ) );
 	}
 
 	// since Facebook is a faux embed, we need to load the JS SDK in the wpview embed iframe
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && ! empty( $_POST['action'] ) && 'parse-embed' == $_POST['action'] ) {
-		return $embed . '<script src="//connect.facebook.net/en_US/all.js#xfbml=1"></script>';
+		return $embed . wp_scripts()->do_items( array( 'jetpack-facebook-embed' ) );
 	} else {
-		wp_enqueue_script( 'jetpack-facebook-embed', plugins_url( 'js/facebook.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( 'jetpack-facebook-embed' );
 		return $embed;
 	}
 }
@@ -52,8 +59,12 @@ function jetpack_facebook_shortcode_handler( $atts ) {
 	if ( empty( $atts['url'] ) )
 		return;
 
-	if ( ! preg_match( JETPACK_FACEBOOK_EMBED_REGEX, $atts['url'] ) && ! preg_match( JETPACK_FACEBOOK_PHOTO_EMBED_REGEX, $atts['url'] ) )
+	if ( ! preg_match( JETPACK_FACEBOOK_EMBED_REGEX, $atts['url'] )
+	&& ! preg_match( JETPACK_FACEBOOK_PHOTO_EMBED_REGEX, $atts['url'] )
+	&& ! preg_match( JETPACK_FACEBOOK_VIDEO_EMBED_REGEX, $atts['url'] )
+	&& ! preg_match( JETPACK_FACEBOOK_VIDEO_ALTERNATE_EMBED_REGEX, $atts['url'] )  ) {
 		return;
+	}
 
 	return $wp_embed->shortcode( $atts, $atts['url'] );
 }

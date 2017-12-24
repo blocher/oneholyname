@@ -20,7 +20,7 @@ if (!class_exists("SLFramework_Progressbar")) {
 		* @return boxAdmin the box object
 		*/
 		
-		function SLFramework_Progressbar($length=300, $height=20, $start=0, $insideText="", $id="progressbar") {
+		function __construct($length=300, $height=20, $start=0, $insideText="", $id="progressbar") {
 			$this->length = $length ; 
 			$this->insideText = $insideText ; 
 			$this->height = $height ; 

@@ -3,7 +3,7 @@ Contributors: michael.dewildt
 Donate link: https://influx.com
 Tags: backup, dropbox
 Requires at least: 3.0
-Tested up to: 4.2
+Tested up to: 4.7
 Stable tag: trunk
 
 Keep your valuable WordPress website, its media and database backed up to Dropbox in minutes with this sleek, easy to use plugin. Need help? Please email support@wpb2d.com
@@ -61,10 +61,6 @@ from other errors, however a message should be displayed informing you of the re
 Premium extensions are downloadable snippets of code that add extra functionality to WordPress Backup to Dropbox. The extensions are features have been requested but may not appeal to all users. Instead of complicating the plugin by adding them to the core, premium extensions allows you to choose what extra functionality you want.
 
 Premium extensions can be purchased securely using [PayPal](http://www.paypal.com) and installed with the click of a button. For more information pelase visit http://wpb2d.com/premium.
-
-= More Information =
-
-For news and updates please visit my blog - http://www.mikeyd.com.au/category/wordpress-backup-to-dropbox/
 
 = Available in these languages =
 
@@ -145,6 +141,30 @@ You can also install the zip [premium extension](http://wpb2d.com/premium) that 
 3. Premium Extensions: Add extra functionality with ease and a 60 day money back guarantee.
 
 == Changelog ==
+
+= 4.7.1 =
+Corrected 'Tested up to' in readme.txt
+
+= 4.7 =
+Tested to work with WordPress 4.7
+
+= 4.5.3 =
+Fix database error: Column 'offset' cannot be null - Take two!
+
+= 4.5 =
+Tested to work with WordPress 4.5
+
+== 4.4.1 ==
+Fix database error: Column 'offset' cannot be null
+
+= 4.4 =
+Tested to work with WordPress 4.4
+
+= 4.3 =
+Tested to work with WordPress 4.3
+
+= 4.2 =
+Tested to work with WordPress 4.2
 
 = 4.1 =
 * Make use of plugin_dir_url func instead of WP_PLUGIN_URL

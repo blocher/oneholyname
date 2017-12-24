@@ -12,7 +12,7 @@
 			<?php wp_nonce_field( 'jetpack-protect' ); ?>
 			<input type='hidden' name='action' value='get_protect_key' />
 			<p class="submit">
-				<?php _e( 'An API key is needed for Jetpack Protect.', 'jetpack' ); ?>
+				<?php _e( 'An API key is needed for Protect.', 'jetpack' ); ?>
 				<br /><br /><input type='submit' class='button-primary' value='<?php echo esc_attr( __( 'Get an API Key', 'jetpack' ) ); ?>' />
 			</p>
 		</form>
@@ -58,7 +58,7 @@
 			<input type='hidden' name='action' value='jetpack_protect_save_whitelist' />
 			<textarea name="whitelist"><?php echo implode( PHP_EOL, $whitelist['local'] ); ?></textarea>
 			<p>
-				<em><?php _e('IPv4 and IPv6 are acceptable. <br />To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1-12.12.12.100', 'jetpack' ); ?></em>
+				<em><?php _e('IPv4 and IPv6 are acceptable. Enter multiple IPs on separate lines. <br />To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1-12.12.12.100', 'jetpack' ); ?></em>
 			</p>
 			<p>
 				<input type='submit' class='button-primary' value='<?php echo esc_attr( __( 'Save', 'jetpack' ) ); ?>' />

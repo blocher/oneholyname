@@ -25,15 +25,15 @@
  * lightbox script, and only loads it on appropriate posts and pages *with*
  * NextGEN Gallery content. The result? Gorgeous galleries *and* a speedy site.
  *
- * Optimizer v2.1.1 currently supports (and is tested compatible with) NextGEN
- * Gallery (v2.0.0 to v2.1.0), NextGEN Legacy (v1.6.2 to v1.9.13) and
- * NextCellent Gallery (v1.9.14 to v1.9.26).
+ * Optimizer v2.1.5 currently supports (and is tested compatible with) NextGEN
+ * Gallery (v2.0.0 to v2.1.60), NextGEN Legacy (v1.6.2 to v1.9.13) and
+ * NextCellent Gallery (v1.9.14 to v1.9.31).
  *
  * NextGEN Gallery Optimizer Pro
  *
  * Upgrade to Optimizer Pro for the new "NextGEN Gallery Deactivator" feature.
  * A whole new level of speed optimization.
- * Only load NextGEN’s PHP *code* on posts/pages *with* NextGEN Gallery content.
+ * Only load NextGEN's PHP *code* on posts/pages *with* NextGEN Gallery content.
  * http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator
  *
  * Upgrade to Optimizer Pro for the new "Dynamic Fancybox Settings Interface".
@@ -50,7 +50,7 @@
  * @package		NextGEN_Gallery_Optimizer_Basic
  * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
  * @link				http://www.nextgengalleryoptimizer.com
- * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @copyright	2012 - 2016 Mark Jeldi | Helpful Media
  */
 
 /**
@@ -59,7 +59,7 @@
  * @package		NextGEN_Gallery_Optimizer_Basic
  * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
  * @link				http://www.nextgengalleryoptimizer.com
- * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @copyright	2012 - 2016 Mark Jeldi | Helpful Media
  * @since 			2.0.0
  */
 .error, .updated {
@@ -74,6 +74,22 @@
 
 h2 {
 	text-shadow: none !important; /* Clear the text-shadow from headings in the old admin (WordPress v3.7). */
+}
+
+/*
+ * Define the original WordPress admin header styling, to override a size
+ * reduction introduced with changes in v4.4.
+ *
+ * "Admin page headings were adjusted from H3 to H2 tags to reinforce page
+ * hierarchy".
+ *
+ * See: https://codex.wordpress.org/Version_4.4
+ */
+.wrap h1, .wrap h2 {
+    font-size: 23px;
+    font-weight: 400;
+    padding: 9px 15px 4px 0;
+    line-height: 29px;
 }
 
 .nggobasic-select-style, .nggobasic-custom-style {

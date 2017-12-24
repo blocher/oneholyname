@@ -1,11 +1,11 @@
-﻿=== NextGEN Gallery Optimizer ===
+=== NextGEN Gallery Optimizer ===
 Contributors: Mark Jeldi
 Author URI: http://www.nextgengalleryoptimizer.com/
 Plugin URI: http://www.nextgengalleryoptimizer.com/
 Tags: nextgen gallery, nextgen, nextcellent gallery, nextcellent, nextgen legacy, nextgen gallery optimizer, remove nextgen gallery scripts, remove nextgen gallery stylesheets, speed up nextgen gallery, nextgen gallery plugins, nextgen gallery addons, nextgen gallery fancybox, fancybox, fancybox plugin, fancybox lightbox, fancybox for wordpress, wordpress fancybox, wordpress optimization
 Requires at least: 3.7
-Tested up to: 4.2.2
-Stable tag: 2.1.1
+Tested up to: 4.7
+Stable tag: 2.1.5
 License: GPLv2
 
 The essential add-on for the NextGEN Gallery WordPress plugin.
@@ -18,22 +18,22 @@ NextGEN Gallery Optimizer improves your site's page load speed, by preventing Ne
 
 Additionally...
 
-If you're using [NextGEN v2](https://wordpress.org/plugins/nextgen-gallery/) (v2.0.0 to v2.1.0), Optimizer also provides you with complete granular control of the scripts and stylesheets that load on posts and pages ***with*** NextGEN Gallery content. For a live example of these settings in action, please view the source of [Optimizer's homepage](http://www.nextgengalleryoptimizer.com/) (a NextGEN v2 gallery page with AJAX pagination) in your browser.
+If you're using [NextGEN v2](https://wordpress.org/plugins/nextgen-gallery/) (v2.0.0 to v2.1.60), Optimizer also provides you with complete granular control of the scripts and stylesheets that load on posts and pages ***with*** NextGEN Gallery content. For a live example of these settings in action, please view the source of [Optimizer's homepage](http://www.nextgengalleryoptimizer.com/) (a NextGEN v2 gallery page with AJAX pagination) in your browser.
 
-If you're using [NextGEN Legacy](https://wordpress.org/plugins/nextgen-gallery/developers/) (v1.6.2 to v1.9.13) or [NextCellent Gallery](https://wordpress.org/plugins/nextcellent-gallery-nextgen-legacy/) (v1.9.14 to v1.9.26), Optimizer will intelligently fine-tune all your posts and pages ***with*** NextGEN Gallery content automatically... detecting every shortcode and setting, to only load the scripts and stylesheets required on each page.
+If you're using [NextGEN Legacy](https://wordpress.org/plugins/nextgen-gallery/developers/) (v1.6.2 to v1.9.13) or [NextCellent Gallery](https://wordpress.org/plugins/nextcellent-gallery-nextgen-legacy/) (v1.9.14 to v1.9.31), Optimizer will intelligently fine-tune all your posts and pages ***with*** NextGEN Gallery content automatically... detecting every shortcode and setting, to only load the scripts and stylesheets required on each page.
 
 For a full overview of the optimization process, please see...  
 [http://www.nextgengalleryoptimizer.com/optimization-flowcharts/](http://www.nextgengalleryoptimizer.com/optimization-flowcharts/).
 
 Optimizer also includes an ***enhanced*** version of the fantastic [Fancybox](http://fancybox.net) lightbox script, and only loads it on appropriate posts and pages ***with*** NextGEN Gallery content. The result? Gorgeous galleries ***and*** a speedy site.
 
-Optimizer v2.1.1 currently supports (and is tested compatible with) **NextGEN Gallery (v2.0.0 to v2.1.0)**, **NextGEN Legacy (v1.6.2 to v1.9.13)** and **NextCellent Gallery (v1.9.14 to v1.9.26)**.
+Optimizer v2.1.5 currently supports (and is tested compatible with) **NextGEN Gallery (v2.0.0 to v2.1.60)**, **NextGEN Legacy (v1.6.2 to v1.9.13)** and **NextCellent Gallery (v1.9.14 to v1.9.31)**.
 
 = NextGEN Gallery Optimizer Pro =
 
 Upgrade to **[Optimizer Pro](http://www.nextgengalleryoptimizer.com/nextgen-gallery-optimizer-pro/)** for the new **[NextGEN Gallery Deactivator](http://www.nextgengalleryoptimizer.com/nextgen-gallery-optimizer-pro/)** feature.  
 A whole new level of speed optimization.  
-**Only load NextGEN’s PHP *code* on posts and pages *with* NextGEN Gallery content.**
+**Only load NextGEN's PHP *code* on posts and pages *with* NextGEN Gallery content.**
 
 Upgrade to **[Optimizer Pro](http://www.nextgengalleryoptimizer.com/nextgen-gallery-optimizer-pro/)** for the new **[Dynamic Fancybox Settings Interface](http://www.nextgengalleryoptimizer.com/nextgen-gallery-optimizer-pro/)**.  
 The fastest and easiest way to customize Fancybox.  
@@ -51,6 +51,50 @@ For more information, please see the following...
 2. Prevents NextGEN's scripts & styles from loading on non-NextGEN posts/pages.
 3. Additionally fine-tunes NextGEN's scripts and styles on NextGEN posts/pages.
 4. 1-click install of the Enhanced Fancybox Lightbox to display your images in style.
+
+
+= NEW in Version 2.1.5: =
+
+1. Tested: Fully compatible with NextGEN Gallery up to v2.1.60.
+2. Tested: Fully compatible with NextCellent Gallery up to v1.9.31 (unchanged).
+3. Tested: Fully compatible with WordPress up to v4.7.
+4. Updated: Incremented all version numbers in the in-plugin documentation to reflect our new "tested up to" compatibilities.
+5. Added: NextGEN Pro's new checkout, checkout return and proofed images pages are now allowed in Deactivator by default (Pro).
+6. Fixed: Compatibility with WP-CLI in Deactivator (Pro).
+
+
+= NEW in Version 2.1.4: =
+
+1. Tested: Fully compatible with NextGEN Gallery up to v2.1.46.
+2. Tested: Fully compatible with NextCellent Gallery up to v1.9.31 (unchanged).
+3. Tested: Fully compatible with WordPress up to v4.5.3.
+4. Tested: PHP 7 ready.
+5. Added: WP v4.5 compatibility for our plugin description JavaScript on the "plugins.php" page.
+6. Updated: Incremented all version numbers to document our new "tested up to" compatibilities.
+7. Updated: The download URL to NextGEN's repository page is now in the new WordPress.org format.
+8. Fixed: Character encoding issues in readme.txt. Now saved strictly as UTF-8.
+9. Fixed: Single-quote encoding issues in the header comment documentation.
+
+
+= NEW in Version 2.1.3: =
+
+1. Tested fully compatible with NextGEN Gallery up to v2.1.23.
+2. Tested fully compatible with NextCellent Gallery up to v1.9.31.
+3. Tested fully compatible with WordPress up to v4.4.2.
+4. Updated all in-plugin documentation to reflect our new "tested up to" compatibility.
+5. Added styling updates to Optimizer's settings page, for header tag changes in WordPress v4.4.
+6. Added full compatibility with NextCellent Gallery v1.9.30+ for our lightbox effects page integration, after its major admin rewrite in v1.9.30.
+7. Added detection of NextCellent Gallery's new admin management PHP pages in NextGEN Gallery Deactivator (Pro), after the full admin rewrite in NextCellent v1.9.30.
+
+
+= NEW in Version 2.1.2: =
+
+1. Tested fully compatible with NextGEN Gallery up to v2.1.15.
+2. Tested fully compatible with NextCellent Gallery up to v1.9.26 (unchanged).
+3. Tested fully compatible with WordPress up to v4.3.
+4. Updated all in-plugin documentation to reflect our new "tested up to" compatibility.
+5. Added detection of base_url query string parameter pages in NextGEN Gallery Deactivator (Pro).
+6. Added detection of NextGEN's "Manage Gallery" meta links in NextGEN Gallery Deactivator (Pro).
 
 
 = NEW in Version 2.1.1: =
@@ -241,6 +285,13 @@ Please see the following page in Optimizer's documentation...
 [http://www.nextgengalleryoptimizer.com/docs/limitations/](http://www.nextgengalleryoptimizer.com/docs/limitations/)
 
 
+= How is NextGEN Legacy (v1.6.2 to v1.9.13) faring these days without updates? =
+
+1. As of WordPress v4.2 (possibly earlier) the Sort Gallery page in the admin fails to save changes to the image sort order. It gives the following notice on-save when WP_DEBUG is active: "Notice: Undefined variable: sortArray in ...nextgen-gallery/admin/manage-sort.php on line 19". One workaround would be to simply upload your images in the order you want them displayed.
+
+2. There are also a few new notices (when WP_DEBUG is active) in WordPress v4.3, however the widgets do still appear to be working: "Notice: The called constructor method for WP_Widget is <strong>deprecated</strong> since version 4.3.0! Use __construct() instead. in .../wp-includes/functions.php on line 3457".
+
+
 = Why aren't my image uploads working in NextGEN 2.0.xx? =
 
 There are many possibilities (typically ownership/permissions issues), but here's an odd one from personal experience. Hopefully it'll help...
@@ -352,6 +403,69 @@ Please see [http://www.nextgengalleryoptimizer.com/](http://www.nextgengalleryop
 
 == Changelog ==
 
+
+= v2.1.5 - 2016-12-12 =
+
+= Optimizer Basic and Pro: =
+
+* Tested: Fully compatible with NextGEN Gallery up to v2.1.60.
+* Tested: Fully compatible with NextCellent Gallery up to v1.9.31 (unchanged).
+* Tested: Fully compatible with WordPress up to v4.7.
+* Updated: Incremented all version numbers in the in-plugin documentation to reflect our new "tested up to" compatibilities.
+
+= Optimizer Pro: =
+
+* Added: NextGEN Pro's new URLs for its checkout, checkout return and proofed images pages are now flagged as "Allowed Pages" in Deactivator by default.
+* Fixed: "Undefined index: HTTP_HOST" notices in WP-CLI when calling "wp plugin (activate|deactivate) nextgen-gallery-optimizer-pro".
+
+
+= v2.1.4 - 2016-7-13 =
+
+= Optimizer Basic and Pro: =
+
+* Tested: Fully compatible with NextGEN Gallery up to v2.1.46.
+* Tested: Fully compatible with NextCellent Gallery up to v1.9.31 (unchanged).
+* Tested: Fully compatible with WordPress up to v4.5.3.
+* Tested: PHP 7 ready.
+* Added: WP v4.5 compatibility for our plugin description JavaScript on the "plugins.php" page.
+* Updated: Incremented all version numbers (as appropriate) to document our new "tested up to" compatibilities.
+* Updated: The download URL to NextGEN's repository page is now in the new WordPress.org format (i.e. omit "/extend/", and include SSL).
+* Fixed: Character encoding issues in readme.txt. Now saved strictly as UTF-8 (dropped the BOM).
+* Fixed: Single-quote encoding issues in the header comment documentation.
+
+
+= v2.1.3 - 2016-2-13 =
+
+= Optimizer Basic and Pro: =
+
+* TESTED: Fully compatible with NextGEN Gallery up to v2.1.23.
+* TESTED: Fully compatible with NextCellent Gallery up to v1.9.31.
+* TESTED: Fully compatible with WordPress up to v4.4.2.
+* UPDATED: All in-plugin, repository and website documentation to reflect our new "tested up to" compatibilities.
+* ADDED: Explicitly defined the original WordPress admin h2 header tag styling in Optimizer's settings page CSS, to override a size reduction introduced with changes in WP v4.4.
+* ADDED: Extra checks, sanitization and styling in our integration with NextCellent Gallery's lightbox effects page, for full compatibility with the major admin rewrite in NextCellent v1.9.30.
+
+= Optimizer Pro: =
+
+* ADDED: Detection of NextCellent Gallery's new admin management PHP pages in NextGEN Gallery Deactivator, after the full admin rewrite in NextCellent v1.9.30.
+
+
+= v2.1.2 - 2015-9-12 =
+
+= Optimizer Basic and Pro: =
+
+* TESTED: Fully compatible with NextGEN Gallery up to v2.1.15.
+* TESTED: Fully compatible with NextCellent Gallery up to v1.9.26 (unchanged).
+* TESTED: Fully compatible with WordPress up to v4.3.
+* UPDATED: All in-plugin, repository and website documentation to reflect our new "tested up to" compatibility.
+
+= Optimizer Pro: =
+
+* ADDED: Detection of base_url query string parameter pages in NextGEN Gallery Deactivator. These dynamic pages are sometimes generated by plugins (e.g. the "Calculated Fields Form" plugin) for AJAX calls, to pull in extra data. And where that extra data involves NextGEN functionality, we needed to be able to flag them as Allowed Pages.
+
+* ADDED: Detection of NextGEN's "Manage Gallery" meta links in NextGEN Gallery Deactivator. The URL's of the linked PHP files needed to be flagged as Allowed Pages, as although they're loaded in the admin, they're actually located in the "nextgen-gallery" plugin directory (therefore undetectable by is_admin() checks).
+
+
 = v2.1.1 - 2015-6-18 =
 
 = Basic and Pro: =
@@ -363,7 +477,7 @@ Please see [http://www.nextgengalleryoptimizer.com/](http://www.nextgengalleryop
 * NEW: Added 256x256, 128x128 and svg plugin icons for the new WordPress plugin installer screen.
 
 
-= V2.1 - 2015-3-09 =
+= v2.1 - 2015-3-09 =
 
 
 = Basic and Pro: =
@@ -383,7 +497,7 @@ Please see [http://www.nextgengalleryoptimizer.com/](http://www.nextgengalleryop
 
 * FIXED: "Fatal error: Call to undefined method C_Lightbox_Installer::uninstall_lightbox()" after Photocrati *reintroduced* the "C_Lightbox_Installer" class in NextGEN v2.0.74+, but *without* the original "uninstall_lightbox()" method.
 
-* FIXED: "Fatal error: Class 'C_NextGen_Settings' not found" when activating other plugins. This is caused by new methods introduced by Photocrati in NextGEN v2.0.71+ intended to hide (instead of *fix*) PHP warnings when using their NextGEN Plus/Pro plugins or their theme. They are called "is_activating()" and "is_not_activating()", and are added to the "C_NextGEN_Bootstrap" class in "nggallery.php". This appears to prevent NextGEN from initializing on the activation of other plugins, and as a result, NextGEN doesn’t load its includes...causing all third-party calls to its "C_NextGen_Settings" class in the NextGEN 2.0 API to fail.
+* FIXED: "Fatal error: Class 'C_NextGen_Settings' not found" when activating other plugins. This is caused by new methods introduced by Photocrati in NextGEN v2.0.71+ intended to hide (instead of *fix*) PHP warnings when using their NextGEN Plus/Pro plugins or their theme. They are called "is_activating()" and "is_not_activating()", and are added to the "C_NextGEN_Bootstrap" class in "nggallery.php". This appears to prevent NextGEN from initializing on the activation of other plugins, and as a result, NextGEN doesn't load its includes...causing all third-party calls to its "C_NextGen_Settings" class in the NextGEN 2.0 API to fail.
 
 
 = NextCellent Gallery v1.9.25+ =
@@ -451,7 +565,7 @@ Re: [https://wordpress.org/support/topic/question-about-pro-version-1](https://w
 * SECURED: NextGEN Gallery Deactivator's directory now includes an index.php file (like all other directories in Optimizer) to prevent bots from scanning the directory tree.
 
 
-= V2.0 - 2014-12-11 =
+= v2.0 - 2014-12-11 =
 
 = Script and stylesheet optimization changelog: =
 
@@ -531,7 +645,7 @@ Re: [https://wordpress.org/support/topic/question-about-pro-version-1](https://w
 * FIXED: Some minor Fancybox errors in JSHint.
 
 
-= V1.1.2 - 02/01/2013 =
+= v1.1.2 - 02/01/2013 =
 
 * Added new checks to make sure NextGEN Gallery is both installed and activated. A new admin notification accompanies this to assist new users with downloading, activating and setting up NextGEN.
 
@@ -550,7 +664,7 @@ Re: [https://wordpress.org/support/topic/question-about-pro-version-1](https://w
 * Explicitly defined database settings variables as globals so they're able to be used inside functions called on register_activation_hook().
 
 
-= V1.1.1 - 08/11/2012 =
+= v1.1.1 - 08/11/2012 =
 
 * Added a dynamic administrative message on the front-end for logged-in admins, which displays on posts/pages where unsupported shortcodes are being used. It's intended to inform admins about the Basic version's limitations in case they skipped the documentation, and highlight the Premium version's feature set in case it would be more appropriate for their requirements. [Basic only]
 
@@ -559,7 +673,7 @@ Re: [https://wordpress.org/support/topic/question-about-pro-version-1](https://w
 * Added a blank index.php file inside each of Optimizer's folders to prevent Google from accessing and indexing the Apache directory tree. [Basic and Premium]
 
 
-= V1.1 - 12/07/2012 =
+= v1.1 - 12/07/2012 =
 
 * Added a conditional bottom margin in Fancybox's image height calculations to make room for single-line titles. By default, especially with large images, the titles would be squished against the bottom of the viewport.
 
@@ -587,7 +701,7 @@ Re: [https://wordpress.org/support/topic/question-about-pro-version-1](https://w
 * Added a link to Premium in the plugin description.
 
 
-= V1.0.8 - 18/06/2012 =
+= v1.0.8 - 18/06/2012 =
 
 * Changed "compatible up to" version number after thorough testing on WordPress 3.4.
 
@@ -600,14 +714,14 @@ Re: [https://wordpress.org/support/topic/question-about-pro-version-1](https://w
 * Switched Google-hosted jQuery to the latest version (1.7.2).
 
 
-= V1.0.7 - 29/05/2012 =
+= v1.0.7 - 29/05/2012 =
 
 * Converted all jQuery "$" selectors in Fancybox's invocation code to "jQuery" to prevent conflicts with other plugins and scripts.
 
 * Fixed a minor bug in the "file not writable" admin message whereby the filename was omitted.
 
 
-= V1.0.6 - 04/04/2012 =
+= v1.0.6 - 04/04/2012 =
 
 * Installation of Fancybox is now fully automated and set by default.
 The plugin saves a copy of existing settings on the Gallery --> Options --> Effects page, then updates them with the Fancybox code so we don't have to enter it manually.
@@ -624,7 +738,7 @@ On deactivation, Optimizer will attempt to restore the former values...but only 
 * Added extra fields to the options page for persistent plugin settings.
 
 
-= V1.0.5 - 20/03/2012 =
+= v1.0.5 - 20/03/2012 =
 
 * Replaced my shortcode regex with WordPress's native get_shortcode_regex() function for more precise matching.
 
@@ -635,7 +749,7 @@ On deactivation, Optimizer will attempt to restore the former values...but only 
 * Added promotional box to the basic version's settings page.
 
 
-= V1.0.4 - 18/03/2012 =
+= v1.0.4 - 18/03/2012 =
 
 * Added an automatic redirect that sends first time users to the plugin options page on first activation.
 
@@ -650,7 +764,7 @@ On deactivation, Optimizer will attempt to restore the former values...but only 
 * Moved the stylesheet drop-down if statements to scripts-and-styles.php to keep them together with their register and enqueue calls.
 
 
-= V1.0.3 - 09/03/2012 =
+= v1.0.3 - 09/03/2012 =
 
 * Replaced all hard-coded scripts and styles with WordPress's built-in wp_enqueue_scripts and wp_print_styles functions for better compatibility with other plugins.
 
@@ -659,7 +773,7 @@ On deactivation, Optimizer will attempt to restore the former values...but only 
 * Added /wp-content/ url prefix to custom css input box on the settings page. Also made the Fancybox installation instructions clearer with larger text, a link to the NextGEN Effects page, and extra advice in the Tips section on plugin conflicts.
 
 
-= V1.0.2 - 07/03/2012 =
+= v1.0.2 - 07/03/2012 =
 
 * Added support for WordPress Pages
 
@@ -670,15 +784,19 @@ On deactivation, Optimizer will attempt to restore the former values...but only 
 * Switched JQuery to the latest version 1.7.1 (Google hosted)
 
 
-= V1.0.1 - 01/03/2012 =
+= v1.0.1 - 01/03/2012 =
 * Resolved issue regarding upload to WordPress.org repository
 
 
-= V1.0 - 28/02/2012 =
+= v1.0 - 28/02/2012 =
 * Initial release on February 28th, 2012.
 
 
 == Upgrade Notice ==
+= Upgrade to v2.1.5 is recommended for Optimizer Pro users, otherwise this is mostly a maintenance/documentation update to reflect our new NextGEN Gallery and WordPress "tested up to" compatibilities. =
+= Upgrade to v2.1.4 is recommended, as it addresses a small JavaScript issue introduced in WordPress v4.5. =
+= Upgrade to v2.1.3 is recommended, as it adds full compatibility with the major admin rewrite in NextCellent Gallery v1.9.30, and addresses a styling issue introduced in WordPress v4.4. =
+= Upgrade to v2.1.2 is non-essential. Just a maintenance/documentation update to reflect our new NextGEN Gallery and WordPress "tested up to" compatibility, plus some minor additions in Pro. =
 = Upgrade to v2.1.1 is non-essential. Just a maintenance/documentation update to reflect our new NextGEN/NextCellent/WordPress "tested up to" compatibility. =
 = Upgrade to v2.1 is highly recommended, as it adds a number of improvements, including compatibility for recent NextGEN and NextCellent Gallery updates. =
 = Upgrade to v2.0 is highly recommended, as it has been completely rewritten with innumerable additions and improvements. =

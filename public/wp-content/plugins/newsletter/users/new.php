@@ -1,46 +1,63 @@
 <?php
+if (!defined('ABSPATH'))
+    exit;
+
 require_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
 $controls = new NewsletterControls();
 $module = NewsletterUsers::instance();
 
 if ($controls->is_action('save')) {
 
-    $controls->data['status'] = 'C';
-    $controls->data['sex'] = 'n';
+    if (!is_email($controls->data['email'])) {
+        $controls->errors = __('Wrong email address.', 'newsletter');
+    }
 
-    $user = $module->save_user($controls->data);
-    if ($user === false) {
-        $controls->errors = 'This email already exists.';
-    } else {
-        $controls->js_redirect($module->get_admin_page_url('edit') . '&id=' . $user->id);
-        return;
+    if (empty($controls->errors)) {
+        $controls->data['status'] = 'C';
+        $controls->data['sex'] = 'n';
+
+        $user = $module->save_user($controls->data);
+        if ($user === false) {
+            $controls->errors = __('This subscriber already exists.', 'newsletter');
+        } else {
+            echo '<script>';
+            echo 'location.href="' . $module->get_admin_page_url('edit') . '&id=' . $user->id . '"';
+            echo '</script>';
+            return;
+        }
     }
 }
 ?>
-<div class="wrap">
-    <?php $help_url = 'http://www.thenewsletterplugin.com/plugins/newsletter/subscribers-module'; ?>
-    <?php include NEWSLETTER_DIR . '/header-new.php'; ?>
-    <div id="newsletter-title">
-    <?php include NEWSLETTER_DIR . '/users/menu.inc.php'; ?>
 
-    <h2>New subscriber</h2>
-</div>
-    <div class="newsletter-separator"></div> 
-    <?php $controls->show(); ?>
+<div class="wrap" id="tnp-wrap">
 
-    <form method="post" action="">
-        <?php $controls->init(); ?>
+    <?php include NEWSLETTER_DIR . '/tnp-header.php'; ?>
 
-        <table class="form-table">
-            <tr valign="top">
-                <th>New email address</th>
-                <td>
-                    <?php $controls->text('email', 60); ?>
-                    <?php $controls->button('save', 'Proceed'); ?>
+    <div id="tnp-heading">
 
-                </td>
-            </tr>
-        </table>
+        <h2><?php _e('New Subscriber', 'newsletter') ?></h2>
 
-    </form>
+    </div>
+
+    <div id="tnp-body" class="tnp-users tnp-users-new">
+
+        <form method="post" action="">
+            <?php $controls->init(); ?>
+
+            <table class="form-table">
+                <tr>
+                    <th><?php _e('Email', 'newsletter')?></th>
+                    <td>
+                        <?php $controls->text_email('email', 60); ?>
+                        <?php $controls->button('save', '&raquo;'); ?>
+
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+    </div>
+
+    <?php include NEWSLETTER_DIR . '/tnp-footer.php'; ?>
+
 </div>

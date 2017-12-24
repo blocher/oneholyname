@@ -32,7 +32,7 @@ if (!class_exists("SLFramework_Table")) {
 		* @return SLFramework_Table the table
 		*/
 		
-		function SLFramework_Table($nb_all_Items=0, $nb_max_per_page=0, $order=false, $search=false) {	
+		function __construct($nb_all_Items=0, $nb_max_per_page=0, $order=false, $search=false) {	
 			global $SLframework_id_table ; 
 			
 			$SLframework_id_table ++ ; 
@@ -326,7 +326,7 @@ if (!class_exists("adminCell")) {
 		* @param string $content the HTML code to be displayed in the cell
 		* @return adminCell the object
 		*/
-		function adminCell($content) {
+		function __construct($content) {
 			$this->content = $content ; 
 			$this->action = array() ;
 		}

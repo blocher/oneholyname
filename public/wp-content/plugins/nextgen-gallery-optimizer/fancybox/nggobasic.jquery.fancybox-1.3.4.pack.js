@@ -16,7 +16,7 @@
  */
 
 /**
- * NextGEN Gallery Optimizer Basic Fancybox Lightbox
+ * NextGEN Gallery Optimizer Basic Enhanced Fancybox Lightbox
  *
  * Used with permission and packaged with enhancements by Mark Jeldi,
  * as part of the NextGEN Gallery Optimizer WordPress plugin.

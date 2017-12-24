@@ -17,7 +17,7 @@ if (!class_exists("SLFramework_Feedback")) {
 		* @param string $pluginID the pluginID of the plugin (probably <code>$this->pluginID</code>)
 		* @return SLFramework_Feedback the SLFramework_Feedback object
 		*/
-		function SLFramework_Feedback($plugin, $pluginID) {
+		function __construct($plugin, $pluginID) {
 			$this->plugin = $plugin ; 
 			$this->pluginID = $pluginID ; 
 		}

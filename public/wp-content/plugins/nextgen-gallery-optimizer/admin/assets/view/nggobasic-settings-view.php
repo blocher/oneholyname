@@ -27,15 +27,15 @@
  * lightbox script, and only loads it on appropriate posts and pages *with*
  * NextGEN Gallery content. The result? Gorgeous galleries *and* a speedy site.
  *
- * Optimizer v2.1.1 currently supports (and is tested compatible with) NextGEN
- * Gallery (v2.0.0 to v2.1.0), NextGEN Legacy (v1.6.2 to v1.9.13) and
- * NextCellent Gallery (v1.9.14 to v1.9.26).
+ * Optimizer v2.1.5 currently supports (and is tested compatible with) NextGEN
+ * Gallery (v2.0.0 to v2.1.60), NextGEN Legacy (v1.6.2 to v1.9.13) and
+ * NextCellent Gallery (v1.9.14 to v1.9.31).
  *
  * NextGEN Gallery Optimizer Pro
  *
  * Upgrade to Optimizer Pro for the new "NextGEN Gallery Deactivator" feature.
  * A whole new level of speed optimization.
- * Only load NextGEN’s PHP *code* on posts/pages *with* NextGEN Gallery content.
+ * Only load NextGEN's PHP *code* on posts/pages *with* NextGEN Gallery content.
  * http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator
  *
  * Upgrade to Optimizer Pro for the new "Dynamic Fancybox Settings Interface".
@@ -52,7 +52,7 @@
  * @package		NextGEN_Gallery_Optimizer_Basic
  * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
  * @link				http://www.nextgengalleryoptimizer.com
- * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @copyright	2012 - 2016 Mark Jeldi | Helpful Media
  */
 
 /**
@@ -73,13 +73,13 @@ if ( ! defined( 'WPINC' ) ) {
  * @package		NextGEN_Gallery_Optimizer_Basic
  * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
  * @link				http://www.nextgengalleryoptimizer.com
- * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @copyright	2012 - 2016 Mark Jeldi | Helpful Media
  */
 ?>
 
 <div class="wrap">
 
-	<h2><?php echo $this->display_name; ?></h2>
+	<h1><?php echo $this->display_name; ?></h1>
 
 	<div id="nggobasic-upgrade-to-pro-button">
 		<a class="button-primary" title="Upgrade to NextGEN Gallery Optimizer Pro" alt="Upgrade to NextGEN Gallery Optimizer Pro" href="http://www.nextgengalleryoptimizer.com/nextgen-gallery-optimizer-pro/" target="_blank">Unlock more speed. Upgrade to Optimizer Pro.</a>

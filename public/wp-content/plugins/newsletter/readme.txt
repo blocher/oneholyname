@@ -1,8 +1,8 @@
 === Newsletter ===
-Tags: newsletter,email,subscription,mass mail,list build,email marketing,direct mailing
-Requires at least: 3.3.0
-Tested up to: 4.2.2
-Stable tag: trunk
+Tags: newsletter,email,subscription,mass mail,list build,email marketing,direct mailing,automation,automated
+Requires at least: 3.4.0
+Tested up to: 4.9.1
+Stable tag: 5.1.8
 Contributors: satollo,webagile,michael-travan
 
 Add a real newsletter system to your blog. For free. With unlimited newsletters and subscribers.
@@ -10,40 +10,55 @@ Add a real newsletter system to your blog. For free. With unlimited newsletters 
 == Description ==
 
 Newsletter is a **real newsletter system** for your WordPress blog: perfect for list building, you can easily create,
-send and track e-mails, headache-free. It just works out of box! 
+send and track e-mails, headache-free. It just works out of box!
 
 = Main Features =
 
-* **Unlimited Subscribers** with statistics 
-* **Unlimited Emails** with tracking
+* **Responsive email Drag & Drop composer**
+* **Unlimited subscribers** with statistics 
+* **Unlimited newsletter** with tracking
 * Customizable **subscription widget**, **page** or **custom form**
 * Wordpress User Registration **seamless integration**
 * **Single** And **Double Opt-In** plus privacy checkbox for EU laws compliance
-* **Subscribers preferences** to fine-target your campaigns
+* **Subscribers lists** to fine-target your campaigns
 * SMTP-Ready 
 * Customizable Themes
-* Html and Text versions of Emails 
+* Newsletter with Html and Text message versions 
 * All messages are **fully translatable** from Admin Panel (no .po/.mo)
 * Diagnostics Panel to check your blog mailing capability 
+* **Compatible with Postman, WP Mail SMTP, Easy WP SMTP, Easy SMTP Mail, WP Mail Bank**
 
-**Set Up Your First Newsletter In Just A Couple Of Clicks**
-[youtube https://www.youtube.com/watch?v=JaxK7XwqvVI]
+= Integration with WordPress registration =
+
+* Newsletter subscription check box on standard WordPress registration form
+* Auto confirmation on first login
+* Imports already registered users
+
+= Free Extension =
+
+Find and install them from the Extensions panel in your blog.
+
+* WP Registration Integration: connects the WordPress standard registration with Newsletter subscription. Optionally imports all registered users as subscribers.
+* Locked Content: exchange the access to your premium contents with a subscription
+* Archive: creates a simple blog page which lists all your sent newsletters
 
 = Professional Extensions =
 
 Need *more power*? Feel *something's missing*? The Newsletter Plugin features can be easily extended through 
 our **premium, professional Extensions**! Let us introduce just two of them : )
 
-* [Reports Extension](http://www.thenewsletterplugin.com/plugins/newsletter/reports-module) is a regular WordPress plugin which improves the internal statistics collection system and provides better reports of data collected for each sent email. Neat.
-* [Feed By Mail Extension](http://www.thenewsletterplugin.com/feed-by-mail-extension) generates and sends your newsletters using your blog last posts, even custom ones like events or products. Just sit and watch! 
+* [Reports Extension](https://www.thenewsletterplugin.com/plugins/newsletter/reports-module) is a regular WordPress plugin which improves the internal statistics collection system and provides better reports of data collected for each sent email. Neat.
+* [Automated Extension](https://www.thenewsletterplugin.com/automated-extension) generates and sends your newsletters using your blog last posts, even custom ones like events or products. Just sit and watch!
+* [WooCommerce Extension](https://www.thenewsletterplugin.com/woocommerce-extension) subscribe customers to a mailing list and generate product newletters.
+* [Amazon SES Extension](https://www.thenewsletterplugin.com/amazon-ses-extension-for-the-newsletter-plugin) seamlessly integrate Amazon SES with The Newsletter Plugin. Hassle-free.
 
 = Support =
 
-We provide support for our plugin on [Wordpress.org forums](https://wordpress.org/support/plugin/newsletter) and through our official [forum here](http://www.thenewsletterplugin.com/forums), but only Premium Users with an active license have access to one-to-one support via our [ticketing system](http://www.thenewsletterplugin.com/support-ticket). 
+We provide support for our plugin on [Wordpress.org forums](https://wordpress.org/support/plugin/newsletter) and through our official [forum here](https://www.thenewsletterplugin.com/forums), but only Premium Users with an active license have access to one-to-one support via our [ticketing system](https://www.thenewsletterplugin.com/support-ticket). 
 
 = Follow Us =
 
-* **Our Official Website** - http://www.thenewsletterplugin.com/ 
+* **Our Official Website** - https://www.thenewsletterplugin.com/ 
 * **Our Facebook Page** - https://www.facebook.com/thenewsletterplugin 
 * **Our Twitter Account** - https://twitter.com/newsletterwp 
 
@@ -55,18 +70,563 @@ We provide support for our plugin on [Wordpress.org forums](https://wordpress.or
 
 == Frequently Asked Questions ==
 
-See the [Newsletter FAQ](http://www.thenewsletterplugin.com/plugins/newsletter/newsletter-faq) or the
-[Newsletter Forum](http://www.thenewsletterplugin.com/forums) to ask for help.
+See the [Newsletter FAQ](https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-faq) or the
+[Newsletter Forum](https://www.thenewsletterplugin.com/forums) to ask for help.
 
-For documentation start from [Newsletter documentation](http://www.thenewsletterplugin.com/plugins/newsletter/newsletter-documentation).
+For documentation start from [Newsletter documentation](https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-documentation).
 
 Thank you, The Newsletter Team
 
-== Screen shots ==
+== Screenshots ==
 
-No screen shots are available at this time.
+1. The plugin dashboard
+2. The responsive email Drag & Drop composer
+3. The Reports extension
 
 == Changelog ==
+
+== 5.1.8 ==
+
+Newsletter page creation fix
+
+== 5.1.7 ==
+
+* NEW! Welcome wizard
+
+== 5.1.6 ==
+
+* Fix list selection on first save
+
+== 5.1.5 ==
+
+* Re-confirmation is now allows for unsubscribed and bounced 
+* Fixed to minimal widget and minimal css
+* Fixed the approx. subscriber count on newsletter creation (was showing encoded data)
+
+== 5.1.4 ==
+
+* Fixed notices on email edit panel
+* Added microdata to the call to action block
+* Added filter on name field while sending. [See this post](https://www.thenewsletterplugin.com/?p=54292)
+* Improved the online [viewability rules](https://www.thenewsletterplugin.com/documentation/newsletters-module#view-online) 
+* Fixed theme editor bad behavior
+* Fixed the min size of thumbnails on default theme
+* Removed references to font awesome where not used
+
+== 5.1.3 ==
+
+* Fixed newsletter duplication which was loosing the editor type
+* Fixed gender saving on targeting
+
+== 5.1.2 ==
+
+* Improved the speed report on status panel
+* Removed the obsolete diagnostic panel
+* Removed obsolete code
+* Removed the locked content menu entry (please install the free content lock extension)
+* Fixed validation call on widget minimal
+* Added more translatable strings
+* Fixed the editor CSS when a theme has its own
+* Confirmation is now activation
+* CSS clean up
+
+== 5.1.1 ==
+
+* Fix on email check
+
+== 5.1.0 ==
+
+* "ncu" parameter can be used for alternative welcome page as well, not only confirmation, when single opt in is selected
+* Removed the old "email alternative" to create custom subscription messages templates (has no effects)
+* Added the antiflood system
+
+== 5.0.9 ==
+
+* Removed wp users integration and locked content now available as FREE optional extensions (to make the plugin smaller)
+* Removed obsolete code loading old-style extensions
+
+== 5.0.8 ==
+
+* Improved select 2 layout
+* Support for conditional comments in the editor
+
+== 5.0.7 ==
+
+* Fix a database table field size
+
+== 5.0.6 ==
+
+* Improved performance with new db indexes
+* Fixed a bug in social URLs
+* Home URL check on status panel
+* Fixed a not removable notice
+
+== 5.0.5 ==
+
+* Fixed an administration notice removal
+
+== 5.0.4 ==
+
+* Fix media selector for blog without absolute URLs
+* Notice to install the wp users integration
+* Added workaround for XSS protection in chrome on custom form when they contains JS code
+
+== 5.0.3 ==
+
+* Added {email_url_encoded} tag
+* Changed https to http for compatibility with old servers
+
+== 5.0.2 ==
+
+* Fixed a notice on theme selection panel
+* Fixed a block initialization error notice for woocommerce
+* Improved the emoji support on newsletter subject
+
+== 5.0.1 ==
+
+* Fixed and improved the heading block
+* Fixed the can spam block (not showing default texts is not configured)
+* Fixed the footer block changed the unsubscribe url to the profile url
+
+== 5.0.0 ==
+
+* Added wp user identifier on subscriber details panel
+* Fixed a notice on subscriber list panel
+* Added the Auto-Submit header
+* Added the X-Auto-Response-Suppress header
+* Added microdata markup for native confirmation button on email clients
+* Fixed url checking with ending spaces
+* Fix for sites with forced relative content url
+* Fix debug notices on vimeo theme
+
+== 4.9.9 ==
+
+* Fixed action URL for hand written forms in the subscription text
+* Fixed rewrite not working with specific html formatting
+* Change the composer text editor height
+
+== 4.9.8 ==
+
+* Fixed the antibot option
+
+== 4.9.7 ==
+
+* Fixed setup script throwing a debug notice
+* Changed chart library
+
+== 4.9.6 ==
+
+* Extension version check improved
+* HTML5 form source code on profile panel
+
+== 4.9.5 ==
+
+* Fixed table creation with dbDelta
+
+== 4.9.4 ==
+
+* Admin css fix
+* Log fix
+
+== 4.9.3 ==
+
+* Replacing fix
+
+== 4.9.2 ==
+
+* Style fix
+
+== 4.9.1 ==
+
+* Small code fixes
+* Chart js conflict fix
+* Curl SSL version on status panel
+
+== 4.9.0 ==
+
+* Fixed logo editing when not set in the Company Info
+* Fix few layout problem on the user statistics panel
+* Composer layout improvements
+* Added select2 support
+* Fixed syntax error on status panel auto call check
+* Fixed notice for theme without the text part
+* Added chart.js from cdn
+* Improved stats collection and aggregation
+
+= 4.8.9 =
+
+* Package problems on WP.org 
+
+= 4.8.8 =
+
+* WP Users Integration and Locked Content Extensions readiness
+* Improved the SSL management on admin side
+* Fix privacy checkbox layout when the link is used
+* Standard form CSS improvements
+
+= 4.8.7 =
+
+* Empty excerpt fix
+* Fixed the list of blocks not appearing on few PHP installations
+* Fixed the composer editor
+
+= 4.8.6 =
+
+* Warnings on SMTP panel when configured but not yet activated
+* Warning management in controls
+* Font family selector in the editor
+* Font size selector in the editor
+* Removed embedded tiny
+* Removed embedded ace
+* HTTPS on external links
+* Fixed tag replacement on subject on test confirmation and welcome emails
+
+= 4.8.5 =
+
+* Added HTML editor plugin to tiny
+* Fixed a couple of debug notices on widget
+
+= 4.8.4 =
+
+* Fixed posts block background editing
+* Composer js improvements
+* Fixed a couple of debug notices
+* CSS fix
+
+= 4.8.3 =
+
+* Fixed debug notices on widgets
+* Fixed Vimeo icon on social block
+* Fixed javascript in the editor
+
+= 4.8.2 =
+
+* Changed few labels
+* CSS fix on admin panels  
+
+= 4.8.1 =
+
+* Lists selection on widget
+* CSS fix for submit button on widget
+* Fixed the status panel on action call check
+* Fixed the dedicated page creation
+* New editor for service messages' template with desktop and mobile preview
+* New raw html editor for newsletter with with desktop and mobile preview
+* Improved status panel scheduler check
+* Removed the old tiny mce 3
+
+= 4.8.0 =
+
+* New media selection on newsletter editor with size picker
+* Fixed the required attribute on profile form
+* Support for Analytics extension
+
+= 4.7.9 =
+
+* Removed the TGMPA library
+* Some CSS fixes
+* Fix few debug notices
+
+= 4.7.8 =
+
+* Old TGMPA library compatibility
+
+= 4.7.7 =
+
+* New extensions panel
+* Minor fixes and enhancements
+* New media selection on newsletter edit panel
+* Removed enqueuing of no more used scripts
+* Fixed the subscriber count on targeting panel
+
+= 4.7.6 =
+
+* New status panel
+
+= 4.7.5 =
+
+* Removed references to old css
+* Fixed the relative URLs problem in the composer
+
+= 4.7.4 =
+
+* Improved widget CSS
+* Added Instagram to social icons
+* Little style improvements
+
+= 4.7.3 =
+
+* Added custom CSS field to customize the forms appearance
+* Added codemirror for CSS edit
+* Added plugin version to style link
+* Added plugin version to script link
+* Corrected a tag in newsletter widget minimal
+* Added line height on form fields
+* Changed CSS class prefixes to tnp
+* Fixed a divide by zero on diagnostic panel
+* Improved the collection of emails sending speed data
+* Fixed a bug when adding a new subscriber from the admin panel
+
+= 4.7.2 =
+
+* Fixed a debug notice
+
+= 4.7.1 =
+
+* Fixed missing files in the package
+
+= 4.7.0 =
+
+* Added the selection for the Newsletter messages dedicated page
+* New forms CSS and validator
+* New widget for a minimal form
+* Use shortcode attribute "layout" to revert to old style table forms, using layout=table
+* Added reset button for diagnostic scheduler statistics
+
+= 4.6.8 =
+
+* Fixed the image browser/upload URL error in themes
+
+= 4.6.7 =
+
+* Fixed blank page without a newsletter dedicated page
+
+= 4.6.6 =
+
+* Fixed the blocks reload
+
+= 4.6.5 =
+
+* Fixed the style stripped when switching back and forth betwenn the visual and raw editor (from version 4.6.4)
+
+= 4.6.4 =
+
+* Fixed the profile link in admin panels
+* Fixed the composer editor
+* Cleanup of old code
+* Force the composer editor to keep the absolute urls
+
+= 4.6.3 =
+
+* Fixed the profile save with new action url
+
+= 4.6.2 =
+
+* Fixed the import option "override status" not working in update mode
+* Fixed the missing http when the couldflare plugin is installed (!)
+* Improved controls and security on open tracking link
+* Added few new diagnostic parameters
+
+= 4.6.1 =
+
+* Fixed a security issue on admin side only exploitable by logged in admins
+
+= 4.6.0 =
+
+* Fixed debug notices on composer post blocks
+* Improved image styles on composer hero block
+* Added support for WP_Error in the logger
+* Improved the license checking
+
+= 4.5.9 =
+
+* Fixed a PHP syntax error on composer panel
+
+= 4.5.8 =
+
+* Edit image alt text in the composer
+* Fixed german characters problem on visual composer
+* Added new data to diagnostic panel
+* Change the export to be more compatible with specific blog installations
+* Added translations to export panel
+
+= 4.5.7 =
+
+* Fixed the total sent email in dashboard
+* Fixed the total sent number on newsletter list when an already sent newsletter is edited
+* Removed the save button on sent newsletter
+* Code cleanup
+* Service message for stats panel of draft newsletters
+
+= 4.5.6 =
+
+* New unified themes and composer selection screen
+* Fixed the WP integration panel (incompatibility with WP 4.5.3)
+* Removed few notices
+* More warning fix
+* Fix "isHTML" error
+* jQuery conflict fix
+* Escape fix
+* Warning fix
+* Fixed the mime header
+
+= 4.5.0 =
+
+* New responsive email Drag & Drop composer, see [the guide](https://www.thenewsletterplugin.com/plugins/newsletter/composer).
+
+= 4.2.4 =
+
+* Fixed the notices display in Newsletter admin pages
+* Administrative emails sent now with the Newsletter engine
+* New {email_id} and {email_subject} placeholders
+
+= 4.2.3 =
+
+* Improvements in database error management
+* Added hook for Reports Extension
+
+= 4.2.2 =
+
+* The lock feature is disabled for editors and administrators
+* Fixed the newsletter sent table
+
+= 4.2.1 =
+
+* Fixed the progress indicator on newsletter list
+
+= 4.2.0 =
+
+* New statistics dashboard
+* Newsletter Reports 4 support
+
+= 4.1.3 =
+
+* Fixed the notice dismiss not working on every page
+* Fixed debug notice on WP 4.5
+* Added unverified SSL connection option on SMTP panel
+
+= 4.1.2 =
+
+* Minor security fix (on admin side with admin access)
+
+= 4.2.0 =
+
+* Added support for Reports Extension 4
+* Improved license check
+
+= 4.1.1 =
+
+* Added compatibility with SMTP plugins (Newsletter now sends with wp_mail if not otherwise configured)
+* Small CSS fixes
+
+= 4.1.0 =
+
+* Fix statistics link in the dashboard newsletter list
+
+= 4.0.9 =
+
+* Updated jQuery UI
+* Updated compatibility notice
+* Fixed tabs on subscriber stats panel
+* Fixed documentation on profile page
+
+= 4.0.8 =
+
+* Dashboard style fix for WordPress >= 4.4
+* Minor improvements
+
+= 4.0.7 =
+
+* New check to prevent not correct message template settings to block emails
+* Improved confirmation email test
+* Added welcome email test
+* Resubscription in single opt-in does not send the confirmation email anymore
+* Fixed second subscription with Facebook extension
+
+= 4.0.6 =
+
+* Fixed forced lists on subscription panel
+* Fixed few i18n tags
+* Fixed background color on theme selector
+
+= 4.0.5 =
+
+* Fixed an error on content lock
+* Fixed CSS for extensions
+* Fixed few debug notices
+* Improved the content lock user recognition
+* Subscriber search by list 
+
+= 4.0.4 =
+
+* Fixed and improved the email template for service messages
+
+= 4.0.3 =
+
+* Fixed the welcome email enable/disable setting 
+
+= 4.0.2 =
+
+* Fixed main settings saving
+* Fixed unsubscription settings saving
+
+= 4.0.0 =
+
+* Shiny new look
+* New top menu
+* Locked content feature moved into the subscription module
+* Separated SMTP configuration panel
+* Newsletter users import transfer first and last name
+* Various bug fixes and improvements
+
+= 3.9.5 =
+
+* Corrected the call to maybe_maybe_convert_table_to_utf8mb4
+
+= 3.9.4 =
+
+* CSV export fix
+* Delete button on newsletter list fixed (wrong since version 3.9.3)
+
+= 3.9.3 =
+
+* Added the blog charset to the dagnostic panel
+* Fixed the read count (was due to antispam filter changes)
+* Language domain fixes
+
+= 3.9.2 =
+
+* Fixed the tab separator in CSV export
+* Removed the already subscribed option
+* Removed obsolete code for anchor tracking
+* Added the sent newsletters to the subscriber editing panel
+* Added a sent-to table
+
+= 3.9.1 =
+
+* Enable the tracking key edit
+* Removed the antibot option, active by default
+* First round of changes for translate.wordpress.org
+* Fixed few notices
+* Added deprecation notices for the email.php and email-alternative.php files
+* Fixed the export separator
+* Removed reference to plugin files in URLs to avoid spam filter
+* Removed the selection of Newsletter action URL
+* Removed obsolete files
+
+= 3.9.0 =
+
+* Fixed the new excerpt extraction
+
+= 3.8.9 =
+
+* Fixed few debug notices
+* Improved support for browser without javascript
+* Adding multi subscription support
+* Improved antibot
+* Fixed some debug/deprecated noticies
+* Added support for new beta Report Extension features
+
+= 3.8.8 =
+
+* Unsubscription works now only with JavaScript enabled browser to block bots
+* New way to extract excerpts to avoid third party filters
+* Fixed the image selector for header logo
+* Added preview form subscription message template
+* Added WordPress like metadata on themes
+* Fixed the default theme
+* Changed few theme screeshots
+* Added attribute "layout" to shortcode with value "html5" for tableless form
 
 = 3.8.7 =
 
@@ -80,7 +640,7 @@ No screen shots are available at this time.
 
 * Changed the widget constructor
 * Fixed the newsletter_form shortcode
-* Added shortcodes for in page form building (beta): see the [plugin documentation](http://www.thenewsletterplugin.com/plugins/newsletter/newsletter-documentation).
+* Added shortcodes for in page form building (beta): see the [plugin documentation](https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-documentation).
 
 = 3.8.4 =
 
@@ -118,7 +678,7 @@ No screen shots are available at this time.
 * Added import subscribers from CSV file
 * Updated the WP compatibility version number
 * Fixed the save button on sent emails
-* Fixed the List-§Unsubscribe header with new URL schema
+* Fixed the List-Unsubscribe header with new URL schema
 
 = 3.7.8 =
 

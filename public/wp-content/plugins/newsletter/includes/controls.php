@@ -1,10 +1,262 @@
 <?php
 
+defined('ABSPATH') || exit;
+
 class NewsletterControls {
 
     var $data;
     var $action = false;
     var $button_data = '';
+    var $errors = '';
+    var $messages = '';
+    var $warnings = array();
+    var $countries = array(
+        'AF' => 'Afghanistan',
+        'AX' => 'Aland Islands',
+        'AL' => 'Albania',
+        'DZ' => 'Algeria',
+        'AS' => 'American Samoa',
+        'AD' => 'Andorra',
+        'AO' => 'Angola',
+        'AI' => 'Anguilla',
+        'AQ' => 'Antarctica',
+        'AG' => 'Antigua And Barbuda',
+        'AR' => 'Argentina',
+        'AM' => 'Armenia',
+        'AW' => 'Aruba',
+        'AU' => 'Australia',
+        'AT' => 'Austria',
+        'AZ' => 'Azerbaijan',
+        'BS' => 'Bahamas',
+        'BH' => 'Bahrain',
+        'BD' => 'Bangladesh',
+        'BB' => 'Barbados',
+        'BY' => 'Belarus',
+        'BE' => 'Belgium',
+        'BZ' => 'Belize',
+        'BJ' => 'Benin',
+        'BM' => 'Bermuda',
+        'BT' => 'Bhutan',
+        'BO' => 'Bolivia',
+        'BA' => 'Bosnia And Herzegovina',
+        'BW' => 'Botswana',
+        'BV' => 'Bouvet Island',
+        'BR' => 'Brazil',
+        'IO' => 'British Indian Ocean Territory',
+        'BN' => 'Brunei Darussalam',
+        'BG' => 'Bulgaria',
+        'BF' => 'Burkina Faso',
+        'BI' => 'Burundi',
+        'KH' => 'Cambodia',
+        'CM' => 'Cameroon',
+        'CA' => 'Canada',
+        'CV' => 'Cape Verde',
+        'KY' => 'Cayman Islands',
+        'CF' => 'Central African Republic',
+        'TD' => 'Chad',
+        'CL' => 'Chile',
+        'CN' => 'China',
+        'CX' => 'Christmas Island',
+        'CC' => 'Cocos (Keeling) Islands',
+        'CO' => 'Colombia',
+        'KM' => 'Comoros',
+        'CG' => 'Congo',
+        'CD' => 'Congo, Democratic Republic',
+        'CK' => 'Cook Islands',
+        'CR' => 'Costa Rica',
+        'CI' => 'Cote D\'Ivoire',
+        'HR' => 'Croatia',
+        'CU' => 'Cuba',
+        'CY' => 'Cyprus',
+        'CZ' => 'Czech Republic',
+        'DK' => 'Denmark',
+        'DJ' => 'Djibouti',
+        'DM' => 'Dominica',
+        'DO' => 'Dominican Republic',
+        'EC' => 'Ecuador',
+        'EG' => 'Egypt',
+        'SV' => 'El Salvador',
+        'GQ' => 'Equatorial Guinea',
+        'ER' => 'Eritrea',
+        'EE' => 'Estonia',
+        'ET' => 'Ethiopia',
+        'FK' => 'Falkland Islands (Malvinas)',
+        'FO' => 'Faroe Islands',
+        'FJ' => 'Fiji',
+        'FI' => 'Finland',
+        'FR' => 'France',
+        'GF' => 'French Guiana',
+        'PF' => 'French Polynesia',
+        'TF' => 'French Southern Territories',
+        'GA' => 'Gabon',
+        'GM' => 'Gambia',
+        'GE' => 'Georgia',
+        'DE' => 'Germany',
+        'GH' => 'Ghana',
+        'GI' => 'Gibraltar',
+        'GR' => 'Greece',
+        'GL' => 'Greenland',
+        'GD' => 'Grenada',
+        'GP' => 'Guadeloupe',
+        'GU' => 'Guam',
+        'GT' => 'Guatemala',
+        'GG' => 'Guernsey',
+        'GN' => 'Guinea',
+        'GW' => 'Guinea-Bissau',
+        'GY' => 'Guyana',
+        'HT' => 'Haiti',
+        'HM' => 'Heard Island & Mcdonald Islands',
+        'VA' => 'Holy See (Vatican City State)',
+        'HN' => 'Honduras',
+        'HK' => 'Hong Kong',
+        'HU' => 'Hungary',
+        'IS' => 'Iceland',
+        'IN' => 'India',
+        'ID' => 'Indonesia',
+        'IR' => 'Iran, Islamic Republic Of',
+        'IQ' => 'Iraq',
+        'IE' => 'Ireland',
+        'IM' => 'Isle Of Man',
+        'IL' => 'Israel',
+        'IT' => 'Italy',
+        'JM' => 'Jamaica',
+        'JP' => 'Japan',
+        'JE' => 'Jersey',
+        'JO' => 'Jordan',
+        'KZ' => 'Kazakhstan',
+        'KE' => 'Kenya',
+        'KI' => 'Kiribati',
+        'KR' => 'Korea',
+        'KW' => 'Kuwait',
+        'KG' => 'Kyrgyzstan',
+        'LA' => 'Lao People\'s Democratic Republic',
+        'LV' => 'Latvia',
+        'LB' => 'Lebanon',
+        'LS' => 'Lesotho',
+        'LR' => 'Liberia',
+        'LY' => 'Libyan Arab Jamahiriya',
+        'LI' => 'Liechtenstein',
+        'LT' => 'Lithuania',
+        'LU' => 'Luxembourg',
+        'MO' => 'Macao',
+        'MK' => 'Macedonia',
+        'MG' => 'Madagascar',
+        'MW' => 'Malawi',
+        'MY' => 'Malaysia',
+        'MV' => 'Maldives',
+        'ML' => 'Mali',
+        'MT' => 'Malta',
+        'MH' => 'Marshall Islands',
+        'MQ' => 'Martinique',
+        'MR' => 'Mauritania',
+        'MU' => 'Mauritius',
+        'YT' => 'Mayotte',
+        'MX' => 'Mexico',
+        'FM' => 'Micronesia, Federated States Of',
+        'MD' => 'Moldova',
+        'MC' => 'Monaco',
+        'MN' => 'Mongolia',
+        'ME' => 'Montenegro',
+        'MS' => 'Montserrat',
+        'MA' => 'Morocco',
+        'MZ' => 'Mozambique',
+        'MM' => 'Myanmar',
+        'NA' => 'Namibia',
+        'NR' => 'Nauru',
+        'NP' => 'Nepal',
+        'NL' => 'Netherlands',
+        'AN' => 'Netherlands Antilles',
+        'NC' => 'New Caledonia',
+        'NZ' => 'New Zealand',
+        'NI' => 'Nicaragua',
+        'NE' => 'Niger',
+        'NG' => 'Nigeria',
+        'NU' => 'Niue',
+        'NF' => 'Norfolk Island',
+        'MP' => 'Northern Mariana Islands',
+        'NO' => 'Norway',
+        'OM' => 'Oman',
+        'PK' => 'Pakistan',
+        'PW' => 'Palau',
+        'PS' => 'Palestinian Territory, Occupied',
+        'PA' => 'Panama',
+        'PG' => 'Papua New Guinea',
+        'PY' => 'Paraguay',
+        'PE' => 'Peru',
+        'PH' => 'Philippines',
+        'PN' => 'Pitcairn',
+        'PL' => 'Poland',
+        'PT' => 'Portugal',
+        'PR' => 'Puerto Rico',
+        'QA' => 'Qatar',
+        'RE' => 'Reunion',
+        'RO' => 'Romania',
+        'RU' => 'Russian Federation',
+        'RW' => 'Rwanda',
+        'BL' => 'Saint Barthelemy',
+        'SH' => 'Saint Helena',
+        'KN' => 'Saint Kitts And Nevis',
+        'LC' => 'Saint Lucia',
+        'MF' => 'Saint Martin',
+        'PM' => 'Saint Pierre And Miquelon',
+        'VC' => 'Saint Vincent And Grenadines',
+        'WS' => 'Samoa',
+        'SM' => 'San Marino',
+        'ST' => 'Sao Tome And Principe',
+        'SA' => 'Saudi Arabia',
+        'SN' => 'Senegal',
+        'RS' => 'Serbia',
+        'SC' => 'Seychelles',
+        'SL' => 'Sierra Leone',
+        'SG' => 'Singapore',
+        'SK' => 'Slovakia',
+        'SI' => 'Slovenia',
+        'SB' => 'Solomon Islands',
+        'SO' => 'Somalia',
+        'ZA' => 'South Africa',
+        'GS' => 'South Georgia And Sandwich Isl.',
+        'ES' => 'Spain',
+        'LK' => 'Sri Lanka',
+        'SD' => 'Sudan',
+        'SR' => 'Suriname',
+        'SJ' => 'Svalbard And Jan Mayen',
+        'SZ' => 'Swaziland',
+        'SE' => 'Sweden',
+        'CH' => 'Switzerland',
+        'SY' => 'Syrian Arab Republic',
+        'TW' => 'Taiwan',
+        'TJ' => 'Tajikistan',
+        'TZ' => 'Tanzania',
+        'TH' => 'Thailand',
+        'TL' => 'Timor-Leste',
+        'TG' => 'Togo',
+        'TK' => 'Tokelau',
+        'TO' => 'Tonga',
+        'TT' => 'Trinidad And Tobago',
+        'TN' => 'Tunisia',
+        'TR' => 'Turkey',
+        'TM' => 'Turkmenistan',
+        'TC' => 'Turks And Caicos Islands',
+        'TV' => 'Tuvalu',
+        'UG' => 'Uganda',
+        'UA' => 'Ukraine',
+        'AE' => 'United Arab Emirates',
+        'GB' => 'United Kingdom',
+        'US' => 'United States',
+        'UM' => 'United States Outlying Islands',
+        'UY' => 'Uruguay',
+        'UZ' => 'Uzbekistan',
+        'VU' => 'Vanuatu',
+        'VE' => 'Venezuela',
+        'VN' => 'Viet Nam',
+        'VG' => 'Virgin Islands, British',
+        'VI' => 'Virgin Islands, U.S.',
+        'WF' => 'Wallis And Futuna',
+        'EH' => 'Western Sahara',
+        'YE' => 'Yemen',
+        'ZM' => 'Zambia',
+        'ZW' => 'Zimbabwe',
+    );
 
     function __construct($options = null) {
         if ($options == null) {
@@ -90,23 +342,52 @@ class NewsletterControls {
      * Show the errors and messages.
      */
     function show() {
+        static $shown = false;
+
+        if ($shown) {
+            return;
+        }
+        $shown = true;
+
         if (!empty($this->errors)) {
-            echo '<div class="error"><p>';
+            echo '<div class="tnp-error">';
             echo $this->errors;
-            echo '</p></div>';
+            echo '</div>';
+        }
+        if (!empty($this->warnings)) {
+            foreach ((array)$this->warnings as $warning) {
+                echo '<div class="tnp-warning">';
+                echo $warning;
+                echo '</div>';
+            }
         }
         if (!empty($this->messages)) {
-            echo '<div class="updated"><p>';
+            echo '<div class="tnp-message">';
             echo $this->messages;
-            echo '</p></div>';
+            echo '</div>';
         }
+    }
+
+    function add_message_saved() {
+        if (!empty($this->messages)) {
+            $this->messages .= '<br><br>';
+        }
+        $this->messages .= __('Saved.', 'newsletter');
+    }
+
+    function add_message_done() {
+        if (!empty($this->messages)) {
+            $this->messages .= '<br><br>';
+        }
+        $this->messages .= __('Done.', 'newsletter');
     }
 
     function hint($text, $url = '') {
         echo '<div class="hints">';
+        // Do not escape that, it can be formatted
         echo $text;
         if (!empty($url)) {
-            echo " <a href='$url' target='_blank'>Read more</a>.";
+            echo ' <a href="' . esc_attr($url) . '" target="_blank">Read more</a>.';
         }
         echo '</div>';
     }
@@ -114,14 +395,16 @@ class NewsletterControls {
     function yesno($name) {
         $value = isset($this->data[$name]) ? (int) $this->data[$name] : 0;
 
-        echo '<select style="width: 60px" name="options[' . $name . ']">';
+        echo '<select style="width: 60px" name="options[' . esc_attr($name) . ']">';
         echo '<option value="0"';
-        if ($value == 0)
+        if ($value == 0) {
             echo ' selected';
+        }
         echo '>No</option>';
         echo '<option value="1"';
-        if ($value == 1)
+        if ($value == 1) {
             echo ' selected';
+        }
         echo '>Yes</option>';
         echo '</select>&nbsp;&nbsp;&nbsp;';
     }
@@ -129,15 +412,34 @@ class NewsletterControls {
     function enabled($name) {
         $value = isset($this->data[$name]) ? (int) $this->data[$name] : 0;
 
-        echo '<select style="width: 100px" name="options[' . $name . ']">';
+        echo '<select style="width: 100px" name="options[' . esc_attr($name) . ']">';
         echo '<option value="0"';
-        if ($value == 0)
+        if ($value == 0) {
             echo ' selected';
+        }
         echo '>Disabled</option>';
         echo '<option value="1"';
-        if ($value == 1)
+        if ($value == 1) {
             echo ' selected';
+        }
         echo '>Enabled</option>';
+        echo '</select>';
+    }
+
+    function disabled($name) {
+        $value = isset($this->data[$name]) ? (int) $this->data[$name] : 0;
+
+        echo '<select style="width: 100px" name="options[' . esc_attr($name) . ']">';
+        echo '<option value="0"';
+        if ($value == 0) {
+            echo ' selected';
+        }
+        echo '>Enabled</option>';
+        echo '<option value="1"';
+        if ($value == 1) {
+            echo ' selected';
+        }
+        echo '>Disabled</option>';
         echo '</select>';
     }
 
@@ -159,13 +461,15 @@ class NewsletterControls {
         echo "<div class='newsletter-checkboxes-group'>";
         foreach ($values_labels as $value => $label) {
             echo "<div class='newsletter-checkboxes-item'>";
-            echo "<input type='checkbox' id='$name' name='options[$name][]' value='$value'";
-            if (array_search($value, $value_array) !== false)
-                echo " checked";
-            echo '/>';
-            if ($label != '')
-                echo " <label for='$name'>$label</label>";
-            echo "</div>";
+            echo '<label><input type="checkbox" id="' . esc_attr($name) . '" name="options[' . esc_attr($name) . '][]" value="' . esc_attr($value) . '"';
+            if (array_search($value, $value_array) !== false) {
+                echo ' checked';
+            }
+            echo '>';
+            if ($label != '') {
+                echo esc_html($label);
+            }
+            echo "</label></div>";
         }
         echo "</div><div style='clear: both'></div>";
     }
@@ -175,11 +479,59 @@ class NewsletterControls {
     function post_types($name = 'post_types') {
         $list = array();
         $post_types = get_post_types(array('public' => true), 'objects', 'and');
-        foreach ($post_types as &$post_type) {
+        foreach ($post_types as $post_type) {
             $list[$post_type->name] = $post_type->labels->name;
         }
 
         $this->checkboxes_group($name, $list);
+    }
+
+    function posts_select($name, $max = 20, $args = array()) {
+        $args = array_merge(array(
+            'posts_per_page' => 5,
+            'offset' => 0,
+            'category' => '',
+            'category_name' => '',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'include' => '',
+            'exclude' => '',
+            'meta_key' => '',
+            'meta_value' => '',
+            'post_type' => 'post',
+            'post_mime_type' => '',
+            'post_parent' => '',
+            'author' => '',
+            'author_name' => '',
+            'post_status' => 'publish',
+            'suppress_filters' => true
+                ), $args);
+        $args['posts_per_page'] = $max;
+
+        $posts = get_posts($args);
+        $options = array();
+        foreach ($posts as $post) {
+            $options['' . $post->ID] = $post->post_title;
+        }
+
+        $this->select($name, $options);
+    }
+    
+    function select_number($name, $min, $max) {
+        $options = array();
+        for ($i=$min; $i<=$max; $i++) {
+            $options['' . $i] = $i;
+        }
+        $this->select($name, $options);
+    }
+
+    function page($name = 'page', $first = null) {
+        $pages = get_pages();
+        $options = array();
+        foreach ($pages as $page) {
+            $options[$page->ID] = $page->post_title;
+        }
+        $this->select($name, $options, $first);
     }
 
     /** Used to create a select which is part of a group of controls identified by $name that will
@@ -190,14 +542,14 @@ class NewsletterControls {
     function select_group($name, $options) {
         $value_array = $this->get_value_array($name);
 
-        echo '<select name="options[' . $name . '][]">';
+        echo '<select name="options[' . esc_attr($name) . '][]">';
 
         foreach ($options as $key => $label) {
-            echo '<option value="' . $key . '"';
+            echo '<option value="' . esc_attr($key) . '"';
             if (array_search($key, $value_array) !== false) {
                 echo ' selected';
             }
-            echo '>' . htmlspecialchars($label) . '</option>';
+            echo '>' . esc_html($label) . '</option>';
         }
 
         echo '</select>';
@@ -206,17 +558,69 @@ class NewsletterControls {
     function select($name, $options, $first = null) {
         $value = $this->get_value($name);
 
-        echo '<select id="options-' . $name . '" name="options[' . $name . ']">';
+        echo '<select id="options-' . esc_attr($name) . '" name="options[' . esc_attr($name) . ']">';
         if (!empty($first)) {
-            echo '<option value="">' . htmlspecialchars($first) . '</option>';
+            echo '<option value="">' . esc_html($first) . '</option>';
         }
         foreach ($options as $key => $label) {
-            echo '<option value="' . $key . '"';
+            echo '<option value="' . esc_attr($key) . '"';
             if ($value == $key)
                 echo ' selected';
-            echo '>' . htmlspecialchars($label) . '</option>';
+            echo '>' . esc_html($label) . '</option>';
         }
         echo '</select>';
+    }
+
+    function select_images($name, $options, $first = null) {
+        $value = $this->get_value($name);
+
+        echo '<select id="options-' . esc_attr($name) . '" name="options[' . esc_attr($name) . ']" style="min-width: 200px">';
+        if (!empty($first)) {
+            echo '<option value="">' . esc_html($first) . '</option>';
+        } else {
+//            if (empty($value)) {
+//                $keys = array_keys($options);
+//                $value = $keys[0];
+//            }
+        }
+        foreach ($options as $key => $data) {
+            echo '<option value="' . esc_attr($key) . '" image="' . esc_attr($data['image']) . '"';
+            if ($value == $key)
+                echo ' selected';
+            echo '>' . esc_html($data['label']) . '</option>';
+        }
+        echo '</select>';
+        echo '<script>jQuery("#options-' . esc_attr($name) . '").select2({templateResult: tnp_select_images, templateSelection: tnp_select_images_selection});</script>';
+    }
+    
+    function select2($name, $options, $first = null, $multiple = false, $style = null, $placeholder='') {
+        
+        if ($multiple) {
+            $option_name = "options[" . esc_attr($name) . "][]";
+        } else {
+            $option_name = "options[" . esc_attr($name) . "]";
+        }
+        
+        if (is_null($style)) {
+            $style = 'width: 100%';
+        }
+
+        $value = $this->get_value($name);
+
+        echo '<select id="options-', esc_attr($name), '" name="', $option_name, '" style="', $style, '"',
+                ($multiple ? ' multiple' : ''), '>';
+        if (!empty($first)) {
+            echo '<option value="">' . esc_html($first) . '</option>';
+        }
+        
+        foreach ($options as $key => $data) {
+            echo '<option value="' . esc_attr($key) . '"';
+            if (is_array($value) && in_array($key, $value) || $value == $key)
+                echo ' selected';
+            echo '>' . esc_html($data) . '</option>';
+        }
+        echo '</select>';
+        echo '<script>jQuery("#options-' . esc_attr($name) . '").select2({placeholder: "', esc_js($placeholder), '"});</script>';
     }
 
     function select_grouped($name, $groups) {
@@ -225,15 +629,17 @@ class NewsletterControls {
         echo '<select name="options[' . $name . ']">';
 
         foreach ($groups as $group) {
-            echo '<optgroup label="' . htmlspecialchars($group['']) . '">';
+            echo '<optgroup label="' . esc_attr($group['']) . '">';
             if (!empty($group)) {
                 foreach ($group as $key => $label) {
-                    if ($key == '')
+                    if ($key == '') {
                         continue;
-                    echo '<option value="' . $key . '"';
-                    if ($value == $key)
+                    }
+                    echo '<option value="' . esc_attr($key) . '"';
+                    if ($value == $key) {
                         echo ' selected';
-                    echo '>' . htmlspecialchars($label) . '</option>';
+                    }
+                    echo '>' . esc_html($label) . '</option>';
                 }
             }
             echo '</optgroup>';
@@ -248,9 +654,9 @@ class NewsletterControls {
     function themes($name, $themes, $submit_on_click = true) {
         foreach ($themes as $key => $data) {
             echo '<label style="display: block; float: left; text-align: center; margin-right: 10px;">';
-            echo $key . '<br>';
-            echo '<img src="' . $data['screenshot'] . '" width="100" height="100" style="border: 1px solid #666; padding: 5px"><br>';
-            echo '<input style="position: relative; top: -40px" type="radio" onchange="this.form.act.value=\'theme\';this.form.submit()" name="options[' . $name . ']" value="' . $key . '"';
+            echo esc_html($key) . '<br>';
+            echo '<img src="' . esc_attr($data['screenshot']) . '" width="100" height="100" style="border: 1px solid #666; padding: 5px"><br>';
+            echo '<input style="position: relative; top: -40px" type="radio" onchange="this.form.act.value=\'theme\';this.form.submit()" name="options[' . esc_attr($name) . ']" value="' . esc_attr($key) . '"';
             if ($this->data[$name] == $key) {
                 echo ' checked';
             }
@@ -264,7 +670,7 @@ class NewsletterControls {
         echo htmlspecialchars($this->data[$name]);
     }
 
-    function value_date($name, $show_remaining) {
+    function value_date($name, $show_remaining = true) {
         $time = $this->get_value($name);
 
         echo gmdate(get_option('date_format') . ' ' . get_option('time_format'), $time + get_option('gmt_offset') * 3600);
@@ -287,90 +693,166 @@ class NewsletterControls {
 
     function text($name, $size = 20, $placeholder = '') {
         $value = $this->get_value($name);
-        echo '<input placeholder="' . htmlspecialchars($placeholder) . '" name="options[' . $name . ']" type="text" size="' . $size . '" value="';
-        echo htmlspecialchars($value);
-        echo '"/>';
+        echo '<input id="options-', esc_attr($name), '" placeholder="' . esc_attr($placeholder) . '" name="options[' . $name . ']" type="text" size="' . $size . '" value="';
+        echo esc_attr($value);
+        echo '">';
     }
 
     function text_email($name, $size = 40) {
         $value = $this->get_value($name);
-        echo '<input name="options[' . $name . ']" type="email" placeholder="Valid email address" size="' . $size . '" value="';
-        echo htmlspecialchars($value);
-        echo '"/>';
+        echo '<input name="options[' . esc_attr($name) . ']" type="email" placeholder="';
+        echo esc_attr__('Valid email address', 'newsletter');
+        echo '" size="' . esc_attr($size) . '" value="';
+        echo esc_attr($value);
+        echo '">';
     }
 
     function text_url($name, $size = 40) {
         $value = $this->get_value($name);
-        echo '<input name="options[' . $name . ']" type="url" placeholder="http://..." size="' . $size . '" value="';
-        echo htmlspecialchars($value);
+        echo '<input name="options[' . esc_attr($name) . ']" type="url" placeholder="http://..." size="' . esc_attr($size) . '" value="';
+        echo esc_attr($value);
         echo '"/>';
     }
 
     function hidden($name) {
         $value = $this->get_value($name);
         echo '<input name="options[' . $name . ']" type="hidden" value="';
-        echo htmlspecialchars($value);
+        echo esc_attr($value);
         echo '"/>';
     }
 
     function button($action, $label, $function = null) {
         if ($function != null) {
-            echo '<input class="button-secondary" type="button" value="' . $label . '" onclick="this.form.act.value=\'' . $action . '\';' . htmlspecialchars($function) . '"/>';
+            echo '<input class="button-secondary" type="button" value="' . esc_attr($label) . '" onclick="this.form.act.value=\'' . esc_attr($action) . '\';' . esc_html($function) . '"/>';
         } else {
-            echo '<input class="button-secondary" type="button" value="' . $label . '" onclick="this.form.act.value=\'' . $action . '\';this.form.submit()"/>';
+            echo '<input class="button-secondary" type="submit" value="' . esc_attr($label) . '" onclick="this.form.act.value=\'' . esc_attr($action) . '\';return true;"/>';
         }
+    }
+
+    /**
+     * With translated "Save" label.
+     */
+    function button_save($function = null) {
+        $this->button_primary('save', __('Save', 'newsletter'), $function);
+    }
+
+    function button_reset($data = '') {
+        echo '<button class="button-secondary" onclick="this.form.btn.value=\'' . esc_attr($data) . '\';this.form.act.value=\'reset\';if (!confirm(\'';
+        echo esc_attr(esc_js(__('Proceed?', 'newsletter')));
+        echo '\')) return false;">';
+        echo '<i class="fa fa-reply"></i> ';
+        echo esc_html(__('Reset', 'newsletter'));
+        echo '</button>';
+    }
+
+    function button_back($url) {
+        echo '<a href="';
+        echo esc_attr($url);
+        echo '" class="button-primary"><i class="fa fa-chevron-left"></i>&nbsp;';
+        _e('Back', 'newsletter');
+        echo '</a>';
+    }
+
+    /**
+     * Creates a button with "copy" action.
+     * @param type $data
+     */
+    function button_copy($data = '') {
+        echo '<button class="button-secondary" onclick="this.form.btn.value=\'' . esc_attr($data) . '\';this.form.act.value=\'copy\';if (!confirm(\'';
+        echo esc_attr(esc_js(__('Proceed?', 'newsletter')));
+        echo '\')) return false;">';
+        echo '<i class="fa fa-copy"></i> ';
+        echo esc_html(__('Duplicate', 'newsletter'));
+        echo '</button>';
+    }
+
+    /**
+     * Creates a button wirh "delete" action.
+     * @param type $data
+     */
+    function button_delete($data = '') {
+        echo '<button class="button-secondary" onclick="this.form.btn.value=\'' . esc_attr($data) . '\';this.form.act.value=\'delete\';if (!confirm(\'';
+        echo esc_attr(esc_js(__('Proceed?', 'newsletter')));
+        echo '\')) return false;">';
+        echo '<i class="fa fa-times"></i> ';
+        echo esc_html(__('Delete', 'newsletter'));
+        echo '</button>';
     }
 
     function button_primary($action, $label, $function = null) {
         if ($function != null) {
-            echo '<input class="button-primary" type="button" value="' . $label . '" onclick="this.form.act.value=\'' . $action . '\';' . htmlspecialchars($function) . '"/>';
+            echo '<input class="button-primary" type="button" value="' . esc_attr($label) . '" onclick="this.form.act.value=\'' . esc_attr($action) . '\';' . esc_attr($function) . '"/>';
         } else {
-            echo '<input class="button-primary" type="button" value="' . $label . '" onclick="this.form.act.value=\'' . $action . '\';this.form.submit()"/>';
+            echo '<input class="button-primary" type="button" value="' . esc_attr($label) . '" onclick="this.form.act.value=\'' . esc_attr($action) . '\';this.form.submit()"/>';
         }
     }
 
     function button_confirm($action, $label, $message = '', $data = '') {
         if (empty($message)) {
-            echo '<input class="button-secondary" type="button" value="' . $label . '" onclick="this.form.btn.value=\'' . $data . '\';this.form.act.value=\'' . $action . '\';this.form.submit()"/>';
+            echo '<input class="button-secondary" type="button" value="' . esc_attr($label) . '" onclick="this.form.btn.value=\'' . esc_attr($data) . '\';this.form.act.value=\'' . esc_attr($action) . '\';this.form.submit()"/>';
         } else {
-            echo '<input class="button-secondary" type="button" value="' . $label . '" onclick="this.form.btn.value=\'' . $data . '\';this.form.act.value=\'' . $action . '\';if (confirm(\'' .
-            htmlspecialchars($message) . '\')) this.form.submit()"/>';
+            echo '<input class="button-secondary" type="button" value="' . esc_attr($label) . '" onclick="this.form.btn.value=\'' . esc_attr($data) . '\';this.form.act.value=\'' . esc_attr($action) . '\';if (confirm(\'' .
+            esc_attr(esc_js($message)) . '\')) this.form.submit()"/>';
         }
     }
 
     function editor($name, $rows = 5, $cols = 75) {
-        echo '<textarea class="visual" name="options[' . $name . ']" style="width: 100%" wrap="off" rows="' . $rows . '">';
-        echo htmlspecialchars($this->get_value($name));
+        echo '<textarea class="visual" name="options[' . esc_attr($name) . ']" style="width: 100%" wrap="off" rows="' . esc_attr($rows) . '">';
+        echo esc_html($this->get_value($name));
         echo '</textarea>';
     }
 
     function wp_editor($name, $settings = array()) {
-        wp_editor($this->data[$name], $name, array_merge(array('textarea_name' => 'options[' . $name . ']', 'wpautop' => false), $settings));
-        if (!is_plugin_active('mce_table_buttons/mce_table_buttons.php')) {
-            echo '<p class="description">You can install <a href="https://wordpress.org/plugins/mce-table-buttons/" target="_blank">MCE Table Button</a> for a table management toolbar add on.</p>';
-        }
+        $value = $this->get_value($name);
+        wp_editor($value, $name, array_merge(array(
+            'tinymce' => array('content_css' => plugins_url('newsletter') . '/css/wp-editor.css?ver=' . filemtime(NEWSLETTER_DIR . '/css/wp-editor.css')),
+            'textarea_name' => 'options[' . esc_attr($name) . ']', 
+            'wpautop' => false
+            ), $settings));
+        //echo '<p class="description">You can install <a href="https://wordpress.org/plugins/tinymce-advanced/" target="_blank">TinyMCE Advanced</a> for advanced editing features</p>';
     }
 
     function textarea($name, $width = '100%', $height = '50') {
-        echo '<textarea class="dynamic" name="options[' . $name . ']" wrap="off" style="width:' . $width . ';height:' . $height . '">';
-        echo htmlspecialchars($this->data[$name]);
+        $value = $this->get_value($name);
+        echo '<textarea id="options-' . esc_attr($name) . '" class="dynamic" name="options[' . esc_attr($name) . ']" wrap="off" style="width:' . esc_attr($width) . ';height:' . esc_attr($height) . '">';
+        echo esc_html($value);
         echo '</textarea>';
     }
 
     function textarea_fixed($name, $width = '100%', $height = '200') {
-        echo '<textarea name="options[' . $name . ']" wrap="off" style="width:' . $width . ';height:' . $height . 'px">';
-        echo htmlspecialchars($this->data[$name]);
+        $value = $this->get_value($name);
+        echo '<textarea id="options-' . esc_attr($name) . '" name="options[' . esc_attr($name) . ']" wrap="off" style="width:' . esc_attr($width) . ';height:' . esc_attr($height) . 'px">';
+        echo esc_html($value);
         echo '</textarea>';
+    }
+
+    function textarea_preview($name, $width = '100%', $height = '200', $header = '', $footer = '', $switch_button = true) {
+        $value = $this->get_value($name);
+        //do_action('newsletter_controls_textarea_preview', $name);
+        if ($switch_button) {
+            echo '<input class="button-primary" type="button" onclick="newsletter_textarea_preview(\'options-' . esc_attr($name) . '\', \'\', \'\')" value="Switch editor/preview">';
+            echo '<br><br>';
+        }
+        echo '<div style="box-sizing: border-box; position: relative; margin: 0; padding: 0; width:' . esc_attr($width) . '; height:' . esc_attr($height) . '">';
+        echo '<textarea id="options-' . esc_attr($name) . '" name="options[' . esc_attr($name) . ']" wrap="off" style="width:' . esc_attr($width) . ';height:' . esc_attr($height) . 'px">';
+        echo esc_html($value);
+        echo '</textarea>';
+        echo '<div id="options-' . esc_attr($name) . '-preview" style="box-sizing: border-box; background-color: #eee; border: 1px solid #bbb; padding: 15px; width: auto; position: absolute; top: 20px; left: 20px; box-shadow: 0 0 20px #777; z-index: 10000; display: none">';
+        echo '<iframe id="options-' . esc_attr($name) . '-iframe" style="box-sizing: border-box; background-color: #fff; border: 1px solid #bbb; box-shadow: 1px 1px 10px #777; padding: 15px; width: 650px; margin-right: 20px; height: 500px; float: left"></iframe>';
+        echo '<iframe id="options-' . esc_attr($name) . '-iframe-phone" style="box-sizing: border-box; background-color: #fff; border: 1px solid #bbb; box-shadow: 1px 1px 10px #777; border-radius: 10px; padding: 5px; width: 320px; height: 500px; float: left"></iframe>';
+        echo '</div>';
+        echo '</div>';
     }
 
     function email($prefix, $editor = null, $disable_option = false) {
         if ($disable_option) {
-            $this->checkbox($prefix . '_disabled', 'Disable this email');
+            $this->disabled($prefix . '_disabled');
             echo '<br>';
         }
-        //echo 'Subject:<br />';
+
         $this->text($prefix . '_subject', 90, 'Subject');
-        //echo '<br />Message:<br />';
+        echo '<br><br>';
+        
         if ($editor == 'wordpress') {
             $this->wp_editor($prefix . '_message');
         } else if ($editor == 'textarea') {
@@ -381,14 +863,50 @@ class NewsletterControls {
     }
 
     function checkbox($name, $label = '') {
-        if ($label != '')
+        if ($label != '') {
             echo '<label>';
-        echo '<input type="checkbox" id="' . $name . '" name="options[' . $name . ']" value="1"';
-        if (!empty($this->data[$name]))
+        }
+        echo '<input type="checkbox" id="' . esc_attr($name) . '" name="options[' . esc_attr($name) . ']" value="1"';
+        if (!empty($this->data[$name])) {
+            echo ' checked';
+        }
+        echo '>';
+        if ($label != '') {
+            echo '&nbsp;' . esc_html($label) . '</label>';
+        }
+    }
+
+    function checkbox2($name, $label = '') {
+        if ($label != '') {
+            echo '<label>';
+        }
+        echo '<input type="checkbox" id="' . esc_attr($name) . '" onchange="document.getElementById(\'' . esc_attr($name) . '_hidden\').value=this.checked?\'1\':\'0\'"';
+        if (!empty($this->data[$name])) {
             echo ' checked="checked"';
-        echo '/>';
-        if ($label != '')
-            echo '&nbsp;' . $label . '</label>';
+        }
+        echo '>';
+        if ($label != '') {
+            echo '&nbsp;' . esc_html($label) . '</label>';
+        }
+        echo '<input type="hidden" id="' . esc_attr($name) . '_hidden" name="options[' . esc_attr($name) . ']" value="';
+
+        echo empty($this->data[$name]) ? '0' : '1';
+        echo '">';
+    }
+
+    function radio($name, $value, $label = '') {
+        if ($label != '') {
+            echo '<label>';
+        }
+        echo '<input type="radio" id="' . esc_attr($name) . '" name="options[' . esc_attr($name) . ']" value="' . esc_attr($value) . '"';
+        $v = $this->get_value($name);
+        if ($v == $value) {
+            echo ' checked="checked"';
+        }
+        echo '>';
+        if ($label != '') {
+            echo '&nbsp;' . esc_html($label) . '</label>';
+        }
     }
 
     /**
@@ -396,12 +914,24 @@ class NewsletterControls {
      * the key $name an array containig the passed value.
      */
     function checkbox_group($name, $value, $label = '') {
-        echo '<input type="checkbox" id="' . $name . '" name="options[' . $name . '][]" value="' . $value . '"';
-        if (is_array($this->data[$name]) && array_search($value, $this->data[$name]) !== false)
-            echo ' checked="checked"';
-        echo '/>';
-        if ($label != '')
-            echo ' <label for="' . $name . '">' . $label . '</label>';
+        echo '<label><input type="checkbox" id="' . esc_attr($name) . '" name="options[' . esc_attr($name) . '][]" value="' . esc_attr($value) . '"';
+        if (isset($this->data[$name]) && is_array($this->data[$name]) && array_search($value, $this->data[$name]) !== false) {
+            echo ' checked';
+        }
+        echo '>';
+        if ($label != '') {
+            echo esc_html($label);
+        }
+        echo '</label>';
+    }
+
+    function checkboxes($name, $options) {
+        echo '<div class="tnp-checkboxes">';
+        foreach ($options as $value => $label) {
+            $this->checkbox_group($name, $value, $label);
+        }
+        echo '<div style="clear: both"></div>';
+        echo '</div>';
     }
 
     function color($name) {
@@ -413,7 +943,7 @@ class NewsletterControls {
     function categories($name = 'category') {
         $categories = get_categories();
         echo '<div class="newsletter-checkboxes-group">';
-        foreach ($categories as &$c) {
+        foreach ($categories as $c) {
             echo '<div class="newsletter-checkboxes-item">';
             $this->checkbox($name . '_' . $c->cat_ID, esc_html($c->cat_name));
             echo '</div>';
@@ -451,18 +981,13 @@ class NewsletterControls {
         echo '<div class="newsletter-preferences-group">';
 
         for ($i = 1; $i <= NEWSLETTER_LIST_MAX; $i++) {
-            if (empty($options_profile['list_' . $i]))
+            if (empty($options_profile['list_' . $i])) {
                 continue;
+            }
             echo '<div class="newsletter-preferences-item">';
-            $this->checkbox($name . '_' . $i, '<span class="newsletter-badge">' . $i . '</span> ' . htmlspecialchars($options_profile['list_' . $i]));
+            $this->checkbox2($name . '_' . $i, esc_html($options_profile['list_' . $i]));
             echo '</div>';
         }
-        echo '<div style="clear: both"></div>';
-        echo '</div>';
-        echo '<div class="hints">';
-        echo 'User\'s preferences can be activated from the "Subscription Form" panel. They can be used to simulate lists or create private groups. The number is the "preference number". ';
-        echo '<a href="http://www.thenewsletterplugin.com/plugins/newsletter/newsletter-preferences" target="_blank">Read more about preferences</a>.';
-        echo '</div>';
     }
 
     /**
@@ -475,16 +1000,17 @@ class NewsletterControls {
 
         echo '<div class="newsletter-preferences-group">';
         for ($i = 1; $i <= NEWSLETTER_LIST_MAX; $i++) {
-            if (empty($options_profile['list_' . $i]))
+            if (empty($options_profile['list_' . $i])) {
                 continue;
+            }
             echo '<div class="newsletter-preferences-item">';
-            $this->checkbox_group($name, $i, '(' . $i . ') ' . htmlspecialchars($options_profile['list_' . $i]));
+            $this->checkbox_group($name, $i, '(' . $i . ') ' . esc_html($options_profile['list_' . $i]));
             echo '</div>';
         }
         echo '<div style="clear: both"></div>';
-        echo '<a href="http://www.thenewsletterplugin.com/plugins/newsletter/newsletter-preferences" target="_blank">'
+        echo '<a href="https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-preferences" target="_blank">'
         . 'Click here to read more about preferences.'
-                . '</a> They can be configured on Subscription Form - Profile fields panel.';
+        . '</a> They can be configured on Subscription Form - Profile fields panel.';
         echo '</div>';
     }
 
@@ -496,30 +1022,54 @@ class NewsletterControls {
 
         echo '<div class="newsletter-preferences-group">';
         for ($i = 1; $i <= NEWSLETTER_LIST_MAX; $i++) {
-            if (empty($options_profile['list_' . $i]))
+            if (empty($options_profile['list_' . $i])) {
                 continue;
+            }
 
             echo '<div class="newsletter-preferences-item">';
 
             $this->select($name . '_' . $i, array(0 => 'Any', 1 => 'Yes', 2 => 'No'));
-            echo '(' . $i . ') ' . htmlspecialchars($options_profile['list_' . $i]);
+            echo '(' . $i . ') ' . esc_html($options_profile['list_' . $i]);
 
             echo '</div>';
         }
         echo '<div style="clear: both"></div>';
-        echo '<a href="http://www.thenewsletterplugin.com/plugins/newsletter/newsletter-preferences" target="_blank">Click here know more about preferences.</a> They can be configured on Subscription/Form field panel.';
+        echo '<a href="https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-preferences" target="_blank">Click here know more about preferences.</a> They can be configured on Subscription/Form field panel.';
         echo '</div>';
     }
 
-    /** Creates a single select with the active preferences. */
-    function preferences_select($name = 'preference') {
+    /**
+     * Creates a single select with the active preferences. 
+     */
+    function preferences_select($name = 'preference', $empty_label = null) {
         $options_profile = get_option('newsletter_profile');
 
         $lists = array();
+        if ($empty_label) {
+            $lists[''] = $empty_label;
+        }
         for ($i = 1; $i <= NEWSLETTER_LIST_MAX; $i++) {
             $lists['' . $i] = '(' . $i . ') ' . $options_profile['list_' . $i];
         }
         $this->select($name, $lists);
+        echo ' <a href="admin.php?page=newsletter_subscription_lists" target="_blank"><i class="fa fa-edit"></i></a>';
+    }
+    
+    /**
+     * Generates an associative array with the active lists to be used in a select.
+     * @param string $empty_label
+     * @return array
+     */
+    function get_list_options($empty_label = null) {
+        $options_profile = get_option('newsletter_profile');
+        $lists = array();
+        if ($empty_label) {
+            $lists[''] = $empty_label;
+        }
+        for ($i = 1; $i <= NEWSLETTER_LIST_MAX; $i++) {
+            $lists['' . $i] = '(' . $i . ') ' . $options_profile['list_' . $i];
+        }
+        return $lists;
     }
 
     function date($name) {
@@ -527,75 +1077,85 @@ class NewsletterControls {
         $year = date('Y', $this->data[$name]);
         $day = date('j', $this->data[$name]);
         $month = date('m', $this->data[$name]);
-        $onchange = "this.form.elements['options[" . $name . "]'].value = new Date(document.getElementById('" . $name . "_year').value, document.getElementById('" . $name . "_month').value, document.getElementById('" . $name . "_day').value, 12, 0, 0).getTime()/1000";
-        echo '<select id="' . $name . '_month" onchange="' . $onchange . '">';
+        $onchange = "this.form.elements['options[" . esc_attr($name) . "]'].value = new Date(document.getElementById('" . esc_attr($name) . "_year').value, document.getElementById('" . esc_attr($name) . "_month').value, document.getElementById('" . esc_attr($name) . "_day').value, 12, 0, 0).getTime()/1000";
+        echo '<select id="' . $name . '_month" onchange="' . esc_attr($onchange) . '">';
         for ($i = 0; $i < 12; $i++) {
             echo '<option value="' . $i . '"';
-            if ($month - 1 == $i)
+            if ($month - 1 == $i) {
                 echo ' selected';
+            }
             echo '>' . date('F', mktime(0, 0, 0, $i + 1, 1, 2000)) . '</option>';
         }
         echo '</select>';
 
-        echo '<select id="' . $name . '_day" onchange="' . $onchange . '">';
+        echo '<select id="' . esc_attr($name) . '_day" onchange="' . esc_attr($onchange) . '">';
         for ($i = 1; $i <= 31; $i++) {
             echo '<option value="' . $i . '"';
-            if ($day == $i)
+            if ($day == $i) {
                 echo ' selected';
+            }
             echo '>' . $i . '</option>';
         }
         echo '</select>';
 
-        echo '<select id="' . $name . '_year" onchange="' . $onchange . '">';
+        echo '<select id="' . esc_attr($name) . '_year" onchange="' . esc_attr($onchange) . '">';
         for ($i = 2011; $i <= 2021; $i++) {
             echo '<option value="' . $i . '"';
-            if ($year == $i)
+            if ($year == $i) {
                 echo ' selected';
+            }
             echo '>' . $i . '</option>';
         }
         echo '</select>';
     }
 
+    /**
+     * Date and time (hour) selector. Timestamp stored.
+     */
     function datetime($name) {
-        echo '<input type="hidden" name="fields[' . $name . ']" value="datetime">';
+        echo '<input type="hidden" name="fields[' . esc_attr($name) . ']" value="datetime">';
         $time = $this->data[$name] + get_option('gmt_offset') * 3600;
         $year = gmdate('Y', $time);
         $day = gmdate('j', $time);
         $month = gmdate('m', $time);
         $hour = gmdate('H', $time);
 
-        echo '<select name="' . $name . '_month">';
+        echo '<select name="' . esc_attr($name) . '_month">';
         for ($i = 1; $i <= 12; $i++) {
             echo '<option value="' . $i . '"';
-            if ($month == $i)
+            if ($month == $i) {
                 echo ' selected';
+            }
             echo '>' . date('F', mktime(0, 0, 0, $i, 1, 2000)) . '</option>';
         }
         echo '</select>';
 
-        echo '<select name="' . $name . '_day">';
+        echo '<select name="' . esc_attr($name) . '_day">';
         for ($i = 1; $i <= 31; $i++) {
             echo '<option value="' . $i . '"';
-            if ($day == $i)
+            if ($day == $i) {
                 echo ' selected';
+            }
             echo '>' . $i . '</option>';
         }
         echo '</select>';
 
-        echo '<select name="' . $name . '_year">';
+        echo '<select name="' . esc_attr($name) . '_year">';
         for ($i = 2011; $i <= 2021; $i++) {
             echo '<option value="' . $i . '"';
-            if ($year == $i)
+            if ($year == $i) {
                 echo ' selected';
+            }
             echo '>' . $i . '</option>';
         }
         echo '</select>';
 
-        echo '<select name="' . $name . '_hour">';
+        echo '<select name="' . esc_attr($name) . '_hour">';
         for ($i = 0; $i <= 23; $i++) {
             echo '<option value="' . $i . '"';
-            if ($hour == $i)
+            if ($hour == $i) {
                 echo ' selected';
+            }
             echo '>' . $i . ':00</option>';
         }
         echo '</select>';
@@ -604,7 +1164,7 @@ class NewsletterControls {
     function hours($name) {
         $hours = array();
         for ($i = 0; $i < 24; $i++) {
-            $hours['' . $i] = '' . $i;
+            $hours['' . $i] = sprintf('%02d', $i) . ':00';
         }
         $this->select($name, $hours);
     }
@@ -616,7 +1176,9 @@ class NewsletterControls {
 
     function init($options = array()) {
         $cookie_name = 'newsletter_tab';
-        if (isset($options['cookie_name'])) $cookie_name = $options['cookie_name'];
+        if (isset($options['cookie_name'])) {
+            $cookie_name = $options['cookie_name'];
+        }
         echo '<script type="text/javascript">
     jQuery(document).ready(function(){
         jQuery("textarea.dynamic").focus(function() {
@@ -640,8 +1202,14 @@ class NewsletterControls {
         }).on("select", function() {
             var media = tnp_uploader.state().get("selection").first();
             document.getElementById(name + "_id").value = media.id;
+            if (media.attributes.url.substring(0, 0) == "/") {
+                media.attributes.url = "' . site_url('/') . '" + media.attributes.url;
+            }
             document.getElementById(name + "_url").value = media.attributes.url;
-            document.getElementById(name + "_img").src = media.attributes.sizes.thumbnail.url;
+            if (media.attributes.sizes.medium.url.substring(0, 0) == "/") {
+                media.attributes.sizes.medium.url = "' . site_url('/') . '" + media.attributes.sizes.medium.url;
+            }
+            document.getElementById(name + "_img").src = media.attributes.sizes.medium.url;
         }).open();
     }
     function newsletter_media_remove(name) {
@@ -650,6 +1218,37 @@ class NewsletterControls {
             document.getElementById(name + "_url").value = "";
             document.getElementById(name + "_img").src = "' . plugins_url('newsletter') . '/images/nomedia.png";
         }
+    }
+    function newsletter_textarea_preview(id, header, footer) {
+        var d = document.getElementById(id + "-iframe").contentWindow.document;
+        d.open();
+        if (templateEditor) {
+            d.write(templateEditor.getValue());
+        } else {
+            d.write(header + document.getElementById(id).value + footer);
+        }
+        d.close();
+        
+        var d = document.getElementById(id + "-iframe-phone").contentWindow.document;
+        d.open();
+        if (templateEditor) {
+            d.write(templateEditor.getValue());
+        } else {
+            d.write(header + document.getElementById(id).value + footer);
+        }
+        d.close();
+        //jQuery("#" + id + "-iframe-phone").toggle();
+        jQuery("#" + id + "-preview").toggle();
+    }
+    function tnp_select_images(state) {
+        if (!state.id) { return state.text; }
+        var $state = jQuery("<span class=\"tnp-select2-option\"><img style=\"height: 20px!important; position: relative; top: 5px\" src=\"" + state.element.getAttribute("image") + "\"> " + state.text + "</span>");
+        return $state;
+    }
+    function tnp_select_images_selection(state) {
+        if (!state.id) { return state.text; }
+        var $state = jQuery("<span class=\"tnp-select2-option\"><img style=\"height: 20px!important; position: relative; top: 5px\" src=\"" + state.element.getAttribute("image") + "\"> " + state.text + "</span>");
+        return $state;
     }
 </script>
 ';
@@ -663,35 +1262,19 @@ class NewsletterControls {
     }
 
     function update_option($name, $data = null) {
-        if ($data == null)
+        if ($data == null) {
             $data = $this->data;
+        }
         update_option($name, $data);
         if (isset($data['log_level'])) {
             update_option($name . '_log_level', $data['log_level']);
         }
     }
 
-//  function button_link($action, $url, $anchor) {
-//    if (strpos($url, '?') !== false) $url .= $url . '&';
-//    else $url .= $url . '?';
-//    $url .= 'act=' . $action;
-//
-//    $url .= '&_wpnonce=' . wp_create_nonce();
-//
-//    echo '<a class="button" href="' . $url . '">' . $anchor . '</a>';
-//  }
-
     function js_redirect($url) {
         echo '<script>';
-        echo 'location.href="' . $url . '"';
+        echo 'location.href="' . esc_js($url) . '"';
         echo '</script>';
-    }
-
-    /**
-     * @deprecated
-     */
-    function save_user($subscriber) {
-        return NewsletterUsers::instance()->save_user($user);
     }
 
     /**
@@ -704,24 +1287,49 @@ class NewsletterControls {
     function css_font_size($name) {
         $value = $this->get_value($name);
 
-        echo '<select id="options-' . $name . '" name="options[' . $name . ']">';
+        echo '<select id="options-' . esc_attr($name) . '" name="options[' . esc_attr($name) . ']">';
         for ($i = 8; $i < 50; $i++) {
             echo '<option value="' . $i . '"';
-            if ($value == $i)
+            if ($value == $i) {
                 echo ' selected';
+            }
             echo '>' . $i . '</option>';
         }
         echo '</select>&nbsp;px';
     }
+    
+    function css_font_family($name) {
+        $value = $this->get_value($name);
+
+        $fonts = array('Helvetica, Arial, sans-serif', 'Arial Black, Gadget, sans-serif', 'Garamond, serif', 'Courier, monospace', 'Cominc Sans MS, cursive', 'Impact, Charcoal, sans-serif',
+            'Tahoma, Geneva, sans-serif', 'Times New Roman, Times, serif', 'Verdana, Geneva, sans-serif');
+        
+        echo '<select id="options-' . esc_attr($name) . '" name="options[' . esc_attr($name) . ']">';
+        foreach ($fonts as $font) {
+            echo '<option value="', esc_attr($font), '"';
+            if ($value == $font) {
+                echo ' selected';
+            }
+            echo '>', esc_html($font), '</option>';
+        }
+        echo '</select>';
+    }   
+    
+    function css_text_align($name) {
+        $options = array('left'=>__('Left', 'newsletter'), 'right'=>__('Right', 'newsletter'), 
+            'center'=>__('Center', 'newsletter'));
+        $this->select($name, $options);
+    }     
 
     function css_border($name) {
         $value = $this->get_value($name . '_width');
 
-        echo 'width&nbsp;<select id="options-' . $name . '-width" name="options[' . $name . '_width]">';
+        echo 'width&nbsp;<select id="options-' . esc_attr($name) . '-width" name="options[' . esc_attr($name) . '_width]">';
         for ($i = 0; $i < 10; $i++) {
             echo '<option value="' . $i . '"';
-            if ($value == $i)
+            if ($value == $i) {
                 echo ' selected';
+            }
             echo '>' . $i . '</option>';
         }
         echo '</select>&nbsp;px&nbsp;&nbsp;';
@@ -732,56 +1340,131 @@ class NewsletterControls {
 
         $value = $this->get_value($name . '_radius');
 
-        echo '&nbsp;&nbsp;radius&nbsp;<select id="options-' . $name . '-radius" name="options[' . $name . '_radius]">';
+        echo '&nbsp;&nbsp;radius&nbsp;<select id="options-' . esc_attr($name) . '-radius" name="options[' . esc_attr($name) . '_radius]">';
         for ($i = 0; $i < 10; $i++) {
             echo '<option value="' . $i . '"';
-            if ($value == $i)
+            if ($value == $i) {
                 echo ' selected';
+            }
             echo '>' . $i . '</option>';
         }
         echo '</select>&nbsp;px';
     }
 
-    function media($name, $size='thumbnail') {
-        $media_id = $this->data[$name]['id'];
-        $media = wp_get_attachment_image_src($media_id, $size);
-
+    /**
+     * Media selector using the media library of WP. Produces a field which values is an array containing 'id' and 'url'.
+     * 
+     * @param string $name
+     */
+    function media($name) {
+        if (isset($this->data[$name])) {
+            $media_id = (int) $this->data[$name]['id'];
+            $media = wp_get_attachment_image_src($media_id, 'medium');
+            $media_full = wp_get_attachment_image_src($media_id, 'full');
+        } else {
+            $media = false;
+        }
+        echo '<div style="position: relative">';
+        echo '<a style="position: absolute; top: 5px; right: 5px; background-color: #fff; color: #000; padding: 0px 5px 6px 5px; font-size: 24px; display: block; text-decoration: none" href="#" onclick="newsletter_media_remove(\'' . esc_attr($name) . '\'); return false">&times;</a>';
         if ($media === false) {
             $media = array('', '', '');
-            echo '<img id="' . $name . '_img" src="' . plugins_url('newsletter') . '/images/nomedia.png" onclick="newsletter_media(\'' . $name . '\')">';
+            $media_full = array('', '', '');
+            $media_id = 0;
+            echo '<img style="max-width: 200px; max-height: 200px;" id="' . esc_attr($name) . '_img" src="' . plugins_url('newsletter') . '/images/nomedia.png" onclick="newsletter_media(\'' . esc_attr($name) . '\')">';
         } else {
-            echo '<img id="' . $name . '_img" src="' . $media[0] . '" onclick="newsletter_media(\'' . $name . '\')">';
-            echo '<br>';
-            echo '<a href="#" onclick="newsletter_media_remove(\'' . $name . '\'); return false">Remove</a>';
-
+            echo '<img style="max-width: 200px; max-height: 200px;" id="' . esc_attr($name) . '_img" src="' . esc_attr($media[0]) . '" onclick="newsletter_media(\'' . esc_attr($name) . '\')">';
         }
 
-        echo '<input type="hidden" id="' . $name . '_id" name="options[' . $name . '][id]" value="' . $media_id . '" size="5">';
-        echo '<input type="hidden" id="' . $name . '_url" name="options[' . $name . '][url]" value="' . esc_attr($media[0]) . '" size="50">';
-
+        echo '</div>';
+        echo '<input type="hidden" id="' . esc_attr($name) . '_id" name="options[' . esc_attr($name) . '][id]" value="' . esc_attr($media_id) . '" size="5">';
+        echo '<input type="hidden" id="' . esc_attr($name) . '_url" name="options[' . esc_attr($name) . '][url]" value="' . esc_attr($media_full[0]) . '" size="50">';
     }
 
     function media_input($option, $name, $label) {
 
-//        if (empty($option)) {
-//            $option = $this->currentoption;
-//        }
-//        $options = $this->get_option($option);
-//        $val = '';
-//        if (isset($options[$var])) {
-//            $val = $options[$var];
-//        }
-
         if (!empty($label)) {
-            $output = '<label class="select" for="tnp_' . $name . '">' . $label . ':</label>';
+            $output = '<label class="select" for="tnp_' . esc_attr($name) . '">' . esc_html($label) . ':</label>';
         }
-        $output .= '<input id="tnp_' . $name . '" type="text" size="36" name="' . $option . '[' . $name . ']" value="' . esc_attr($val) . '" />';
-        $output .= '<input id="tnp_' . $name . '_button" class="button" type="button" value="Select Image" />';
+        $output .= '<input id="tnp_' . esc_attr($name) . '" type="text" size="36" name="' . esc_attr($option) . '[' . esc_attr($name) . ']" value="' . esc_attr($val) . '" />';
+        $output .= '<input id="tnp_' . esc_attr($name) . '_button" class="button-primary" type="button" value="Select Image" />';
         $output .= '<br class="clear"/>';
 
         echo $output;
     }
 
-}
+    /**
+     * Prints a formatted date using the formats and timezone of WP, including the current date and time and the
+     * time left to the passed time.
+     * 
+     * @param int $time
+     * @param int $now
+     * @param bool $left
+     * @return string
+     */
+    static function print_date($time = null, $now = false, $left = false) {
+        if (is_null($time)) {
+            $time = time();
+        }
+        if ($time == false) {
+            $buffer = 'none';
+        } else {
+            $buffer = gmdate(get_option('date_format') . ' ' . get_option('time_format'), $time + get_option('gmt_offset') * 3600);
+        }
+        if ($now) {
+            $buffer .= ' (now: ' . gmdate(get_option('date_format') . ' ' .
+                            get_option('time_format'), time() + get_option('gmt_offset') * 3600);
+            $buffer .= ')';
+        }
+        if ($left) {
+            $buffer .= ', ' . gmdate('H:i:s', $time - time()) . ' left';
+        }
+        return $buffer;
+    }
+    
+    /**
+     * Prints the help button near a form field. The label is used as icon title.
+     * 
+     * @param string $url
+     * @param string $label
+     */
+    static function help($url, $label='') {
+        echo '<a href="', $url, '" target="_blank" title="', esc_attr($label), '"><i class="fa fa-question-circle-o"></i></a>';
+    }
+    
+    static function idea($url, $label='') {
+        echo '<a href="', $url, '" target="_blank" title="', esc_attr($label), '"><i class="fa fa-lightbulb-o"></i></a>';
+    }
+    
+    static function field_help($url, $text = '') {
+        if (empty($text)) $text = __('Read more', 'newsletter');
+        echo '<i class="fa fa-question-circle"></i>&nbsp;<a href="', $url, '" target="_blank">', $text, '</a>';
+    }
+    
+    /**
+     * Prints a panel link to the documentation.
+     * 
+     * @param type $url
+     * @param type $text
+     */
+    static function panel_help($url, $text = '') {
+        if (empty($text)) $text = __('Need help?', 'newsletter');
+        echo '<span class="tnp-panel-help"><a href="', $url, '" target="_blank">', $text, '</a></span>';
+    }
+    
+    /**
+     * Prints an administration page link to the documentation (just under the administration page title.
+     * @param type $url
+     * @param type $text
+     */
+    static function page_help($url, $text = '') {
+        if (empty($text)) $text = __('Need help?', 'newsletter');
+        echo '<div class="tnp-page-help"><a href="', $url, '" target="_blank">', $text, '</a></div>';
+    }
+    
+    static function print_truncated($text, $size=50) {
+        if (mb_strlen($text) < $size) return esc_html($text);
+        $sub = mb_substr($text, 0, $size);
+        echo '<span title="', esc_attr($text), '">', esc_html($sub), '...</span>';
+    }
 
-?>
+}

@@ -1,4 +1,5 @@
 <?php
+if (!defined('ABSPATH')) exit;
 
 @require_once NEWSLETTER_INCLUDES_DIR . '/logger.php';
 
@@ -32,10 +33,12 @@ class NewsletterStore {
 
     function get_field($table, $id, $field_name) {
         global $wpdb;
-        if (preg_match('/^[a-zA-Z]+$/', $field_name) == 0) {
+        $field_name = (string)$field_name;
+        if (preg_match('/^[a-zA-Z_]+$/', $field_name) == 0) {
             $this->logger->error('Invalis field name: ' . $field_name);
             return false;
         }
+        $id = (int)$id;
         $r = $wpdb->get_var($wpdb->prepare("select $field_name from $table where id=%d limit 1", $id));
         if ($wpdb->last_error) {
             $this->logger->error($wpdb->last_error);
@@ -46,12 +49,20 @@ class NewsletterStore {
 
     function get_single($table, $id, $format = OBJECT) {
         global $wpdb;
+        $id = (int)$id;
         return $this->get_single_by_query($wpdb->prepare("select * from $table where id=%d limit 1", $id), $format);
     }
 
     function get_single_by_field($table, $field_name, $field_value, $format = OBJECT) {
         global $wpdb;
-        return $this->get_single_by_query("select * from $table where $field_name='" . $wpdb->escape($field_value) . "' limit 1", $format);
+        $field_name = (string)$field_name;
+        $field_value = (string)$field_value;
+        
+        if (preg_match('/^[a-zA-Z_]+$/', $field_name) == 0) {
+            $this->logger->error('Invalis field name: ' . $field_name);
+            return false;
+        }
+        return $this->get_single_by_query($wpdb->prepare("select * from $table where $field_name=%s limit 1", $field_value), $format);
     }
 
     function get_count($table, $where = null) {
@@ -85,6 +96,8 @@ class NewsletterStore {
     }
 
     function sanitize($data) {
+        global $wpdb;
+        if (strpos($wpdb->charset, 'utf8mb4') === 0) return $data;
         foreach ($data as $key => $value) {
             $data[$key] = preg_replace('%(?:\xF0[\x90-\xBF][\x80-\xBF]{2}|[\xF1-\xF3][\x80-\xBF]{3}|\xF4[\x80-\x8F][\x80-\xBF]{2})%xs', '', $value);
         }
@@ -106,21 +119,30 @@ class NewsletterStore {
         if (is_object($data)) {
             $data = (array) $data;
         }
+        
+        // Remove transient fields
+        foreach (array_keys($data) as $key) {
+            if (substr($key, 0, 1) == '_') unset($data[$key]);
+        }
 
         if (isset($data['id'])) {
-            $id = $data['id'];
+            $id = (int)$data['id'];
             unset($data['id']);
-            $r = $wpdb->update($table, $this->sanitize($data), array('id' => $id));
-            if ($r === false) {
-                $this->logger->fatal($wpdb->last_error);
-                die('Database error.');
+            if (!empty($data)) {
+                $r = $wpdb->update($table, $this->sanitize($data), array('id' => $id));
+                if ($r === false) {
+                    $this->logger->fatal($wpdb->last_error);
+                    $this->logger->fatal($wpdb->last_query);
+                    die('Database error see the log files (log files path can be found on Newsletter diagnostic panel)');
+                }
             }
             //$this->logger->debug('save: ' . $wpdb->last_query);
         } else {
             $r = $wpdb->insert($table, $this->sanitize($data));
             if ($r === false) {
                 $this->logger->fatal($wpdb->last_error);
-                die('Database error.');
+                $this->logger->fatal($wpdb->last_query);
+                die('Database error see the log files (log files path can be found on Newsletter diagnostic panel)');
             }
             $id = $wpdb->insert_id;
         }
@@ -134,7 +156,14 @@ class NewsletterStore {
 
     function increment($table, $id, $field) {
         global $wpdb;
-        $result = $wpdb->query("update $table set $field=$field+1 where id=$id");
+        $id = (int)$id;
+        $field = (string)$field;
+        
+        if (preg_match('/^[a-zA-Z_]+$/', $field) == 0) {
+            $this->logger->error('Invalis field name: ' . $field);
+            return false;
+        }
+        $result = $wpdb->query($wpdb->prepare("update $table set $field=$field+1 where id=%d", $id));
 
         if ($wpdb->last_error) {
             $this->logger->error($wpdb->last_error);
@@ -153,9 +182,12 @@ class NewsletterStore {
     function delete($table, $id) {
         global $wpdb;
         if (is_array($id)) {
+            for ($i=0; $i<count($id); $i++) {
+                $id[$i] = (int)$id[$i];
+            }
             $wpdb->query("delete from " . $table . " where id in (" . implode(',', $id) . ")");
         } else {
-            $wpdb->delete($table, array('id' => $id));
+            $wpdb->delete($table, array('id' => (int)$id));
         }
         if ($wpdb->last_error) {
             $this->logger->error($wpdb->last_error);
@@ -184,6 +216,10 @@ class NewsletterStore {
 
     function set_field($table, $id, $field, $value) {
         global $wpdb;
+        $field = (string)$field;
+        $id = (int)$id;
+        $value = (string)$value;
+        
         if (preg_match('/^[a-zA-Z_]+$/', $field) == 0) {
             $this->logger->error('Invalis field name: ' . $field_name);
             return false;

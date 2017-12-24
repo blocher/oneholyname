@@ -2,6 +2,9 @@
 global $newsletter; // Newsletter object
 global $post; // Current post managed by WordPress
 
+if (!defined('ABSPATH'))
+    exit;
+
 /*
  * Some variabled are prepared by Newsletter Plus and are available inside the theme,
  * for example the theme options used to build the email body as configured by blog
@@ -22,9 +25,9 @@ global $post; // Current post managed by WordPress
 $filters = array();
 
 // Maximum number of post to retrieve
-$filters['showposts'] = (int) $theme_options['theme_max_posts'];
-if ($filters['showposts'] == 0) {
-    $filters['showposts'] = 10;
+$filters['posts_per_page'] = (int) $theme_options['theme_max_posts'];
+if ($filters['posts_per_page'] == 0) {
+    $filters['posts_per_page'] = 10;
 }
 
 
@@ -41,31 +44,20 @@ if (!empty($theme_options['theme_post_types'])) {
 // Retrieve the posts asking them to WordPress
 $posts = get_posts($filters);
 
-// Styles
-$color = $theme_options['theme_color'];
-if (empty($color))
-    $color = '#777';
-
-$font = $theme_options['theme_font'];
-$font_size = $theme_options['theme_font_size'];
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <title></title>
-        <style>
-            * {
-                font-family: <?php echo $font; ?>;
-                font-size: <?php echo $font_size; ?>;
-            }
-        </style>
     </head>
     <body style="font:normal 11px helvetica,sans-serif;">
 
-        <table style="background:#ffffff" width="600" align="center" border="0" cellpadding="0" cellspacing="0">
+        <table style="background:#ffffff; max-width: 100%" width="600" align="center" border="0" cellpadding="0" cellspacing="0">
 
             <tr>
-                <td style="color:#9ab;font:normal 11px helvetica,sans-serif;text-align:center;padding:10px 0 20px 0"><?php echo $theme_options['theme_pre_message']; ?></td>
+                <td style="color:#9ab;font:normal 12px helvetica,sans-serif;text-align:center;padding:10px 0 20px 0">
+                    <?php echo $theme_options['theme_pre_message']; ?>
+                </td>
             </tr>
 
             <tr>
@@ -76,14 +68,10 @@ $font_size = $theme_options['theme_font_size'];
 
                 <td style="border:1px dotted #e1e2e3;border-top:none;border-bottom:3px solid #e1e2e3;background:#ffffff">
 
-
-
                     <table width="100%" align="center" border="0" cellpadding="20" cellspacing="0">
 
                         <tr>
                             <td style="background:#ffffff">
-
-
 
                                 <p style="color:#456;font-family:arial,sans-serif;font-size:24px;line-height:1.2;margin:15px 0;padding:0"><a target="_tab" href="<?php echo get_option('home'); ?>" style="color:#28c;text-decoration:none" target="_blank"><?php echo get_option('blogname'); ?></a></p>
 
@@ -129,7 +117,7 @@ $font_size = $theme_options['theme_font_size'];
 
                                 <br><br>
                                 <p style="color:#456;font-family:arial,sans-serif;font-size:12px;line-height:1.6em;font-style:italic;margin:0 0 15px 0;padding:0">
-                                    To change your subscription, <a target="_blank"  href="{profile_url}">click here</a>.
+                                    <?php echo $theme_options['theme_footer_message']; ?>
                                 </p>
                             </td>
                         </tr>

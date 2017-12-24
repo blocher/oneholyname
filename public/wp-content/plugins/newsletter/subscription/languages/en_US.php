@@ -12,12 +12,14 @@
 
 $options = array();
 
+$options['noconfirmation'] = 0;
+$options['antiflood'] = 10;
+$options['notify_email'] = get_option('admin_email');
+
 // Profile page
-$options['profile_text'] = "<p>Change your subscription preferences to get what you are most interested in.</p>
+$options['profile_text'] = __("{profile_form}
     <p>If you change your email address, a confirmation email will be sent to activate it.</p>
-    </p>
-    {profile_form}
-    <p>To cancel your subscription, <a href='{unsubscription_confirm_url}'>click here</a>.</p>";
+    <p><a href=\"{unsubscription_confirm_url}\">Cancel your subscription</a></p>", 'newsletter');
 
 // Profile page messages
 $options['profile_email_changed'] = "Your email has been changed, an activation email has been sent. Please follow the instructions to activate the new address.";
@@ -25,9 +27,7 @@ $options['profile_error'] = "Your email is not valid or already in use by anothe
     
 $options['error_text'] = '<p>This subscription can\'t be completed, sorry. The email address is blocked or already subscribed. You should contact the owner to unlock that email address. Thank you.</p>';
 
-$options['already_confirmed_text'] = '<p>This email address is already subscribed, anyway a welcome email has been resent. Thank you.</p>';
-
-$options['subscribe_wp_users'] = 0;
+//$options['already_confirmed_text'] = '<p>This email address is already subscribed, anyway a welcome email has been resent. Thank you.</p>';
 
 // Subscription page introductory text (befor the subscription form)
 $options['subscription_text'] =
@@ -36,14 +36,16 @@ $options['subscription_text'] =
 // Message show after a subbscription request has made.
 $options['confirmation_text'] =
 "<p>You have successfully subscribed to the newsletter. You'll
-receive a confirmation email in few minutes. Please follow the
-link in it to confirm your subscription. If the email takes
+receive a confirmation email in a few minutes. Please follow the
+link to confirm your subscription. If the email takes
 more than 15 minutes to appear in your mailbox, please check
 your spam folder.</p>";
 
 // Confirmation email subject (double opt-in)
 $options['confirmation_subject'] =
 "Please confirm subscription - {blog_title} newsletter";
+
+$options['confirmation_tracking'] = '';
 
 // Confirmation email body (double opt-in)
 $options['confirmation_message'] =

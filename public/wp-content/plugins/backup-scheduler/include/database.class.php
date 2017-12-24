@@ -16,7 +16,7 @@ if (!class_exists("SL_Database")) {
 		* @param string $filter the beginning of the table name for instance "wp3_" for the tables of the blog n°3. If not provided, it will take all tables
 		*/
 
-		function SL_Database($filter="", $sepBlog = "") {
+		function __construct($filter="", $sepBlog = "") {
 			$this->starttime = microtime(true) ; 
 			$this->filter = $filter ; 
 			$this->sepBlog = $sepBlog ; 

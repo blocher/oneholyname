@@ -19,7 +19,7 @@ if (!class_exists("SLFramework_Tabs")) {
 		* @return SLFramework_Tabs the tabs
 		*/
 		
-		function SLFramework_Tabs() {	
+		function __construct() {	
 			$this->title = array() ; 
 			$this->content = array() ; 
 			$this->image = array() ; 

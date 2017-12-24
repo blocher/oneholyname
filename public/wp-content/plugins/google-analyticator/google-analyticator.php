@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Google Analyticator
- * Version: 6.4.9.5
+ * Version: 6.5.4
  * Plugin URI: http://www.videousermanuals.com/google-analyticator/?utm_campaign=analyticator&utm_medium=plugin&utm_source=readme-txt
  * Description: Adds the necessary JavaScript code to enable <a href="http://www.google.com/analytics/">Google's Analytics</a>. After enabling this plugin you need to authenticate with Google, then select your domain and you're set.
  * Author: SumoMe
@@ -12,7 +12,7 @@
 //error_reporting(E_ALL);
 //ini_set('display_errors', '1');
 
-define('GOOGLE_ANALYTICATOR_VERSION', '6.4.9');
+define('GOOGLE_ANALYTICATOR_VERSION', '6.5.4');
 
 define('GOOGLE_ANALYTICATOR_CLIENTID', '1007949979410.apps.googleusercontent.com');
 define('GOOGLE_ANALYTICATOR_CLIENTSECRET', 'q06U41XDXtzaXD14E-KO1hti'); //don't worry - this don't need to be secret in our case
@@ -125,9 +125,9 @@ function  ganalyticator_stats_init(){
 }
 // Initialize the options
 function ga_admin_init() {
-	
+
 	ga_get_active_addons();
-	
+
 	# Load the localization information
 	$plugin_dir = basename(dirname(__FILE__));
 	load_plugin_textdomain('google-analyticator', 'wp-content/plugins/' . $plugin_dir . '/localizations', $plugin_dir . '/localizations');
@@ -154,9 +154,10 @@ function add_ga_option_page() {
 		//$plugin_page = add_options_page(__('Google Analyticator Settings', 'google-analyticator'), 'Google Analytics', 'manage_options', basename(__FILE__), 'ga_settings_page');
 		//add_action('load-'.$plugin_page, 'ga_pre_load' );
 	}
-	   $activate_page = add_submenu_page( null, 'Activation', 'Google Analytics', 'manage_options', 'ga_activate' , 'ga_activate');
-	   $reset_page = add_submenu_page(null, 'Reset', 'Reset', 'activate_plugins', 'ga_reset', 'ga_reset' );
-        add_action('load-'.$reset_page, 'ga_do_reset' );
+
+	$activate_page = add_submenu_page( null, 'Activation', 'Google Analytics', 'manage_options', 'ga_activate' , 'ga_activate');
+	$reset_page = add_submenu_page(null, 'Reset', 'Reset', 'activate_plugins', 'ga_reset', 'ga_reset' );
+	add_action('load-'.$reset_page, 'ga_do_reset' );
 
 }
 
@@ -177,7 +178,6 @@ function ga_pre_load()
         // Update GA Token
         update_option('ga_google_token', $_POST['key_ga_google_token']);
 
-
     endif;
 
     if( get_option('ga_defaults') == 'yes' ):
@@ -186,8 +186,7 @@ function ga_pre_load()
         exit;
 
     endif;
-    
-    
+
     /** Action to trancate Analyticator db cache   **/
     if(isset($_GET['pageaction']) && $_GET['pageaction'] == 'ga_clear_cache'){
 	    global $wpdb;
@@ -272,7 +271,7 @@ function ga_do_reset()
 {
 	global $wpdb;
 	// Check to make sure referer is same as host.
-	check_admin_referer( 'ga-reset' );
+	check_admin_referer('ga-reset');
 
     // Delete all GA options.
     delete_option(key_ga_status);
@@ -375,7 +374,7 @@ function ga_options_page() {
 		if ($ga_admin_disable_DimentionIndex == '')
 			$ga_admin_disable_DimentionIndex = ga_admin_disable_DimentionIndex_default;
 			
-		update_option(key_ga_admin_disable_DimentionIndex, wp_filter_kses( $ga_admin_disable_DimentionIndex ) );
+		update_option(key_ga_admin_disable_DimentionIndex, sanitize_text_field( $ga_admin_disable_DimentionIndex ) );
 		
 		// Update the admin disable setting
 		$ga_admin_disable = wp_filter_kses( $_POST[key_ga_admin_disable] );
@@ -410,7 +409,7 @@ function ga_options_page() {
 
 		// Update the adsense key
 		$ga_adsense = $_POST[key_ga_adsense];
-		update_option(key_ga_adsense, wp_filter_kses( $ga_adsense ) );
+		update_option(key_ga_adsense, sanitize_text_field( $ga_adsense ) );
 
 		// Update the event tracking
 		$ga_event = $_POST[key_ga_event];
@@ -428,11 +427,11 @@ function ga_options_page() {
 		$ga_outbound_prefix = $_POST[key_ga_outbound_prefix];
 		if ($ga_outbound_prefix == '')
 			$ga_outbound_prefix = ga_outbound_prefix_default;
-			update_option(key_ga_outbound_prefix, wp_filter_kses( $ga_outbound_prefix) );
+			update_option(key_ga_outbound_prefix, sanitize_text_field( $ga_outbound_prefix) );
 
 			// Update the download tracking code
 			$ga_downloads = $_POST[key_ga_downloads];
-			update_option(key_ga_downloads, wp_filter_kses( $ga_downloads ) );
+			update_option(key_ga_downloads, sanitize_text_field( $ga_downloads ) );
 
 		// Update the Enhanced Link Attribution
 		$ga_enhanced_link_attr = $_POST[key_ga_enhanced_link_attr];
@@ -444,7 +443,7 @@ function ga_options_page() {
 		$ga_downloads_prefix = $_POST[key_ga_downloads_prefix];
 		if ($ga_downloads_prefix == '')
 			$ga_downloads_prefix = ga_downloads_prefix_default;
-			update_option(key_ga_downloads_prefix, wp_filter_kses( $ga_downloads_prefix) );
+			update_option(key_ga_downloads_prefix, sanitize_text_field( $ga_downloads_prefix) );
 
 		// Update the widgets option
 		$ga_widgets = $_POST[key_ga_widgets];
@@ -467,7 +466,7 @@ function ga_options_page() {
 		do_action("ga_experiment_setting_save");
 		
 		// Give an updated message
-		echo "<div class='updated fade'><p><strong>" . __('Google Analyticator settings saved.', 'google-analyticator') . "</strong></p></div>";
+		echo "<div class='updated settings-error notice is-dismissible'><p><strong>" . __('Google Analyticator settings saved.', 'google-analyticator') . "</strong></p><button type='button' class='notice-dismiss'><span class='screen-reader-text'>Dismiss this notice.</span></button></div>";
 	}
         // Are we using the auth system?
         $useAuth = ( get_option( 'ga_google_token' ) == '' ? false : true );
@@ -1021,9 +1020,10 @@ if(!$addons){?>
     <p class="submit">
       <input type="submit" class="button button-primary" name="info_update" value="<?php _e('Save Changes', 'google-analyticator'); ?>" />
     </p>
-    <a href="<?php echo ga_analyticator_setting_url(). '&pageaction=ga_clear_cache' ?>"><?php _e('Clear Analyticator Cache', 'google-analyticator'); ?></a> |  <a href="<?php echo admin_url('/options-general.php?page=ga_reset'); ?>">
+    <a href="<?php echo ga_analyticator_setting_url(). '&pageaction=ga_clear_cache' ?>"><?php _e('Clear Analyticator Cache', 'google-analyticator'); ?></a> |  <a href="<?php echo wp_nonce_url( admin_url('/options-general.php?page=ga_reset'), 'ga-reset'); ?>">
     <?php _e('Deauthorize &amp; Reset Google Analyticator.', 'google-analyticator'); ?></a>   
   </form>
+
 </div>
 </div>
 <!-- end wrap -->
@@ -1274,6 +1274,11 @@ function ga_outgoing_links()
  **/
 function ga_external_tracking_js()
 {
+	// Exit if this is a post preview
+	if (is_preview()) {
+		return;
+	}
+
 	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	wp_enqueue_script('ga-external-tracking', plugins_url("/google-analyticator/external-tracking{$suffix}.js"), array('jquery'), GOOGLE_ANALYTICATOR_VERSION);
 }
@@ -1285,8 +1290,7 @@ function ga_current_user_is($roles)
 {
 	if ( !$roles ) return false;
 
-	global $current_user;
-	get_currentuserinfo();
+	$current_user = wp_get_current_user();
 	$user_id = intval( $current_user->ID );
 
 	if ( !$user_id ) {

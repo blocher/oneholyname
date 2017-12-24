@@ -21,7 +21,7 @@ if (!class_exists("SLFramework_Textdiff")) {
 		* @access private
 		* @return void
 		*/
-		function SLFramework_Textdiff() {
+		function __construct() {
 			require_once( ABSPATH . WPINC . '/wp-diff.php' );
 		}
 

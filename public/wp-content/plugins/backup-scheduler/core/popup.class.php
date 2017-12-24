@@ -20,7 +20,7 @@ if (!class_exists("SLFramework_Popup")) {
 		* @return void 
 		*/
 		
-		public function SLFramework_Popup($title, $content, $css="", $callback="") {
+		public function __construct($title, $content, $css="", $callback="") {
 			$this->callback = $callback ; 
 			$this->css = $css ; 
 			$this->title = $title ; 

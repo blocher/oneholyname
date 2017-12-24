@@ -10,17 +10,22 @@
 
 global $newsletter, $post;
 
-$color = $theme_options['theme_color'];
-if (empty($color))
+if (!defined('ABSPATH'))
+    exit;
+
+
+if (empty($theme_options['theme_color']))
     $color = '#0088cc';
+else
+    $color = $theme_options['theme_color'];
 
 if (isset($theme_options['theme_posts'])) {
     $filters = array();
 
     if (empty($theme_options['theme_max_posts']))
-        $filters['showposts'] = 10;
+        $filters['posts_per_page'] = 10;
     else
-        $filters['showposts'] = (int) $theme_options['theme_max_posts'];
+        $filters['posts_per_page'] = (int) $theme_options['theme_max_posts'];
 
     if (!empty($theme_options['theme_categories'])) {
         $filters['category__in'] = $theme_options['theme_categories'];
@@ -63,7 +68,7 @@ if (isset($theme_options['theme_posts'])) {
                             <tbody>
                                 <tr>
                                     <td valign="top" style="background-color: #333; color: #f4f4f4; font-size: 20px; padding: 7px">
-                                        <?php echo get_option('blogname') ?>
+<?php echo get_option('blogname') ?>
                                     </td>
                                 </tr>
                                 <!-- main content here --> 
@@ -121,7 +126,7 @@ if (isset($theme_options['theme_posts'])) {
                                                             <tbody>
                                                                 <tr>
                                                                     <td align="center" style="font-size: 14px; font-family: Arial;">
-                                                                        <?php include WP_PLUGIN_DIR . '/newsletter/emails/themes/default/social.php'; ?>
+<?php include WP_PLUGIN_DIR . '/newsletter/emails/themes/default/social.php'; ?>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>

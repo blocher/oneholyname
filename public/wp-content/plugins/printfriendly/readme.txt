@@ -1,41 +1,62 @@
-=== Print Friendly and PDF Button===
+=== Print, PDF, Email by PrintFriendly ===
 Contributors: printfriendly,joostdevalk, jrf
-Tags: print, pdf, printer, printing, printable, widget, plugin
+Tags: print, pdf, email, print button, wp-print, print recipe, print post, print page, print widget, print plugin, printable, wp-pdf, pdf post, pdf page, pdf button, pdf widget, pdf plugin, woocommerce print, woocommerce pdf
 Requires at least: 2.8
-Tested up to: 4.3
-Stable tag: 3.4.3
+Tested up to: 4.9
+Stable tag: 3.13.0
 
 
-The #1 Print and PDF button for your WordPress site. Printer Friendly pages without coding, css, or print.css. Fast, easy, and professional.
+The #1 Print, PDF, Email button. Stylish, full featured, customizable. Add custom header, footer, and more.
 
 == Description ==
 
-The Print Friendly & PDF button saves paper and ink when printing or creating a PDF. It's fast, easy, and looks great when printed. Add the button now, and your users will see the difference.
+**Benefits For Publishers**
 
-**How Print Friendly & PDF Works**
+* Professional: highly polished, stable, and supported.
+* Stylish lightbox (no annoying new tabs or window).
+* Ultimate, Print, PDF, Email experience for your users.
+* Works on HTTP, HTTPS, and password protected sites.
+* Help people save money and the environment.
+* Full featured and free (ad supported) or [Pro Service](https://www.printfriendly.com/button/pro).
 
-The Print Friendly & PDF button automatically creates printer friendly and PDF versions of your pages without the hassle of having to create a print CSS file. No coding, hacking or programming required. Simply install the Print Friendly & PDF plugin, activate, and choose settings for full customization. It also gives your user the ability to remove images and paragraphs of text, so they really only have to print exactly what they want.
+**Benefits for End-Users**
 
-**Cool Features For You:**
+* Save paper and ink when you print
+* Change the text and image size
+* Edit the page by clicking to remove text or images before print or PDF. (Optional feature publishers can choose.)
+* PDF with clickable links
+* Custom paper sizes (A4 or Letter) for PDF
 
-* Get a Printer Friendly and PDF button for your users.
-* Fully Customizable! Choose your favorite print and PDF button, use a text link, or use your own graphic.
-* Get precision placement with easy to change margins, alignment, and pages for your Print and PDF button.
-* On-Page-Lightbox. Have you noticed that other printer friendly buttons open new windows, or tabs? Not with Print Friendly & PDF button. It opens in a Lightbox so you your users stay on the page, and your wp website.
-* Professional looking print and PDFs with branded headers.
-* More repeats and new users. Your brand/URL are printed on the page or saved in the PDF so users remember your site and new users can find you.
+**Customization**
 
-**Cool Print Features for Users:**
+* Print, PDF, Email, options can be on or off.
+* Custom headers and footers for the print and PDF.
+* Button styles to choose, or use your own text and image/button.
+* [Include a copyright](https://support.printfriendly.com/button/developer-questions/include-copyright/) on print and PDF.
+* [Use your own CSS](https://support.printfriendly.com/button/wordpress/create-custom-css-file/) for complete creative control or the print or PDF page.
+* Use the JavaScript or non-JavaScript option.
 
-* Optimizes pages for printing and PDF so you save money and the environment.
-* You can Print or get a PDF.
-* Edit the page before printing or getting a PDF: remove the images and paragraphs you don't need to save ink!
 
-**Localized for 25 Languages**
 
-PrintFriendly & PDF automatically changes language to match your visitor's language settings. For example, if your browser is set to Spanish, then PrintFriendly will use Spanish.
 
-Supported languages:
+= Free - Ad Supported =
+
+> This highly polished, professional plugin is free to use and fully functional. We maintain, improve, and offer support to all users. <br>
+> You get all this for free, and in return tasteful ads are displayed in a non-interfering way. <br>
+> Ads are only shown in the print/pdf/email confirmation window. No other ads are displayed or embedded in the content, or snuck in anywhere else. <br>
+> For example, [click here to see image](http://www.printfriendly.com/images/pf-free-ad-supported.gif)
+
+
+= Purchase an Ad-Free Subscription =
+
+> Get a quality product for reasonable price. Remove the ads by purchasing an ad-free subscription. It’s cheap, easy, and straightforward. <br>
+> Purchase now at [PrintFriendly.com/pro](https://www.printfriendly.com/button/pro)
+
+**Localized in 30 Languages**
+
+PrintFriendly & PDF speaks your language! It detects (based on browser setting) the end-users language and automatically changes language. For example, if your browser is set to Spanish, then PrintFriendly will use Spanish.
+
+A few of our supported languages:
 
 * Danish
 * German
@@ -61,37 +82,16 @@ Supported languages:
 * Chinese Simplified
 * Chinese Traditional
 
-[Learn more...](http://blog.printfriendly.com/2012/06/print-friendly-speaks-your-language.html)
-
 PrintFriendly and PDF is the #1 print optimization technology, **as featured in [Lifehacker](http://lifehacker.com/5272212/print-friendly-optimizes-web-pages-for-printing "PrintFriendly & PDF in Lifehacker"), [Mashable](http://mashable.com/2009/05/18/print-friendly/ "PrintFriendly & PDF in Mashable") & [makeuseof](http://www.makeuseof.com/dir/printfriendly-save-on-paper-and-ink/#comment-95052)**.
 
 **Give PrintFriendly & PDF a test drive at [PrintFriendly.com](http://www.printfriendly.com "PrintFriendly & PDF")**
 
 
-= Free - Ad Supported = 
+= Print, PDF, Email Privacy & Data =
 
-This highly polished, professional plugin is free to use and fully functional. We maintain, improve, and offer support to all users. 
+PDFs are generated on our server; **this plugin “phones home”**.  Also if the end-user shares the page via email, the email is sent by our server.
 
-You get all this for free, and in return tasteful ads are displayed in a non-interfering way.
-
-Ads are only shown in the email confirmation window. No other ads are displayed or embedded in the content, or snuck in anywhere else.
-
-For example, [click here to see image](http://www.printfriendly.com/images/pf-free-ad-supported.gif)
-
-
-= Purchase an Ad-Free Subscription = 
-
-Get a quality product for reasonable price. Remove the ads by purchasing an ad-free subscription. It’s cheap, easy, and straightforward. 
-
-Your ad-free subscription applies to this email plugin, and our popular PrintFriendly & PDF plugin. 
-
-Purchase now at [PrintFriendly.com/pro](http://printfriendly.com/pro)
-
-= Privacy & Data = 
-
-PDFs are generated on our server; ** this plugin “phones home” **.  Also if the end-user shares the page via email, the email is sent by our server. 
-
-Our Fundamental Principles: 
+Our Fundamental Principles:
 
 * **We do not sell data.** Period.
 * **We do not share data,** unless compelled by the law.
@@ -104,7 +104,7 @@ Specifically, here’s what we do with the data and information:
 
 If you’re using the non-JavaScript option in the plugin, then the preview is generated on our server and temporarily stored in cache for a few minutes. After that time it is permanently deleted.
 
-**Email Address & Content get permanently deleted** In order to send the email, we need to store the email address and message on our server. After the email has been sent and found not to be a spammer, the email address is permanently deleted. 
+**Email Address & Content get permanently deleted** In order to send the email, we need to store the email address and message on our server. After the email has been sent and found not to be a spammer, the email address is permanently deleted.
 
 **Server log files get created and deleted.** Browsers and Servers pass non-personally-identifying information, such as the browser type, language, referrer, and the date/time. We may use this data to analyze how the service is being used. Non-personally-identifying aggregate data may get published, e.g., by a report on trends in the usage of the service.
 
@@ -116,29 +116,143 @@ If you’re using the non-JavaScript option in the plugin, then the preview is g
 4. Select "Settings" to customize button style and placement.
 
 == Frequently Asked Questions ==
+= Print Friendly & PDF Official Support=
+[How to articles and support](https://support.printfriendly.com) for Print, PDF, and Email button by PrintFriendly
 
-= I set the button to align left / right and it doesn't align right! =
-Check whether your theme includes the [required CSS class](http://codex.wordpress.org/CSS#WordPress_Generated_Classes), PrintFriendly uses these to align your button. If that doesn't work for you, uncheck the "Add CSS to Pages" checkbox and style the button yourself.
+= Content Not Showing =
+Use [PrintFriendly & PDF custom class names](https://support.printfriendly.com/button/developer-questions/include-exclude-content/) to include/exclude content.
 
-= The Print Friendly button is loading but it's not doing anything, what's wrong? =
-Check the "JavaScript fallback" checkbox in the settings and check again. If the button starts working now, the JavaScript isn't loading correctly. Check your source for a mention of `cdn.printfriendly.com/printfriendly.js`. If it's not there, make sure your theme has the required [wp_footer](http://codex.wordpress.org/Function_Reference/wp_footer) call. 
+= How to add custom header to Print and PDF =
+Use the option in the Plugin settings. [See how](https://support.printfriendly.com/button/wordpress/custom-header-wp/)
 
-= Some of the input fields in the admin are disabled! =
-If you've disabled the loading of CSS and / or set "Add PrintFriendly To" to Manual, some of the input boxes will be disabled as you've basically disabled that functionality.
+= Hide the button on a specific page=
+You can [hide the Print, PDF, and Email button](https://support.printfriendly.com/button/wordpress/hide-button/) using CSS.
 
-= I'm manually adding the button but it's aligning wrong! =
-If you're getting unexpected results, you might want to set Horizontal Alignment to "None".
 
-= I still need help! =
-If you have any other issues with the plugin or the PrintFriendly widget, please write to support@printfriendly.com.
 
 == Screenshots ==
 
-1. The Print Friendly widget optimizes and formats your pages for print. Users can remove images and text before printing plus get a PDF
-2. The Settings Page: choose your print button, text link, or use your own text or graphic.
-3. Localization example: Spanish
+1. Lightbox design keeps users on your page.
+2. More sharing tools, Print, PDF, Email. Plus editing tools!
+3. Fully customizable: Choose your print button, text link, or use your own text or graphic.
+4. Print Friendly & PDF speaks your language! Localized in over 30 languages.
+
 
 == Changelog ==
+
+= 3.13.0 =
+* Add Notification alerting websites using Password Protection or JavaScript to display content they need to upgrade to PrintFriendly Pro
+
+= 3.12.5 =
+* Chanage link in settings page
+
+= 3.12.4 =
+* Bug fix, avoid "undefined variable: return"
+
+= 3.12.3 =
+* Bug fix, sometimes custom image didn't display correctly after upgrade
+
+= 3.12.2 =
+* Add title to Printfriendly button and change button image alt
+
+= 3.12.1 =
+* Fix translations
+
+= 3.12.0 =
+* Update custom button UI
+
+= 3.11.2 =
+* Fix button upgrade for pf-icon-both.gif
+
+= 3.11.1 =
+* Bug fix
+
+= 3.11.0 =
+* Update buttons
+
+= 3.10.0 =
+* Change "leave us a rating" message.
+
+= 3.9.2 =
+* Correctly handle spaces in print-only detection
+
+= 3.9.1 =
+* Better print-only detection
+
+= 3.9.0 =
+* Add new button
+
+= 3.8.8 =
+* Bug fix.
+
+= 3.8.7 =
+* Bug fix.
+
+= 3.8.6 =
+* Allow default image setting to be small medium or large.
+
+= 3.8.5 =
+* Bug fix.
+
+= 3.8.4 =
+* Bug fix.
+
+= 3.8.1 =
+* Improve automatic error reporting.
+
+= 3.8.0 =
+* Add automatic error reporting.
+
+= 3.7.6 =
+* WooCommerce support improvments: remove upsells from print preview.
+
+= 3.7.5 =
+* WooCommerce support improvments: fix DOMDocument.loadHTML warnings.
+
+= 3.7.4 =
+* Added CSS Relative Position and Z-Index to button to avoid content covering the button.
+
+= 3.7.3 =
+* Always use https
+
+= 3.7.2 =
+* Use schema less URLs for loading icons
+
+= 3.7.1 =
+* Use www.printfriendly.com instead of app.printfriendly.com for redirects
+
+= 3.7.0 =
+* Remove http/https option, use current schema
+
+= 3.6.0 =
+* Allow custom HTML in Custom Button Text
+
+= 3.5.4 =
+* WooCommerce 'Content Algorithm' fix
+
+= 3.5.3 =
+* Fix security issues
+
+= 3.5.2 =
+* Fix code to support PHP 5.2
+
+= 3.5.0 =
+* WooCommerce product page improvements. Better support for product images, price, and description.
+
+= 3.4.9 =
+* Fix minor security issue
+
+= 3.4.8 =
+* Fix button images style
+
+= 3.4.7 =
+* Fix button style to remove underline
+
+= 3.4.6 =
+* Always removed PrintFriendly button underline regardless plugin CSS for button styles option
+
+= 3.4.4 =
+* Removed page content selection option - Wordpress Standard/Strict
 
 = 3.4.2 =
 * Fixed the issue occured due to new changes made in the page content selection options
@@ -162,7 +276,7 @@ If you have any other issues with the plugin or the PrintFriendly widget, please
 * Shortcode bug fix
 * Urlencoded button href to produce valid html
 
-= 3.3.7 = 
+= 3.3.7 =
 * Readme.txt update
 
 = 3.3.6 =
@@ -173,15 +287,15 @@ If you have any other issues with the plugin or the PrintFriendly widget, please
 
 = 3.3.4 =
 * Provided Algorithm Options
- 
+
 = 3.3.3 =
 * Using WP content hook for all Buttons
 
-= 3.3.2= 
+= 3.3.2=
 * Algorithm Update
 
-= 3.3.1 = 
-* SSL Support bug fixes. 
+= 3.3.1 =
+* SSL Support bug fixes.
 
 = 3.3.0 =
 
@@ -189,7 +303,7 @@ If you have any other issues with the plugin or the PrintFriendly widget, please
 * Better syncing between client-side/server-side content detection algorithm. This will make improvements to content detection easier than ever.
 * Support for international language sub-regions, for example PT-BR vs. PT (Portuguese-Brazil vs. Portuguese for Portugal)
 * Support for Wordpress - 3.6 .
-* Printfriendly custom commands support. 
+* Printfriendly custom commands support.
 
 = 3.2.10 =
 * Fixed Bug in Google Analytics generation
@@ -197,13 +311,13 @@ If you have any other issues with the plugin or the PrintFriendly widget, please
 = 3.2.9 =
 * Enabled support for Google Analytics
 
-= 3.2.8 = 
+= 3.2.8 =
 * Algorithm Update
 
-= 3.2.7 = 
-* Removed Break tag from button code. 
+= 3.2.7 =
+* Removed Break tag from button code.
 
-= 3.2.6 = 
+= 3.2.6 =
 * Fixed Button behavior when displayed on Homepage for NON-JS version.
 * Fixed CSS issue with Button when placed above content.
 * Fixed box-shadow issue with button.
@@ -348,4 +462,3 @@ If you have any other issues with the plugin or the PrintFriendly widget, please
 
 * To avoid conflicts with Google Analytics widgets, changed link structure. No longer uses onclick to call PrintFriendly Javascript. Now the javascript is called in the href.
 * Custom image support for hosted solutions
-

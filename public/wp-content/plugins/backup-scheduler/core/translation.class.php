@@ -22,7 +22,7 @@ if (!class_exists("SLFramework_Translation")) {
 		* @return SLFramework_Translation the SLFramework_Translation object
 		*/
 		
-		function SLFramework_Translation($domain, $plugin) {
+		function __construct($domain, $plugin) {
 			$this->domain = $domain ; 
 			$this->plugin = $plugin ; 
 			

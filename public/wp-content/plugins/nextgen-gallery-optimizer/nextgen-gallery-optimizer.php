@@ -27,15 +27,15 @@
  * lightbox script, and only loads it on appropriate posts and pages *with*
  * NextGEN Gallery content. The result? Gorgeous galleries *and* a speedy site.
  *
- * Optimizer v2.1.1 currently supports (and is tested compatible with) NextGEN
- * Gallery (v2.0.0 to v2.1.0), NextGEN Legacy (v1.6.2 to v1.9.13) and
- * NextCellent Gallery (v1.9.14 to v1.9.26).
+ * Optimizer v2.1.5 currently supports (and is tested compatible with) NextGEN
+ * Gallery (v2.0.0 to v2.1.60), NextGEN Legacy (v1.6.2 to v1.9.13) and
+ * NextCellent Gallery (v1.9.14 to v1.9.31).
  *
  * NextGEN Gallery Optimizer Pro
  *
  * Upgrade to Optimizer Pro for the new "NextGEN Gallery Deactivator" feature.
  * A whole new level of speed optimization.
- * Only load NextGEN’s PHP *code* on posts/pages *with* NextGEN Gallery content.
+ * Only load NextGEN's PHP *code* on posts/pages *with* NextGEN Gallery content.
  * http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator
  *
  * Upgrade to Optimizer Pro for the new "Dynamic Fancybox Settings Interface".
@@ -52,16 +52,16 @@
  * @package		NextGEN_Gallery_Optimizer_Basic
  * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
  * @link				http://www.nextgengalleryoptimizer.com
- * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @copyright	2012 - 2016 Mark Jeldi | Helpful Media
  *
  * @wordpress-plugin
  * Plugin Name:	NextGEN Gallery Optimizer
  * Plugin URI:	http://www.nextgengalleryoptimizer.com
- * Description:	<strong>The essential add-on for the NextGEN Gallery WordPress plugin.</strong> Optimizer improves your site's page load speed, by preventing NextGEN's scripts and stylesheets from loading on posts and pages <strong><em>without</em></strong> NextGEN Gallery content. <strong><a href="http://www.nextgengalleryoptimizer.com/#script-and-stylesheet-optimization">Learn more</a></strong>. Optimizer also includes an <strong><em>enhanced</em></strong> version of the fantastic Fancybox lightbox script, and only loads it on appropriate posts and pages <strong><em>with</em></strong> NextGEN Gallery content. The result? Gorgeous galleries <strong><em>and</em></strong> a speedy site! <strong><a href="http://www.nextgengalleryoptimizer.com/#enhanced-fancybox-lightbox">Learn more</a></strong>. Optimizer v2.1.1 currently supports (and is tested compatible with) NextGEN Gallery (v2.0.0 to v2.1.0), NextGEN Legacy (v1.6.2 to v1.9.13) and NextCellent Gallery (v1.9.14 to v1.9.26). <strong><a href="http://www.nextgengalleryoptimizer.com/nextgen-gallery-optimizer-pro/">***Upgrade to Optimizer Pro***</a></strong> for the new <strong><a href="http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator">NextGEN Gallery Deactivator</a></strong> feature. A whole new level of speed optimization, that only loads NextGEN’s PHP <strong><em>code</em></strong> on posts and pages <strong><em>with</em></strong> NextGEN Gallery content. Also included in Optimizer Pro is the new <strong><a href="http://www.nextgengalleryoptimizer.com/#dynamic-fancybox-settings-interface">Dynamic Fancybox Settings Interface</a></strong>. The fastest and easiest way to customize Fancybox. Set title styles, background color and opacity, make Fancybox <strong><em>responsive</em></strong> and more. See it in action on Optimizer's settings page, or check out the website for a <strong><a href="http://www.nextgengalleryoptimizer.com/#dynamic-fancybox-settings-interface">live demo</a></strong>.
+ * Description:	<strong>The essential add-on for the NextGEN Gallery WordPress plugin.</strong> Optimizer improves your site's page load speed, by preventing NextGEN's scripts and stylesheets from loading on posts and pages <strong><em>without</em></strong> NextGEN Gallery content. <strong><a href="http://www.nextgengalleryoptimizer.com/#script-and-stylesheet-optimization">Learn more</a></strong>. Optimizer also includes an <strong><em>enhanced</em></strong> version of the fantastic Fancybox lightbox script, and only loads it on appropriate posts and pages <strong><em>with</em></strong> NextGEN Gallery content. The result? Gorgeous galleries <strong><em>and</em></strong> a speedy site! <strong><a href="http://www.nextgengalleryoptimizer.com/#enhanced-fancybox-lightbox">Learn more</a></strong>. Optimizer v2.1.5 currently supports (and is tested compatible with) NextGEN Gallery (v2.0.0 to v2.1.60), NextGEN Legacy (v1.6.2 to v1.9.13) and NextCellent Gallery (v1.9.14 to v1.9.31). <strong><a href="http://www.nextgengalleryoptimizer.com/nextgen-gallery-optimizer-pro/">***Upgrade to Optimizer Pro***</a></strong> for the new <strong><a href="http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator">NextGEN Gallery Deactivator</a></strong> feature. A whole new level of speed optimization, that only loads NextGEN's PHP <strong><em>code</em></strong> on posts and pages <strong><em>with</em></strong> NextGEN Gallery content. Also included in Optimizer Pro is the new <strong><a href="http://www.nextgengalleryoptimizer.com/#dynamic-fancybox-settings-interface">Dynamic Fancybox Settings Interface</a></strong>. The fastest and easiest way to customize Fancybox. Set title styles, background color and opacity, make Fancybox <strong><em>responsive</em></strong> and more. See it in action on Optimizer's settings page, or check out the website for a <strong><a href="http://www.nextgengalleryoptimizer.com/#dynamic-fancybox-settings-interface">live demo</a></strong>.
  * Author:			Helpful Media
- * Version:		2.1.1
+ * Version:		2.1.5
  *
- * Copyright (c) 2012-2015 by Mark Jeldi | Helpful Media | http://www.nextgengalleryoptimizer.com/contact/
+ * Copyright (c) 2012-2016 by Mark Jeldi | Helpful Media | http://www.nextgengalleryoptimizer.com/contact/
  */
 
 /**
@@ -85,7 +85,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 if ( version_compare( PHP_VERSION, '5.0', '<' ) ) {
 
-	exit( sprintf( 'Sorry. NextGEN Gallery Optimizer requires PHP 5 or greater, <a href="http://wordpress.org/about/requirements">just like WordPress itself since v3.2</a>. You’re still on ' . PHP_VERSION . '. Please contact your host to arrange an upgrade.' ) );
+	exit( sprintf( 'Sorry. NextGEN Gallery Optimizer requires PHP 5 or greater, <a href="http://wordpress.org/about/requirements">just like WordPress itself since v3.2</a>. You\'re still on ' . PHP_VERSION . '. Please contact your host to arrange an upgrade.' ) );
 
 }
 
@@ -138,7 +138,7 @@ if ( $wp_version < 3.7 ) {
 	 * @since	2.0.0
 	 * @var		string
 	 */
-	protected $version = '2.1.1';
+	protected $version = '2.1.5';
 
 	/**
 	 * Our plugin display name.

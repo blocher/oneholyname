@@ -27,15 +27,15 @@
  * lightbox script, and only loads it on appropriate posts and pages *with*
  * NextGEN Gallery content. The result? Gorgeous galleries *and* a speedy site.
  *
- * Optimizer v2.1.1 currently supports (and is tested compatible with) NextGEN
- * Gallery (v2.0.0 to v2.1.0), NextGEN Legacy (v1.6.2 to v1.9.13) and
- * NextCellent Gallery (v1.9.14 to v1.9.26).
+ * Optimizer v2.1.5 currently supports (and is tested compatible with) NextGEN
+ * Gallery (v2.0.0 to v2.1.60), NextGEN Legacy (v1.6.2 to v1.9.13) and
+ * NextCellent Gallery (v1.9.14 to v1.9.31).
  *
  * NextGEN Gallery Optimizer Pro
  *
  * Upgrade to Optimizer Pro for the new "NextGEN Gallery Deactivator" feature.
  * A whole new level of speed optimization.
- * Only load NextGEN’s PHP *code* on posts/pages *with* NextGEN Gallery content.
+ * Only load NextGEN's PHP *code* on posts/pages *with* NextGEN Gallery content.
  * http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator
  *
  * Upgrade to Optimizer Pro for the new "Dynamic Fancybox Settings Interface".
@@ -52,7 +52,7 @@
  * @package		NextGEN_Gallery_Optimizer_Basic
  * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
  * @link				http://www.nextgengalleryoptimizer.com
- * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @copyright	2012 - 2016 Mark Jeldi | Helpful Media
  */
 
 /**
@@ -438,12 +438,23 @@ class NGGOBASIC_Admin {
 	 *
 	 * @wp-hook	admin_head
 	 * @uses		admin_url()
+	 * @global		$wp_version
 	 * @since		2.0.0
 	 * @return 	void
 	 */
 	function add_plugin_description_formatting() {
 
 		if ( $this->is_plugins_page() ) {
+
+			/*
+			 * As of WP v4.5, each plugin slug on the "plugins.php" page is now
+			 * stored in the "data-slug" attribute, rather than the "id"
+			 * attribute used in earlier versions. We'll check for this below.
+			 *
+			 * @since	2.1.4
+			 */
+			global $wp_version;
+			$html_attribute = ( $wp_version < 4.5 ) ? 'id' : 'data-slug';
 
 			ob_start(); ?>
 
@@ -453,17 +464,17 @@ class NGGOBASIC_Admin {
 
 				jQuery( document ).ready( function( $ ) {
 
-					$( '[id=<?php echo $this->main_plugin_slug; ?>].active' ) // Look for ALL identical ID's, but only match the one with the"active" class. Duplicates occur in the DOM when you duplicate a plugin and only rename its directory.
+					$( '[<?php echo $html_attribute; ?>=<?php echo $this->main_plugin_slug; ?>].active' ) // Look for ALL identical ID's, but only match the one with the"active" class. Duplicates occur in the DOM when you duplicate a plugin and only rename its directory.
 						.find( '.plugin-description' )
 						.html( '' +
 						'<p style="padding-top: 4px;"><strong>The essential add-on for the NextGEN Gallery WordPress plugin.</strong></p>' +
 						'<p>Optimizer improves your site\'s page load speed, by preventing NextGEN\'s scripts and stylesheets from loading on posts and pages <strong><em>without</em></strong> NextGEN Gallery content. <a href="http://www.nextgengalleryoptimizer.com/#script-and-stylesheet-optimization" target="_blank">Learn more...</a></p>' +
 						'<p>Optimizer also includes an <strong><em>enhanced</em></strong> version of the fantastic Fancybox lightbox script, and only loads it on appropriate posts and pages <strong><em>with</em></strong> NextGEN Gallery content. The result? Gorgeous galleries <strong><em>and</em></strong> a speedy site! <a href="http://www.nextgengalleryoptimizer.com/#enhanced-fancybox-lightbox" target="_blank">Learn more...</a></p>' +
-						'<p>Optimizer v2.1.1 currently supports&nbsp;(and is tested compatible with)&nbsp;NextGEN Gallery&nbsp;(v2.0.0 to v2.1.0), NextGEN Legacy&nbsp;(v1.6.2 to v1.9.13)&nbsp;and NextCellent Gallery&nbsp;(v1.9.14 to v1.9.26).</p>' +
+						'<p>Optimizer v2.1.5 currently supports&nbsp;(and is tested compatible with)&nbsp;NextGEN Gallery&nbsp;(v2.0.0 to v2.1.60), NextGEN Legacy&nbsp;(v1.6.2 to v1.9.13)&nbsp;and NextCellent Gallery&nbsp;(v1.9.14 to v1.9.31).</p>' +
 
 						'<div style="padding-top: 15px; padding-bottom: 5px; margin-top: 15px; margin-bottom: 15px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd;">' +
 							'<p><strong>New and exclusive to Optimizer Pro...</strong></p>' +
-							'<p><strong>NextGEN Gallery Deactivator</strong><br />A whole new level of speed optimization.<br />Only load NextGEN’s PHP <strong><em>code</em></strong> on posts and pages <strong><em>with</em></strong> NextGEN Gallery content.<br /><a href="http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator" target="_blank">Learn more</a> | <a href="http://www.nextgengalleryoptimizer.com/docs/nextgen-gallery-deactivator/" target="_blank">Documentation</a></p>' +
+							'<p><strong>NextGEN Gallery Deactivator</strong><br />A whole new level of speed optimization.<br />Only load NextGEN\'s PHP <strong><em>code</em></strong> on posts and pages <strong><em>with</em></strong> NextGEN Gallery content.<br /><a href="http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator" target="_blank">Learn more</a> | <a href="http://www.nextgengalleryoptimizer.com/docs/nextgen-gallery-deactivator/" target="_blank">Documentation</a></p>' +
 							'<p><strong>Dynamic Fancybox Settings Interface</strong><br />The fastest and easiest way to customize Fancybox. Completely update-safe.<br />Change title position, background color and opacity, make Fancybox <strong><em>responsive</em></strong> and more.<br /><a href="<?php echo admin_url( 'options-general.php?page=' . $this->settings_slug );?>&autoload=true" target="_blank">Launch</a> | <a href="http://www.nextgengalleryoptimizer.com/docs/dynamic-fancybox-settings-interface/" target="_blank">Documentation</a></p>' +
 						'</div>' )
 						.find( 'p' )
@@ -710,7 +721,7 @@ class NGGOBASIC_Admin {
 				$out.= '<b>NextGEN Gallery Optimizer Basic Error Notification:</b><br />';
 				$out.= 'Optimizer is an add-on for the NextGEN Gallery WordPress plugin, but it appears...<b>NextGEN Gallery is not <i>installed</i>.</b><br />';
 				$out.= 'Please <a href="' . get_admin_url( '', 'plugin-install.php?tab=search&s=NextGEN+Gallery' ) . '">download it here automatically</a> ';
-				$out.= 'or <a href="http://wordpress.org/extend/plugins/nextgen-gallery">manually from the WordPress repository</a>.';
+				$out.= 'or <a href="https://wordpress.org/plugins/nextgen-gallery/" target="_blank">manually from the WordPress repository</a>.';
 				$out.= '</p></div>';
 
 				echo $out;

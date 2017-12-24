@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-05-23T06:43:12+00:00\n"
+"PO-Revision-Date: 2016-11-23T15:51:32+00:00\n"
 "Last-Translator: GerinG <http://gering111.com/>\n"
 "Last-Translator: Slawka <http://eth0.org.ru>\n"
 "Last-Translator: Berdych <chernil.com.ua>\n"
@@ -144,4 +144,34 @@ msgstr "(например, %s и %s)"
 
 msgid "All upload directories (for this site and the sub-blogs):"
 msgstr "Все директории загрузок (этого сайта и мини-блогов):"
+
+msgid "Exclude these folders:"
+msgstr "Исключить эти папки"
+
+msgid "Send the backup files by email:"
+msgstr "Отправить бекап посредством электронной почты"
+
+msgid "Do you want to add a suffix to sent files:"
+msgstr "Вы хотите добавить суффикс в отправляемые файлы"
+
+msgid "Save the backup files on a FTP?"
+msgstr "Сохранить файлы бекапа на ФТП хранилище"
+
+msgid "FTP host:"
+msgstr "ФТП хост"
+
+msgid "FTP port:"
+msgstr "ФТП порт"
+
+msgid "Your FTP login:"
+msgstr "ФТП логин"
+
+msgid "Your FTP pass:"
+msgstr "ФТП пароль"
+
+msgid "Test"
+msgstr "Тест"
+
+msgid "Add a prefix to the created folder:"
+msgstr "Добавить префикс в созданную папку"
 

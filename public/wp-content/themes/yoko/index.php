@@ -24,6 +24,6 @@ get_header(); ?>
 					</nav><!-- end nav-below -->
 				<?php endif; ?>			
 	</div><!-- end content -->
-<!-- DO -->
+
 <?php get_sidebar(); ?>
 <?php get_footer(); ?>

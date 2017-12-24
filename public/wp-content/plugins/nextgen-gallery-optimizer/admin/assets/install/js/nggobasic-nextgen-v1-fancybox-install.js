@@ -25,15 +25,15 @@
  * lightbox script, and only loads it on appropriate posts and pages *with*
  * NextGEN Gallery content. The result? Gorgeous galleries *and* a speedy site.
  *
- * Optimizer v2.1.1 currently supports (and is tested compatible with) NextGEN
- * Gallery (v2.0.0 to v2.1.0), NextGEN Legacy (v1.6.2 to v1.9.13) and
- * NextCellent Gallery (v1.9.14 to v1.9.26).
+ * Optimizer v2.1.5 currently supports (and is tested compatible with) NextGEN
+ * Gallery (v2.0.0 to v2.1.60), NextGEN Legacy (v1.6.2 to v1.9.13) and
+ * NextCellent Gallery (v1.9.14 to v1.9.31).
  *
  * NextGEN Gallery Optimizer Pro
  *
  * Upgrade to Optimizer Pro for the new "NextGEN Gallery Deactivator" feature.
  * A whole new level of speed optimization.
- * Only load NextGEN’s PHP *code* on posts/pages *with* NextGEN Gallery content.
+ * Only load NextGEN's PHP *code* on posts/pages *with* NextGEN Gallery content.
  * http://www.nextgengalleryoptimizer.com/#nextgen-gallery-deactivator
  *
  * Upgrade to Optimizer Pro for the new "Dynamic Fancybox Settings Interface".
@@ -50,7 +50,7 @@
  * @package		NextGEN_Gallery_Optimizer_Basic
  * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
  * @link				http://www.nextgengalleryoptimizer.com
- * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @copyright	2012 - 2016 Mark Jeldi | Helpful Media
  */
 
 /**
@@ -71,7 +71,7 @@
  * @package		NextGEN_Gallery_Optimizer_Basic
  * @author		Mark Jeldi | Helpful Media <http://www.nextgengalleryoptimizer.com/contact/>
  * @link				http://www.nextgengalleryoptimizer.com
- * @copyright	2012 - 2015 Mark Jeldi | Helpful Media
+ * @copyright	2012 - 2016 Mark Jeldi | Helpful Media
  * @since 			2.0.0
  */
 
@@ -137,6 +137,7 @@
 
 			// Cache our objects.
 			var $thumbCode = $( '#thumbCode' );
+			var $thumbCodeVal = $thumbCode.val();
 
 			$thumbEffect.prepend( '<option value=\"' + enhancedFancyboxDisplayName + '\">' + enhancedFancyboxDisplayName + '</option>' );
 
@@ -157,10 +158,20 @@
 			 * Fix for NextGEN v1.
 			 *
 			 * Menu displays 'None' after save if an add-on lightbox is selected.
+			 *
+			 * As of Optimizer v2.1.3, we're now also checking if
+			 * "returnedSelection" is *NULL*, as NextCellent Gallery lost its
+			 * selected="selected" attribute on the "None" option after the
+			 * full admin rewrite in v1.9.30.
+			 *
+			 * These changes also introduced several tabs of whitespace before
+			 * the link code value of all lightboxes, so we need to sanitize
+			 * the value with the $.trim() function first, before checking if
+			 * our lightbox is indeed installed.
 			 */
-			if ( 'none' === returnedSelection ) {
+			if ( ! returnedSelection || 'none' === returnedSelection ) {
 
-				if ( enhancedFancyboxCode === $thumbCode.val() ) {
+				if ( enhancedFancyboxCode === $.trim( $thumbCodeVal ) ) {
 
 					$thumbEffect.val( enhancedFancyboxDisplayName );
 
@@ -243,6 +254,29 @@
 
 			// Hide our message on initial load if another lightbox is saved.
 			if ( enhancedFancyboxDisplayName !== currentSelection ) { $boxText.css({ 'opacity': '0', 'display': 'none' }); }
+
+			/**
+			 * Styling fix for NextCellent Gallery, for the new-look admin
+			 * pages at Galleries --> Settings.
+			 *
+			 * As of Optimizer v2.1.3, we're checking if there's any left
+			 * margin on the "#slider" wrapper, which used to cause the
+			 * "JavaScript Thumbnail effect" TH tag title to break to two lines
+			 * in NextGEN Legacy and original NextCellent versions.
+			 *
+			 * Without this extra height, we need to add some bottom padding to
+			 * the select menu, so our message isn't right up against it.
+			 */
+			if ( $( '#slider' ).length > 0 ) {
+
+				if ( '0px' == $( '#slider' ).css( 'margin-left' ) ) {
+
+					// Adjust the select menu's padding.
+					$thumbEffect.parent().css({ 'padding-top': '0', 'padding-bottom': '9px', 'padding-right': '0' });
+
+				}
+
+			}
 
 		},
 

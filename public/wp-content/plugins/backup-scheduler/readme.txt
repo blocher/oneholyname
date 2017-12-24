@@ -6,7 +6,7 @@ Author URI: http://www.sedlex.fr/
 Plugin URI: http://wordpress.org/plugins/backup-scheduler/
 Tags: backup, schedule, plugin, save, database, zip
 Requires at least: 3.0
-Tested up to: 4.2
+Tested up to: 4.8.2
 Stable tag: trunk
 License: GPLv3
 
@@ -35,24 +35,25 @@ The super-admin may save either its data or the whole website. By saving the who
 
 = Localization =
 
+* Czech (Czech Republic) translation provided by Mik013, Mik013
 * German (Switzerland) translation provided by PeterDbbert, BernhardKnab, scream
 * German (Germany) translation provided by agent-test, agent, bartdev2000, Ditoran, GLassnig
 * English (United States), default language
 * Spanish (Spain) translation provided by Javier, AVfoto, charliechin, IgnacioCalvo, JordiVives, FelipeJAG, Sebas
 * Farsi (Iran) translation provided by sehrama.ir
 * Finnish (Finland) translation provided by AnttiSilvola
-* French (France) translation provided by SedLex, wkpixearts, Matthieu, mutmut, anonymous, noaneo, TonyLand
+* French (France) translation provided by SedLex, wkpixearts, Matthieu, mutmut, anonymous, noaneo, TonyLand, AlexGulphe
 * Indonesian (Indonesia) translation provided by ceceparif
 * Indonesian (Indonesia) translation provided by Faleddo
-* Italian (Italy) translation provided by PuntoCon
+* Italian (Italy) translation provided by SedLex, PuntoCon, Emilio, GiovanniCaputo
 * Dutch (Netherlands) translation provided by Matrix, WybAnema, Jay
-* Polish (Poland) translation provided by Opti, Lukasz, pablo, Misiek, MarekMackiewicz, Darbo
+* Polish (Poland) translation provided by Opti, Lukasz, pablo, Misiek, MarekMackiewicz, Darbo, darbo, adam
 * Portuguese (Brazil) translation provided by RainilsonRodriguis, GuiBeloto
 * Portuguese (Portugal) translation provided by FranciscoRocha
 * Russian (Russia) translation provided by GerinG, Slawka, Berdych
 * Swedish (Sweden) translation provided by 
 * Thai (Thailand) translation provided by tontan
-* Turkish (Turkey) translation provided by UfukArt
+* Turkish (Turkey) translation provided by SedLex
 * Chinese (People's Republic of China) translation provided by YiscaJoe, jeffli
 
 = Features of the framework =
@@ -77,6 +78,12 @@ Have fun !
 2. The configuration page of the plugin
 
 == Changelog ==
+
+= 1.5.13 =
+* BUG: link to malware site in a submitted translation
+
+= 1.5.12 =
+* NEW: Various improvement of the core
 
 = 1.5.11 =
 * BUG: some installation have some difficulties to identify the type of the column of the SQL table, thus now the quote are set by default one all column
@@ -227,4 +234,4 @@ If you have still this issue, please try with Winzip software.
 Visit http://www.sedlex.fr/cote_geek/
  
  
-InfoVersion:b8edec58cdf5da5ffb89be8876af11d47601241d
+InfoVersion:6903da7dfd178da373fa0ca5fe9670e2eaca9d8a

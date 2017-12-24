@@ -1,11 +1,5 @@
 <?php
 
-/***
-	{
-		Module: photocrati-nextgen_gallery_display
-	}
-***/
-
 define('NGG_DISPLAY_SETTINGS_SLUG', 'ngg_display_settings');
 define('NGG_DISPLAY_PRIORITY_BASE', 10000);
 define('NGG_DISPLAY_PRIORITY_STEP', 2000);
@@ -16,16 +10,23 @@ if (!defined('NGG_SHOW_DISPLAYED_GALLERY_ERRORS')) define('NGG_SHOW_DISPLAYED_GA
 
 class M_Gallery_Display extends C_Base_Module
 {
-	function define()
+	function define($id = 'pope-module',
+                    $name = 'Pope Module',
+                    $description = '',
+                    $version = '',
+                    $uri = '',
+                    $author = '',
+                    $author_uri = '',
+                    $context = FALSE)
 	{
 		parent::define(
 			'photocrati-nextgen_gallery_display',
 			'Gallery Display',
 			'Provides the ability to display gallery of images',
-			'0.13',
-			'http://www.photocrati.com',
-			'Photocrati Media',
-			'http://www.photocrati.com'
+			'0.17',
+      'https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/',
+      'Imagely',
+      'https://www.imagely.com'
 		);
 
 		C_Photocrati_Installer::add_handler($this->module_id, 'C_Display_Type_Installer');
@@ -176,16 +177,21 @@ class M_Gallery_Display extends C_Base_Module
     }
 
     /**
-     * Deletes any displayed galleries that are no longer associated with
-     * a post/page
+     * Deletes any displayed galleries that are no longer associated with a post/page
+     *
      * @global array $displayed_galleries_to_cleanup
      * @param int $post_id
      */
     function cleanup_displayed_galleries($post_id)
     {
+	    if (!apply_filters('ngg_cleanup_displayed_galleries', true, $post_id))
+		    return;
+
         global $displayed_galleries_to_cleanup;
         $mapper = C_Displayed_Gallery_Mapper::get_instance();
-        foreach ($displayed_galleries_to_cleanup as $id) $mapper->destroy($id);
+        foreach ($displayed_galleries_to_cleanup as $id) {
+	        $mapper->destroy($id);
+        }
     }
 
     /**
@@ -207,8 +213,13 @@ class M_Gallery_Display extends C_Base_Module
             $fs = C_Fs::get_instance();
             $abspath = $fs->find_static_abspath('photocrati-nextgen_gallery_display#fontawesome/font-awesome.css');
             if ($abspath) {
+	            $router = C_Router::get_instance();
                 $file_content = file_get_contents($abspath);
-                $file_content = str_replace('../fonts/fontawesome-webfont.woff', site_url('/?ngg_serve_fontawesome_woff=1'), $file_content);
+	            $file_content = str_replace('../fonts/fontawesome-webfont.eot',   $router->get_static_url($this->module_id . '#fonts/fontawesome-webfont.eot'),   $file_content);
+	            $file_content = str_replace('../fonts/fontawesome-webfont.svg',   $router->get_static_url($this->module_id . '#fonts/fontawesome-webfont.svg'),   $file_content);
+	            $file_content = str_replace('../fonts/fontawesome-webfont.ttf',   $router->get_static_url($this->module_id . '#fonts/fontawesome-webfont.ttf'),   $file_content);
+	            $file_content = str_replace('../fonts/fontawesome-webfont.woff2', $router->get_static_url($this->module_id . '#fonts/fontawesome-webfont.woff2'), $file_content);
+	            $file_content = str_replace('../fonts/fontawesome-webfont.woff', site_url('/?ngg_serve_fontawesome_woff=1'), $file_content);
                 header('Content-Type: text/css');
                 echo $file_content;
                 throw new E_Clean_Exit();
@@ -216,20 +227,50 @@ class M_Gallery_Display extends C_Base_Module
         }
     }
 
+	/**
+	 * Enqueues fontawesome. First checks to see if fontawesome is provided by another plugin or already enqueued,
+	 * and if not, enqueues a version of fontawesome that will work with or without IIS
+	 */
     static function enqueue_fontawesome()
     {
         if (!wp_style_is('fontawesome', 'registered'))
         {
-            if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'microsoft-iis') !== FALSE) {
-                wp_register_style('fontawesome', site_url('/?ngg_serve_fontawesome_css=1'));
-            } else {
-                $router = C_Router::get_instance();
-                wp_register_style('fontawesome', $router->get_static_url('photocrati-nextgen_gallery_display#fontawesome/font-awesome.css'));
-            }
+			wp_enqueue_style(
+				'fontawesome',
+				self::get_fontawesome_url(TRUE),
+				FALSE,
+				'4.6.1'
+			);
         }
 
         wp_enqueue_style('fontawesome');
     }
+
+	/**
+	 * Gets the src url for the registered fontawesome handler
+	 * @param bool $ngg_provided_only
+	 * @return null|string|void
+	 */
+	static function get_fontawesome_url($ngg_provided_only=FALSE)
+	{
+		$retval = NULL;
+
+		if (wp_style_is('fontawesome', 'registered') && !$ngg_provided_only) {
+			$style = wp_styles()->registered['fontawesome'];
+			$retval = $style->src;
+		}
+		else {
+			if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'microsoft-iis') !== FALSE) {
+				$retval = site_url('/?ngg_serve_fontawesome_css=1');
+			}
+			else {
+				$router = C_Router::get_instance();
+				$retval = $router->get_static_url('photocrati-nextgen_gallery_display#fontawesome/font-awesome.css');
+			}
+		}
+
+		return $retval;
+	}
 
 	function no_resources_mode($valid_request=TRUE)
 	{
@@ -359,22 +400,38 @@ class M_Gallery_Display extends C_Base_Module
         wp_register_script(
             'nextgen_gallery_display_settings',
             $router->get_static_url('photocrati-nextgen_gallery_display#nextgen_gallery_display_settings.js'),
-            array('jquery-ui-accordion', 'jquery-ui-tooltip')
+            array('jquery-ui-accordion', 'jquery-ui-tooltip'),
+	        NGG_SCRIPT_VERSION
         );
 
         wp_register_style(
             'nextgen_gallery_display_settings',
-            $router->get_static_url('photocrati-nextgen_gallery_display#nextgen_gallery_display_settings.css')
+            $router->get_static_url('photocrati-nextgen_gallery_display#nextgen_gallery_display_settings.css'),
+	        FALSE,
+	        NGG_SCRIPT_VERSION
         );
 
         if (apply_filters('ngg_load_frontend_logic', TRUE, $this->module_id))
         {
             wp_register_style(
                 'nextgen_gallery_related_images',
-                $router->get_static_url('photocrati-nextgen_gallery_display#nextgen_gallery_related_images.css')
+                $router->get_static_url('photocrati-nextgen_gallery_display#nextgen_gallery_related_images.css'),
+	            FALSE,
+	            NGG_SCRIPT_VERSION
             );
-            wp_register_script('ngg_common', $router->get_static_url('photocrati-nextgen_gallery_display#common.js'), array('jquery', 'photocrati_ajax'), NGG_PLUGIN_VERSION, TRUE);
-            wp_register_style('ngg_trigger_buttons', $router->get_static_url('photocrati-nextgen_gallery_display#trigger_buttons.css'));
+            wp_register_script(
+	            'ngg_common',
+	            $router->get_static_url('photocrati-nextgen_gallery_display#common.js'),
+	            array('jquery', 'photocrati_ajax'),
+	            NGG_SCRIPT_VERSION,
+	            TRUE
+            );
+            wp_register_style(
+	            'ngg_trigger_buttons',
+	            $router->get_static_url('photocrati-nextgen_gallery_display#trigger_buttons.css'),
+	            FALSE,
+	            NGG_SCRIPT_VERSION
+            );
         }
     }
 
@@ -442,6 +499,33 @@ class M_Gallery_Display extends C_Base_Module
             'Mixin_Display_Type_Form' 		=> 'mixin.display_type_form.php'
         );
     }
+
+    /**
+     * Gets a list of directories in which display type template might be stored
+     *
+     * @param C_Display_Type $display_type
+     * @return array
+     */
+    static function get_display_type_view_dirs($display_type)
+    {
+        if (!is_object($display_type)) $display_type = C_Display_Type_Mapper::get_instance()->find_by_name($display_type);
+
+        /* Create array of directories to scan */
+        $dirs = array(
+            'default' => C_Component_Registry::get_instance()->get_module_dir($display_type->name) . DIRECTORY_SEPARATOR . 'templates',
+            'custom' => WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'ngg' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . $display_type->name . DIRECTORY_SEPARATOR . 'templates',
+        );
+
+        /* Apply filters so third party devs can add directories for their templates */
+        $dirs = apply_filters('ngg_display_type_template_dirs', $dirs, $display_type);
+        $dirs = apply_filters('ngg_' . $display_type->name . '_template_dirs', $dirs, $display_type);
+        foreach ($display_type->aliases as $alias) {
+          $dirs = apply_filters("ngg_{$alias}_template_dirs", $dirs, $display_type);
+        }
+
+        return $dirs;
+    }
+
 }
 
 class C_Display_Type_Installer

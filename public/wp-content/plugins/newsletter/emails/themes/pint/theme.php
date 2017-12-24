@@ -10,14 +10,16 @@
 
 global $newsletter, $post;
 
+if (!defined('ABSPATH')) exit;
+
 $filters = array();
 if (!empty($theme_options['theme_categories'])) {
     $filters['category__in'] = $theme_options['theme_categories'];
 }
 if (empty($theme_options['theme_max_posts']))
-    $filters['showposts'] = 9;
+    $filters['posts_per_page'] = 9;
 else
-    $filters['showposts'] = (int) $theme_options['theme_max_posts'];
+    $filters['posts_per_page'] = (int) $theme_options['theme_max_posts'];
 
 $posts = get_posts($filters);
 

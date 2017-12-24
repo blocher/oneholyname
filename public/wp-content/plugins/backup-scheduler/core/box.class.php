@@ -20,7 +20,7 @@ if (!class_exists("SLFramework_Box")) {
 		* @return SLFramework_Box the box object
 		*/
 		
-		function SLFramework_Box($title, $content) {
+		function __construct($title, $content) {
 			$this->title = $title ; 
 			$this->content = $content ; 
 		}

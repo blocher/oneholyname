@@ -3,7 +3,7 @@
 Plugin Name: Backup Scheduler
 Plugin Tag: backup, schedule, plugin, save, database, zip
 Description: <p>With this plugin, you may plan the backup of your entire website (folders, files and/or database).</p><p>You can choose: </p><ul><li>which folders you want to save; </li><li>the frequency of the backup process; </li><li>whether your database should be saved; </li><li>whether the backup is stored on the local website, sent by email or stored on a distant FTP (support of multipart zip files)</li></ul><p>This plugin is under GPL licence</p>
-Version: 1.5.11
+Version: 1.5.13
 
 
 Framework: SL_Framework
@@ -432,7 +432,7 @@ class backup_scheduler extends pluginSedLex {
 					$params->add_comment(sprintf(__('By default the port is %s',$this->pluginID), '<code>21</code>')) ; 
 					$params->add_param('ftp_login', __('Your FTP login:',$this->pluginID)) ; 
 					$params->add_param('ftp_pass', __('Your FTP pass:',$this->pluginID)) ; 
-					$params->add_comment(sprintf(__('Click on that button %s to test if the above information is correct',$this->pluginID)."<span id='testFTP_info'></span>", "<input type='button' id='testFTP_button' class='button validButton' onClick='testFTP();'  value='". __('Test',$this->pluginID)."' /><img id='wait_testFTP' src='".WP_PLUGIN_URL."/".str_replace(basename(__FILE__),"",plugin_basename( __FILE__))."core/img/ajax-loader.gif' style='display: none;'>")) ; 			
+					$params->add_comment(sprintf(__('Click on that button %s to test if the above information is correct',$this->pluginID)."<span id='testFTP_info'></span>", "<input type='button' id='testFTP_button' class='button validButton' onClick='testFTP();'  value='". __('Test',$this->pluginID)."' /><img id='wait_testFTP' src='".plugins_url()."/".str_replace(basename(__FILE__),"",plugin_basename( __FILE__))."core/img/ajax-loader.gif' style='display: none;'>")) ; 			
 					$params->add_param('ftp_create_folder', __('Create sub-folder with date in your FTP repository for all backup files:',$this->pluginID),'','',array('ftp_prefix_folder')) ; 
 					$params->add_param('ftp_prefix_folder', __('Add a prefix to the created folder:',$this->pluginID)) ; 
 				} else {
@@ -467,7 +467,7 @@ class backup_scheduler extends pluginSedLex {
 				
 				
 				echo "<p>" ; 
-				echo "<img id='wait_backup' src='".WP_PLUGIN_URL."/".str_replace(basename(__FILE__),"",plugin_basename( __FILE__))."core/img/ajax-loader.gif' style='display: none;'>" ; 
+				echo "<img id='wait_backup' src='".plugins_url()."/".str_replace(basename(__FILE__),"",plugin_basename( __FILE__))."core/img/ajax-loader.gif' style='display: none;'>" ; 
 				echo " <input type='button' id='backupButton' class='button-primary validButton' onClick='initForceBackup(\"external\")'  value='". __('Force a new backup (with Mail/FTP)',$this->pluginID)."' />" ; 
 				echo "<script>jQuery('#backupButton').removeAttr('disabled');</script>" ; 
 				echo " <input type='button' id='backupButton2' class='button validButton' onClick='initForceBackup(\"internal\")'  value='". __('Force a new backup (without any external storage or sending)',$this->pluginID)."' />" ; 
@@ -476,7 +476,7 @@ class backup_scheduler extends pluginSedLex {
 				
 			$tabs->add_tab(__('Backups',  $this->pluginID), ob_get_clean() ) ; 	
 
-			$tabs->add_tab(__('Parameters',  $this->pluginID), $parameters , WP_PLUGIN_URL.'/'.str_replace(basename(__FILE__),"",plugin_basename(__FILE__))."core/img/tab_param.png") ; 	
+			$tabs->add_tab(__('Parameters',  $this->pluginID), $parameters , plugins_url().'/'.str_replace(basename(__FILE__),"",plugin_basename(__FILE__))."core/img/tab_param.png") ; 	
 			
 			// HOW To
 
@@ -566,14 +566,14 @@ class backup_scheduler extends pluginSedLex {
 					$plugin = str_replace("/","",str_replace(basename(__FILE__),"",plugin_basename( __FILE__))) ; 
 					$trans = new SLFramework_Translation($this->pluginID, $plugin) ; 
 					$trans->enable_translation() ; 
-				$tabs->add_tab(__('Manage translations',  $this->pluginID), ob_get_clean() , WP_PLUGIN_URL.'/'.str_replace(basename(__FILE__),"",plugin_basename(__FILE__))."core/img/tab_trad.png") ; 	
+				$tabs->add_tab(__('Manage translations',  $this->pluginID), ob_get_clean() , plugins_url().'/'.str_replace(basename(__FILE__),"",plugin_basename(__FILE__))."core/img/tab_trad.png") ; 	
 			}
 			
 			ob_start() ; 
 				$plugin = str_replace("/","",str_replace(basename(__FILE__),"",plugin_basename( __FILE__))) ; 
 				$trans = new SLFramework_Feedback($plugin, $this->pluginID) ; 
 				$trans->enable_feedback() ; 
-			$tabs->add_tab(__('Give feedback',  $this->pluginID), ob_get_clean() , WP_PLUGIN_URL.'/'.str_replace(basename(__FILE__),"",plugin_basename(__FILE__))."core/img/tab_mail.png") ; 	
+			$tabs->add_tab(__('Give feedback',  $this->pluginID), ob_get_clean() , plugins_url().'/'.str_replace(basename(__FILE__),"",plugin_basename(__FILE__))."core/img/tab_mail.png") ; 	
 			
 			ob_start() ; 
 				// A list of plugin slug to be excluded
@@ -581,7 +581,7 @@ class backup_scheduler extends pluginSedLex {
 				// Replace sedLex by your own author name
 				$trans = new SLFramework_OtherPlugins("sedLex", $exlude) ; 
 				$trans->list_plugins() ; 
-			$tabs->add_tab(__('Other plugins',  $this->pluginID), ob_get_clean() , WP_PLUGIN_URL.'/'.str_replace(basename(__FILE__),"",plugin_basename(__FILE__))."core/img/tab_plug.png") ; 	
+			$tabs->add_tab(__('Other plugins',  $this->pluginID), ob_get_clean() , plugins_url().'/'.str_replace(basename(__FILE__),"",plugin_basename(__FILE__))."core/img/tab_plug.png") ; 	
 			
 			echo $tabs->flush() ; 
 			

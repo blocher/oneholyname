@@ -11,10 +11,10 @@
             <select name='<?php echo esc_attr($display_type_name); ?>[template]'
                     id='<?php echo esc_attr($display_type_name); ?>_template>'
                     class='ngg_thumbnail_template ngg_settings_template'>
-                <option></option>
+                <option></option> 
                 <?php foreach ($templates as $file => $label): ?>
                     <?php if ($file && $label): ?>
-                    <option value="<?php echo $file; ?>" <?php selected($chosen_file, $file, TRUE); ?>><?php esc_html_e($label); ?></option>
+                    <option value="<?php echo esc_attr($file) ?>" <?php selected($chosen_file, $file, TRUE); ?>><?php esc_html_e($label); ?></option>
                     <?php endif ?>
                 <?php endforeach ?>
             </select>

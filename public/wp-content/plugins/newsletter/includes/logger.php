@@ -1,4 +1,5 @@
 <?php
+if (!defined('ABSPATH')) exit;
 
 if (!defined('NEWSLETTER_LOG_DIR')) {
     define('NEWSLETTER_LOG_DIR', WP_CONTENT_DIR . '/logs/newsletter/');
@@ -31,7 +32,7 @@ class NewsletterLogger {
             $this->level = self::NONE;
         }
 
-        $this->file = NEWSLETTER_LOG_DIR . '/' . $module . '-' . $secret . '.txt';
+        $this->file = NEWSLETTER_LOG_DIR . '/' . $module . '-' . date('Y-m') . '-' . $secret . '.txt';
     }
 
     function log($text, $level = self::ERROR) {
@@ -49,10 +50,16 @@ class NewsletterLogger {
             case self::DEBUG: $time .= '- DEBUG';
                 break;
         }
-        if (is_array($text) || is_object($text)) $text = print_r($text, true);
-
+        if (is_wp_error($text)) {
+            /* @var $text WP_Error */
+            $text = $text->get_error_message() . ' (' . $text->get_error_code() . ') - ' . print_r($text->get_error_data(), true);
+        } else {
+            if (is_array($text) || is_object($text)) $text = print_r($text, true);
+        }
         // The "logs" dir is created on Newsletter constructor.
-        $res = @file_put_contents($this->file, $time . ' - ' . size_format(memory_get_usage(), 1) . ' - ' . $text . "\n", FILE_APPEND | FILE_TEXT);
+        $current_user_id = 0;
+        if (function_exists('get_current_user_id')) $current_user_id = get_current_user_id();
+        $res = @file_put_contents($this->file, $time . ' - m: ' . size_format(memory_get_usage(), 1) . ', u: ' . $current_user_id . ' - ' . $text . "\n", FILE_APPEND | FILE_TEXT);
         if ($res === false) {
             $this->level = self::NONE;
         }

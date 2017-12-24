@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-02-16T10:43:51+00:00\n"
+"PO-Revision-Date: 2016-08-09T15:32:14+00:00\n"
 "Last-Translator: 1231 <1231>\n"
 "Last-Translator: OWenT <http://www.owent.net>\n"
 "Last-Translator: peteryeung <http://winplus.tk>\n"
@@ -336,7 +336,7 @@ msgid "Feedback form"
 msgstr "反馈"
 
 msgid "This form is an easy way to contact the author and to discuss issues/incompatibilities/etc. with him"
-msgstr "此处是联系作者提供BUS、兼容性问题等的快速通道"
+msgstr "此处是联系作者提供BUG、兼容性问题等的快速通道"
 
 msgid "Please note that additional information on your wordpress installation will be sent to the author in order to help the debugging if needed (such as : the wordpress version, the installed plugins, etc.)"
 msgstr "注意: 在需要的时候,您的Wordpress的一些安装信息会被发送给作者, 以帮助作者进行调试(比如 Wordpress 版本, 已安装的插件, 等等)"
@@ -442,4 +442,22 @@ msgstr "这不是强制性的! 但是这表明您喜欢我的插件, 这会让�
 
 msgid "The following plugins have been developed by the author and are not yet been installed:"
 msgstr "以下由当前作者开发的插件您可能会感兴趣(未被安装)"
+
+msgid "About SL plugins..."
+msgstr "关于 SL 插件..."
+
+msgid "Location of the SL plugins"
+msgstr "本地的 SL 插件"
+
+msgid "Where do you want to display the SL plugins:"
+msgstr "你是从哪里知道 SL 框架的:"
+
+msgid "Standard"
+msgstr "标准"
+
+msgid "The URL is not a media file."
+msgstr "这个 URL 不指向 媒体文件"
+
+msgid "Choose a media"
+msgstr "选择一个 媒体文件"
 

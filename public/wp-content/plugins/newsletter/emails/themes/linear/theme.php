@@ -1,15 +1,18 @@
 <?php
 global $post;
 
+if (!defined('ABSPATH'))
+    exit;
+
 $filters = array();
 if (!empty($theme_options['theme_categories'])) {
     $filters['category__in'] = $theme_options['theme_categories'];
 }
 
 if (empty($theme_options['theme_max_posts'])) {
-    $filters['showposts'] = 10;
+    $filters['posts_per_page'] = 10;
 } else {
-    $filters['showposts'] = (int) $theme_options['theme_max_posts'];
+    $filters['posts_per_page'] = (int) $theme_options['theme_max_posts'];
 }
 
 if (!empty($theme_options['theme_post_types'])) {
@@ -73,7 +76,7 @@ $posts = get_posts($filters);
                                         <tr>
                                             <td valign="top" align="left">
                                                 <?php
-                                                foreach (array('facebook', 'twitter', 'youtube', 'linkedin', 'googleplus', 'pinterest', 'tumblr') as $social) {
+                                                foreach (array('facebook', 'twitter', 'youtube', 'linkedin', 'googleplus', 'pinterest', 'tumblr', 'instagram') as $social) {
                                                     if (empty($theme_options["theme_$social"]))
                                                         continue;
                                                     ?>

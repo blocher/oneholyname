@@ -4,10 +4,11 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-12-09T09:14:58+00:00\n"
+"PO-Revision-Date: 2016-07-21T21:16:34+00:00\n"
 "Last-Translator: SedLex <http://www.sedlex.fr/>\n"
 "Last-Translator: lan <http://www.dindan.eu/>\n"
 "Last-Translator: LinhHuongVN <adsraovat.com>\n"
+"Last-Translator: TorungChen <tranhuynh.thaitrung@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -302,40 +303,40 @@ msgid "Here, you may configure three levels of translations: at the plugin level
 msgstr "Ở đây, bạn có thể chỉnh đốn ba mức độ của các bản dịch: ở cấp phần mềm ở cấp khuôn khổ, và ở cấp bảng điều khiển. cấu hình bảng điều khiển"
 
 msgid "Please be informed that your current language is %s. Text will be translated if a translation is available."
-msgstr ""
+msgstr "Xin phép thông báo rằng ngôn ngữ hiện tại của bạn là %s. Văn bản sẽ được dịch nếu chức năng dịch sẵn sàng"
 
 msgid "If you want to modify the language, please go in %s and find %s or %s. The second argument is your language and you may modify it as you want."
-msgstr ""
+msgstr "Nếu bạn muốn tùy chỉnh một ngôn ngữ, mời vào%s %s hoặc %s. Tham số thứ hai là ngôn ngữ của bạn và bạn có thể tùy chỉnh nó tùy thích"
 
 msgid "Translations available for this plugin (i.e. %s)"
-msgstr ""
+msgstr "Phiên dịch sẵn sàng trên plugin này (vd %s)"
 
 msgid "Translations available for the SL framework (stored in %s)"
-msgstr ""
+msgstr "Phiên dịch sẵn sàng cho SL framework ( chứ trong %s)"
 
 msgid "Adding a new translation for this language: %s"
-msgstr ""
+msgstr "Thêm một phần dịch mới cho ngôn ngữ này: %s"
 
 msgid "Sentence to translate"
-msgstr ""
+msgstr "Câu phiên dịch"
 
 msgid "Translation"
-msgstr ""
+msgstr "Phiên dịch"
 
 msgid "(if your name/pseudo is already in the list, there is no need to fill this input)"
 msgstr ""
 
 msgid "Your email or your website:"
-msgstr ""
+msgstr "Email or website của bạn:"
 
 msgid "Create the translation files"
-msgstr ""
+msgstr "Tạo tập tin phiên dịch"
 
 msgid "Add a new translation"
-msgstr ""
+msgstr "Tạo một phiên dịch mới"
 
 msgid "Modifying the translation for this language: %s"
-msgstr ""
+msgstr "Tùy chỉnh phiên dịch cho ngôn ngữ này: %s"
 
 msgid "The number of occurrence of %s does not match in both string. Please note that the string %s will be replaced with a contextual string."
 msgstr ""

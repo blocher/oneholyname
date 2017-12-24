@@ -41,7 +41,7 @@
                     <td><input type="radio" name="watermark_options[wmPos]" value="botRight"  <?php checked('botRight',  $position); ?>/></td>
                 </tr>
             </table>
-        </td
+        </td>
     </tr>
 
     <tr class="watermark_field hidden">
@@ -55,13 +55,13 @@
                    name='watermark_options[wmXpos]'
                    placeholder='0'
                    min='0'
-                   value='<?php echo $offset_x; ?>'/> /
+                   value='<?php echo esc_attr($offset_x) ?>'/> /
             <input type='number'
                    id='nextgen_settings_wmYpos'
                    name='watermark_options[wmYpos]'
                    placeholder='0'
                    min='0'
-                   value='<?php echo $offset_y; ?>'/>
+                   value='<?php echo esc_attr($offset_y) ?>'/>
             <label for='nextgen_settings_wmYpos'>h</label>
         </td>
     </tr>

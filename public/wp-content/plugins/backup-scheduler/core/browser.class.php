@@ -16,7 +16,7 @@ if (!class_exists("SLFramework_BrowsersOsDetection")) {
 		* @param $agent the browser agent (i.e. should be $_SERVER['HTTP_USER_AGENT'])
 		* @return SLFramework_BrowsersOsDetection 
 		*/
-		function SLFramework_BrowsersOsDetection($agent) {	
+		function __construct($agent) {	
 			// Default value
 			$this->browser_name = 'Other';
 			$this->browser_version = "?";

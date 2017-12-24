@@ -4,13 +4,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-07-22T16:21:49+00:00\n"
+"PO-Revision-Date: 2016-10-19T20:32:24+00:00\n"
 "Last-Translator: Opti <>\n"
 "Last-Translator: Lukasz <www.premiumaccount.co.ukwww.esteepc.co.uk>\n"
 "Last-Translator: pablo <pawel@dream.net.pl>\n"
 "Last-Translator: Misiek <klimatyzowanydom.pl>\n"
 "Last-Translator: MarekMackiewicz <ickam89.com>\n"
 "Last-Translator: Darbo <darek@kobla.pl>\n"
+"Last-Translator: darbo <darek@kobla.pl>\n"
+"Last-Translator: adam <stream404.art.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -510,4 +512,58 @@ msgstr "Podaj nazwę każego folderu w osobnej linii"
 
 msgid "By default, the line should exactely match the folder name or the folder path to exclude said folder (for instance %s or %s, to exclude the content folder)"
 msgstr "Domyślnie linia powinna dokładnie odwzorować nazwę folderu lub ścieżkę do folderu aby wykluczyć folder (na przykład %s lub %s, aby wykluczyć zawartość folderu)"
+
+msgid "If the line begins with %s, the line will be consider as a regexp (for instance %s, to exclude the content folder)"
+msgstr "Jeśli linia rozpoczyna się od %s, będzie traktowana jako wyrażenie Regexp (np. %s, aby wykluczyć zawartość folderu)"
+
+msgid "For now, the following folder are exluded (please refresh the page if you just upfdate the options to see the correct list):"
+msgstr "Poniższe foldery są teraz wykluczone (odśwież stronę jeśli właśnie zmieniłeś ustawienia aby zobaczyć prawidłową listę)"
+
+msgid "The files greater than this limit won't be included in the zip file!"
+msgstr "Plik większy od tego limitu nie będzie zawarty w pliku ZIP!"
+
+msgid "There is two different ways to create a backup:"
+msgstr "Są dwie różne metody tworzenia backupu:"
+
+msgid "an automatic process (namely background process):"
+msgstr "proces automatyczny (nazywany procesem w tle):"
+
+msgid "Every time a user visits a page of the frontside of your website, a small portion of the backup process is performed;"
+msgstr "Za każdym razem kiedy użytkownik odwiedzi stronę (frontend), uruchomi się mała porcja procesu backupu;"
+
+msgid "Note that if you have very few visits, a complete backup may be quite long."
+msgstr "Zauważ, że jeśli masz mało wizyt, pełny backup może zająć bardzo dużo czasu."
+
+msgid "a forced process:"
+msgstr "proces wymuszony:"
+
+msgid "The button that triggers this forced process may be found in the Backup tab;"
+msgstr "Przycisk który wywołuje proces wymuszony znajduje się w zakładce &quot;Backup&quot;;"
+
+msgid "How to backup the site?"
+msgstr "Jak wykonać kopię zapasową strony?"
+
+msgid "When forcing a backup process, the plugin indicates that another process is running."
+msgstr "Gdy proces kopi zapasowej jest wymuszony, wtyczka ostrzega o innym procesie będącym w toku."
+
+msgid "The backup process cannot end"
+msgstr "Proces tworzenia kopii nie kończy się."
+
+msgid "One click restoration?"
+msgstr "Odtworzenie jednym kliknięciem?"
+
+msgid "In the zip, you will find some sql files."
+msgstr "W pliku zip, znajdziesz pliki sql."
+
+msgid "How to restore the database?"
+msgstr "Jak odtworzyć bazę danych?"
+
+msgid "How to restore the other files?"
+msgstr "Jak odtworzyć inne pliki."
+
+msgid "The backup files are stored in %s."
+msgstr "Pliki kopi zapasowej zapisane są w %s."
+
+msgid "Where the backup are stored?"
+msgstr "Gdzie przechowywane są kopie zapasowe?"
 

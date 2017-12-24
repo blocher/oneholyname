@@ -1,12 +1,13 @@
 === WP Hide Post ===
 Contributors: scriptburn
-Donate link: http://www.konceptus.net/donate
+Donate link: http://scriptburn.com/wp-hide-post/
 Tags: SEO,hide,show,visbility,privacy,customization,sitemap,filter
 Requires at least: 2.6
-Tested up to: 4.2.2
-Stable tag: 1.2.1
+Tested up to: 4.8
+Stable tag: 2.0.10
+License: GPLv2
 
-Enables you to control the visibility of items on your blog by making posts/pages hidden on some parts of your blog, while still visible in other parts as well as to search engines. This plugin is the new incarnation of the 'WP low Profiler'. If this plugin already exists, it will be upgraded to this one, keeping all existing settings.
+Control the visibility of items on your blog by making posts/pages hidden on some parts , while still visible in other parts and search engines.
 
 == Description ==
 
@@ -38,8 +39,8 @@ Please enjoy this plugin freely, comment and rate it profusely, and send me feed
 == Installation ==
 
 1. Upload the `wp-hide-post` folder to the `/wp-content/plugins/` directory
-1. Activate the plugin through the `Plugins` menu in WordPress
-1. That's it!! Now whenever you edit a post/page or create a new one, you will see a small panel on the bottom right of the screen that shows the applicable options.
+2. Activate the plugin through the `Plugins` menu in WordPress
+3. That's it!! Now whenever you edit a post/page or create a new one, you will see a small panel on the bottom right of the screen that shows the applicable options.
 
 == Frequently Asked Questions ==
 
@@ -57,15 +58,15 @@ Yes. The *hidden* flags are just another set of attributes of a post/page. They 
 
 = I have an idea to improve this feature further, what can I do? =
 
-Please contact me on my blog [An Apple a Day](http://www.konceptus.net/wp-hide-post/). I'm looking forward to hearing any suggestions.
+Please contact me on my blog [ScriptBurn.com](http://scriptburn.com/wp-hide-post/). I'm looking forward to hearing any suggestions.
 
 = I just found something that doesn't look right, do I just sit on it? =
 
-By all means no! Please report any bugs on my blog [An Apple a Day](http://www.konceptus.net/wp-hide-post/). I'd really appreciate it. This is free software and I rely on the help of people like you to maintain it.
+By all means no! Please report any bugs on my blog [ScriptBurn.com](http://scriptburn.com/wp-hide-post/). I'd really appreciate it. This is free software and I rely on the help of people like you to maintain it.
 
 = I'm worried this could reduce my search engine ranking. Is it gonna? =
 
-Not at all. On the contrary. All the content you include on your blog, even though it's not directly accessible from the homepage for example, it's still to be available when search engines crawl your site, and will remain linkable for those individuals that are interested in it. Furthermore, if you use some sitemap generation plugin (like the [Google XML Sitemaps](http://wordpress.org/extend/plugins/google-sitemap-generator/) plugin I use on my own [blog](http://www.konceptus.net/)) all the content will be published to web crawlers and will be picked up by search engines. In fact, this plugin will make your SEO more effective by allowing you to add content that you wouldn't otherwise want to show on your homepage.
+Not at all. On the contrary. All the content you include on your blog, even though it's not directly accessible from the homepage for example, it's still to be available when search engines crawl your site, and will remain linkable for those individuals that are interested in it. Furthermore, if you use some sitemap generation plugin (like the [Google XML Sitemaps](http://wordpress.org/extend/plugins/google-sitemap-generator/) plugin I use on my own [ScriptBurn.com](http://scriptburn.com/)) all the content will be published to web crawlers and will be picked up by search engines. In fact, this plugin will make your SEO more effective by allowing you to add content that you wouldn't otherwise want to show on your homepage.
 
 = I used the 'WP low Profiler' plugin before. This one sounds just like it. =
 
@@ -85,22 +86,139 @@ Ditto. It will be deleted. If you had any existing data (if you had it active be
 
 == Screenshots ==
 
-1. Closup showing the *Visibility Attributes* for posts. [See Larger Version](http://www.konceptus.net/wp-content/uploads/screenshot-11.png)
-2. A small panel will appear whenever you are editing or creating a **post**. You can check one or more of the *Visibility Attributes* as needed. [See Larger Version](http://www.konceptus.net/wp-content/uploads/screenshot-21.png)
-3. Closup showing the *Visibility Attributes* for pages. [See Larger Version](http://www.konceptus.net/wp-content/uploads/screenshot-31.png)
-4. Another panel will appear whenever you are editing or creating a new **page**. You can check one or more of the *Visibility Attributes* as needed. Note that options for pages are different from those of posts. [See Larger Version](http://www.konceptus.net/wp-content/uploads/screenshot-41.png)
+1. Closup showing the *Visibility Attributes* for posts. [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-1.png)
 
-== Revision History ==
-* 07/16/2015: v1.1.9  - Compatibility with Wordpress 4.2.2
-* 01/02/2010: v1.1.9  - Compatibility with Wordpress 2.9
-* 10/24/2009: v1.1.4  - Added compatibility with Wordpress 2.8.5
-* 08/07/2009: v1.1.3  - Extended support for Wordpress 2.6
-* 08/07/2009: v1.1.2  - Bug fixes.
-* 08/05/2009: v1.1.1  - Reduce the number of SQL queries to hide pages to a single queries for all pages, rather than one query per page.
-* 08/04/2009: v1.1.0  - Bug fix: bulk update clears "Visibility Attributes". Split code into separate files.
-* 07/24/2009: v1.0.4  - Minor bug fixes
-* 07/24/2009: v1.0.3  - Initial public release of 'WP Hide Post' and deprecation of 'WP low Profiler'
+2. A small panel will appear whenever you are editing or creating a **normal post**. or *custom post* You can check one or more of the *Visibility Attributes* as needed. [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-2.png)
 
+3. Another panel will appear whenever you click on *Quick Edit* in normal post or custom post list page. You can check one or more of the *Visibility Attributes* as needed.  [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-3.png)
+
+4. Another panel will appear whenever you use *Bulk Edit* in normal post or custom post list page. You can check one or more of the *Visibility Attributes* as needed and they will applied to selected posts.  [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-4.png)
+
+5. In normal post or custom post list page you can filter the posts acording to the hide option applied to them. You can also see all of the hide options applied to each post.  [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-5.png)
+
+6. Closup showing the *Visibility Attributes* for pages. [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-6.png)
+
+7. Another panel will appear whenever you are editing or creating a new **page**. You can check one or more of the *Visibility Attributes* as needed. Note that options for pages are different from those of posts. [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-7.png)
+
+8. Another panel will appear whenever you click on *Quick Edit* in **page** list. You can check one or more of the *Visibility Attributes* as needed.  [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-8.png)
+
+9. Another panel will appear whenever you use *Bulk Edit* **page** list. You can check one or more of the *Visibility Attributes* as needed and they will applied to selected pages.  [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-9.png)
+
+10. In list page you can filter the pages acording to the hide option applied to them. You can also see all of the hide options applied to each page.  [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-10.png)
+
+11. In **Settings->WP Hide Post** you can select custom post types where you hide post widget to appear.  [See Larger Version](http://scriptburn.com/wp-content/uploads/wp-hide-post/screenshot-11.png)
+
+
+== Changelog ==
+
+= 2.0.10 =
+*Release Date - 3 Aug 2017*
+
+Fix: An issue related to display custom post types in admin setting section of plugin
+
+
+= 2.0.9 =
+*Release Date - 3 Aug 2017*
+
+Fix:A js bug that was causing post editor toolbar not appearing in admin panel
+Fix: Missing semicolon in a javascript
+Fix: A bug due to that not all custom post types were being displayed in plugin setting section(reported by William Goodwin) 
+
+= 2.0.8 =
+*Release Date - 1 Aug 2017*
+
+Fix: A bug that was causing recurse error and throwing fatal error
+
+= 2.0.7 =
+*Release Date - 31 July 2017*
+
+Fix: Renamed some conflicting class name with other plugins
+
+= 2.0.6 =
+*Release Date - 31 July 2017*
+
+Fix: post was not hiding if the static page was selected as homepage
+Fix: Compatibility with old version of PHP
+
+
+= 2.0.5 =
+*Release Date - 30 July 2017*
+
+Fix: Compatibility with old version of PHP
+
+= 2.0.4 =
+*Release Date - 30 July 2017*
+
+*Fix: An issue that prevented system info file download
+
+= 2.0.3 =
+*Release Date - 12 August 2016*
+
+* Fixed "Check All" not working in Bulk edit page
+* Added a function array_column for wordpress install which are running < PHP5.5.5
+
+= 2.0.2 =
+*Release Date - 12 August 2016*
+
+* Fixed an issue which was displaying error when activating the plugin
+
+= 2.0 =
+*Release Date - 11 August 2016*
+
+* Fix to include Blog page when Hide on the front page option is checked.
+* Added Quick Edit option for post and page in post list page.
+* Added Bulk Edit option for post and page in post list page.
+* Added Search for hidden post option in post list page.
+* Added a new column “Hidden On” in post list page.
+* Added “Check all” Option in hide post widget to select all options at once in post or custom post type page.
+* Added a setting option in setting page where you can select what on which post type you want to show hide post widget.
+* Added a setting option in setting page where you can choose whether to show hide post widest in quick edit mode or not 
+
+
+= 1.1.9 =
+*Release Date - 16 July 2015*
+
+* Compatibility with Wordpress 4.2.2
+
+= 1.1.4 =
+*Release Date - 24 October 2009*
+
+* Added compatibility with Wordpress 2.8.5
+
+= 1.1.3 =
+*Release Date - 07 August 2009*
+
+* Extended support for Wordpress 2.6
+
+= 1.1.2 =
+*Release Date - 07 August 2009*
+
+* Bug fixes.
+
+= 1.1.1 =
+*Release Date - 05 August 2009*
+
+* Reduce the number of SQL queries to hide pages to a single queries for all pages, rather than one query per page.
+
+= 1.1.0 =
+*Release Date - 04 August 2009*
+
+* Bug fix: bulk update clears "Visibility Attributes". Split code into separate files.
+
+= 1.0.4 =
+*Release Date - 24 July 2009*
+
+= 1.0.3 =
+*Release Date - 24 July 2009*
+
+* Initial public release of 'WP Hide Post' and deprecation of 'WP low Profiler'
+
+
+* Minor bug fixes
 == Development Blog ==
 
-Please visit the plugin page at [An Apple a Day](http://www.konceptus.net/wp-hide-post/), and feel free to leave feedback, bug reports and comments.
+Please visit the plugin page at [ScriptBurn.com](http://scriptburn.com/wp-hide-post/), and feel free to leave feedback, bug reports and comments.
+
+ == Upgrade Notice ==
+ n/a
+1
