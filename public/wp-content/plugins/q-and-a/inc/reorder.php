@@ -264,7 +264,7 @@ function faqpageorder_getParentLink($parentID)
 
 class faqpageorder_Widget extends WP_Widget {
 
-	function faqpageorder_Widget() {
+	function __construct() {
 		$widget_ops = array('classname' => 'widget_faqpageorder', 'description' => __( 'Enhanced Pages widget provided by Reorder FAQs', 'qa-free') );
 		$this->WP_Widget('faqpageorder', __('Reorder FAQs', 'qa-free'), $widget_ops);	}
 

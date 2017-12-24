@@ -24,8 +24,8 @@ if(!class_exists("yksemeBase")) {
 			*	Destruct
 			*/
 			public function __destruct() {
-					unset($this);
-				}
+				//unset($this);
+			}
 
 			/**
 			*	Actions
@@ -3551,7 +3551,7 @@ if(!class_exists("yksemeBase")) {
 			public function ykes_mc_apply_filters() {
 					// if the optin checkbox setting is set to show
 					// we wiill display the checkbox on the front end
-					if ( $this->optionVal['optIn-checkbox'] == 1 ) {
+					if ( isset($this->optionVal['optIn-checkbox']) &&  $this->optionVal['optIn-checkbox'] == 1 ) {
 						add_action('comment_post', array(&$this, 'ymc_add_meta_settings'), 10, 2);
 						add_action('comment_approved_', array(&$this, 'ymc_subscription_add'), 60, 2);
 						add_action('comment_post', array(&$this, 'ymc_subscription_add'));

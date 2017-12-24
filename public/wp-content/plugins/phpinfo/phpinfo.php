@@ -18,7 +18,7 @@ function dprx_phpinfo_init_locale() {
 add_action('admin_menu', 'dprx_phpinfo_add_admin_pages');
 
 function dprx_phpinfo_add_admin_pages() {
-	add_options_page('Phpinfo', 'Phpinfo', 10, __FILE__, 'dprx_phpinfo_manage_page');
+	add_options_page('Phpinfo', 'Phpinfo', 'manage_options', __FILE__, 'dprx_phpinfo_manage_page');
 }
 
 function dprx_phpinfo_manage_page() {
@@ -124,7 +124,7 @@ function dprx_phpinfo_manage_page() {
 		?>GD library is installed<?php echo "\n";
 		}
 		?>PHP Version: <?php echo phpversion()."\n"; ?><?php
-		?>MySQL Version: <?php echo mysql_get_server_info()."\n"; ?><?php
+		?>MySQL Version: <?php global $wpdb; echo mysqli_get_server_info($wpdb->dbh)."\n";  ?><?php
 		?>Browser used: <?php echo $_SERVER['HTTP_USER_AGENT']."\n"; ?><?php
 		?></textarea>
 	</div>

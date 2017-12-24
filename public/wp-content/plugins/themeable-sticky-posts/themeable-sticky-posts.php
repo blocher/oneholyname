@@ -24,13 +24,14 @@ class Themeable_Sticky_Posts_Widget extends WP_Widget {
 	/**
 	 * Constructor
 	 */
-	function Themeable_Sticky_Posts_Widget() {
+	function __construct (  $id_base = '', $name = '', $widget_options = array(), $control_options = array()  ) {
 		
 		$widget_ops = array(
 			'classname'   => 'widget_themeable_sticky_posts',
 			'description' => __( 'Themeable Sticky Posts' )
 		);
-		$this->WP_Widget( 'smSticky', __( 'Themeable Sticky Posts' ), $widget_ops );
+
+		parent::__construct( 'smSticky', __( 'Themeable Sticky Posts' ), $widget_ops );
 		
 	}
 	

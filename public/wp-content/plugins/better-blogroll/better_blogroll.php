@@ -10,7 +10,7 @@ Author URI: http://www.dyers.org/blog/
 
 function widget_betterblogroll_init() {
 
-	if ( !function_exists('register_sidebar_widget') || !function_exists('register_widget_control')) 
+	if ( !function_exists('wp_register_sidebar_widget') || !function_exists('wp_register_widget_control')) 
 		return;
 
 	function widget_betterblogroll($args) {
@@ -228,10 +228,10 @@ function widget_betterblogroll_init() {
 	}
 	
 	// Register widget for use
-	register_sidebar_widget(array('Better Blogroll', 'widgets'), 'widget_betterblogroll');
+	wp_register_sidebar_widget('widget_betterblogroll', "Better Blogroll", array('Better Blogroll', 'widgets'));
 
 	// Register settings for use, 300x500 pixel form
-	register_widget_control(array('Better Blogroll', 'widgets'), 'widget_betterblogroll_control', 325, 350);
+	wp_register_widget_control('widget_betterblogroll', "Better Blogroll", array('Better Blogroll', 'widgets'), [325, 350]);
 }
 
 // Run code and init
