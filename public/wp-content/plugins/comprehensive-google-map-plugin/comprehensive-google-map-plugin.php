@@ -173,7 +173,7 @@ if ( !function_exists('cgmp_add_actions') ):
             }
         }
 
-		add_action('widgets_init', create_function('', 'return register_widget("ComprehensiveGoogleMap_Widget");'));
+		add_action('widgets_init', function() { return register_widget("ComprehensiveGoogleMap_Widget"); });
 		add_action('wp_head', 'cgmp_google_map_deregister_scripts', 200);
 		add_action('wp_head', 'cgmp_generate_global_options');
 

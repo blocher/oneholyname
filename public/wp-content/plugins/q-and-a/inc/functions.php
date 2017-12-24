@@ -249,7 +249,12 @@ function qa_add_categories() {
 	$qa_tax_output = '';
 	
 	$terms = get_the_terms( $id, 'faq_category' );
-	$count = count( $terms );
+	if ($terms === false) {
+		$count = 0;
+	} else {
+		$count = count( $terms );
+	}
+	
 	
 	if ( $terms ) {
 			

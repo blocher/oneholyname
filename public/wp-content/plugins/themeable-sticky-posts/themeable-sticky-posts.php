@@ -13,7 +13,7 @@ Author URI: http://www.benhuson.co.uk/
 
 
 
-add_action( 'widgets_init', create_function( '', 'return register_widget("Themeable_Sticky_Posts_Widget");' ) );
+add_action( 'widgets_init', function() { return register_widget("Themeable_Sticky_Posts_Widget"); } );
 
 
 

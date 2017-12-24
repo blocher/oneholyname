@@ -364,8 +364,8 @@ add_filter( 'get_search_form', 'yoko_search_form' );
 /**
  * Remove the default CSS style from the WP image gallery
  */
-add_filter('gallery_style', create_function('$a', 'return "
-<div class=\'gallery\'>";'));
+add_filter('gallery_style', function($a) { return "
+<div class=\'gallery\'>"; });
 
 
 /**
@@ -619,4 +619,4 @@ $googleplus_title = empty($instance['googleplus_title']) ? ' ' : apply_filters('
 	}
 }
 // register Yoko SocialLinks Widget
-add_action('widgets_init', create_function('', 'return register_widget("Yoko_SocialLinks_Widget");'));
+add_action('widgets_init', function() { return register_widget("Yoko_SocialLinks_Widget"); });
