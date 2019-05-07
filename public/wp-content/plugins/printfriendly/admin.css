@@ -1,10 +1,22 @@
+/* Helper Classes */
+
+.pf-no-margin {
+  margin: 0
+}
+
+.pf-hidden {
+  display: none;
+}
+.clearfloat{
+  clear:both;
+}
 label {
   display: block;
   margin: 1.5em 0;
 }
 
 h3 {
-  margin: 3em 0 2em;
+  margin: 1.5rem 0 1rem;
   border-bottom: 1px solid #ccc;
   padding-bottom:.75em;
   clear: both;
@@ -13,6 +25,10 @@ h3 {
 h3.hndle {
   clear:none;
   padding: 7px 5px;
+}
+
+input[type="radio"], img {
+  vertical-align: middle;
 }
 
 #buttongroup1, #buttongroup2, #buttongroup3, #button-positioning div, #button-placement div {
@@ -54,7 +70,7 @@ select{
   display: block;
   margin: .5em .5em 2em 0;
 }
-select#javascript, select#website_protocol {
+select#javascript, select#website_protocol, select#password_protected, select#dynamic_content {
   display: inline-block;
   margin-bottom: 0;
 }
@@ -91,7 +107,6 @@ input[type="number"] {
   vertical-align: baseline;
 }
 #pf-shortcode {
- 
   margin-left: 2em;
 }
 .custom-logo label, .custom-logo input, #pf-favicon {
@@ -122,7 +137,7 @@ label#pf-favicon {
 }
 
 .icon32 {
-	background: url(images/pf-icon.png) center center no-repeat;	
+	background: url(images/pf-icon.png) center center no-repeat;
 }
 
 #after-submit {
@@ -131,7 +146,7 @@ label#pf-favicon {
   padding-top:1em;
 }
 #addmanual-help {
-	display: none;	
+	display: none;
 }
 
 #colorSelector {
@@ -355,8 +370,8 @@ span.description.pf-help-link {
 	font-style: normal;
 }
 
-.no-italics { 
-	font-style:normal !important 
+.no-italics {
+	font-style: normal !important;
 }
 
 #margin input[type="number"]{
@@ -395,4 +410,80 @@ label.radio-custom-btn {
 
 #custom_text {
   width: 200px;
+}
+
+/* Pro Notice Alert Layout */
+.pf-notice {
+  border-left: 4px solid #fff;
+  padding: 0 1.25rem;
+  background: #fff;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+  margin: 5px 0 15px;
+  display:inline-block;
+}
+
+.pf-col-1{
+  float:left;
+  margin:0rem 1.5rem 1.5rem 0;
+}
+.pf-col-2{
+  float: left;
+  margin:0rem 1.5rem 1.5rem 0;
+}
+
+.pf-form-element {
+  margin: 0 0 15px 0;
+}
+
+.pf-btn-message {
+  margin-left: .5rem;
+}
+
+/* Colors */
+.pf-error {
+  color: red;
+  display: none;
+}
+
+.pf-text-success {
+  color: #46b450;
+}
+
+.pf-text-warning {
+  color: #ffb900;
+}
+
+.pf-text-error {
+  color: #dc3232;
+}
+
+.pf-notice-success {
+  border-left: 4px solid #46b450;
+}
+
+.pf-notice-warning {
+  border-left: 4px solid #ffb900;
+}
+
+.pf-notice-error {
+  border-left: 4px solid #dc3232;
+}
+
+.pf-alert-success{
+  padding:.75rem 1.25rem;
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  border-radius: .25rem;
+}
+.pf-alert-warning{
+  padding:.75rem 1.25rem;
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+  border-radius: .25rem;
+}
+/* This hides messages depending on pro status */
+.pf-notice-success .pf-pro-features{
+  display:none;
 }

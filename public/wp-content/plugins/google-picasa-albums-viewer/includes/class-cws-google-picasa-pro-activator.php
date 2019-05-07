@@ -20,6 +20,10 @@ class CWS_Google_Picasa_Pro_Activator {
 	 */
 	public static function activate() {
 
+        delete_option( 'cws_gpp_token_expires' );
+        delete_option( 'cws_gpp_code' );
+        delete_option( 'cws_gpp_access_token' );
+
 		$cws_gpp_options = array(
 					'num_album_results' => 9,
 					'num_image_results' => 4,

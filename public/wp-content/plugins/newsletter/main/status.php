@@ -2,6 +2,7 @@
 if (!defined('ABSPATH'))
     exit;
 
+
 @include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
 $module = Newsletter::instance();
 $controls = new NewsletterControls();
@@ -104,7 +105,7 @@ if ($controls->is_action('test')) {
                 $controls->messages .= '- Try to remove the return path on main settings.<br>';
             }
 
-            $controls->messages .= '<a href="https://www.thenewsletterplugin.com/documentation/email-sending-issues" target="_blank">Read more</a>.';
+            $controls->messages .= '<a href="https://www.thenewsletterplugin.com/documentation/email-sending-issues" target="_blank"><strong>' . __('Read more', 'newsletter') . '</strong></a>.';
 
             $parts = explode('@', $module->options['sender_email']);
             $sitename = strtolower($_SERVER['SERVER_NAME']);
@@ -120,6 +121,16 @@ if ($controls->is_action('test')) {
 }
 
 $options = $module->get_options('status');
+
+// Compute the number of newsletters ongoing and other stats
+$emails = $wpdb->get_results("select * from " . NEWSLETTER_EMAILS_TABLE . " where status='sending' and send_on<" . time() . " order by id asc");
+$total = 0;
+$queued = 0;
+foreach ($emails as $email) {
+    $total += $email->total;
+    $queued += $email->total - $email->sent;
+}
+$speed = Newsletter::$instance->options['scheduler_max'];
 ?>
 
 <div class="wrap tnp-main-status" id="tnp-wrap">
@@ -149,7 +160,54 @@ $options = $module->get_options('status');
                 </thead>
 
                 <tbody>
+                    <?php
+                    $method = '';
+                    if (function_exists('get_filesystem_method')) {
+                        $method = get_filesystem_method(array(), WP_PLUGIN_DIR);
+                    }
+                    ?>
+                    <tr>
+                        <td>Add-ons installable</td>
+                        <td>
+                            <?php if (empty($method)) { ?>
+                                <span class="tnp-maybe">MAYBE</span>
 
+                            <?php } else if ($method == 'direct') { ?>
+                                <span class="tnp-ok">OK</span>
+                            <?php } else { ?>
+                                <span class="tnp-ko">KO</span>
+                            <?php } ?>
+
+                        </td>
+                        <td>
+                            <?php if (empty($method)) { ?>
+                                No able to check, just try the add-ons manager one click install
+                            <?php } else if ($method == 'direct') { ?>
+                                The add-ons manager can install our add-ons
+                            <?php } else { ?>
+                                The plugins dir could be read-only, you can install add-ons uploading the package from the
+                                plugins panel (or uploading them directly via FTP). This is unusual you should ask te provider
+                                about file and folder permissions.
+                            <?php } ?>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Delivering</td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            <?php if (count($emails)) { ?>
+                                Delivering <?php echo count($emails) ?> newsletters to about <?php echo $queued ?> recipients.
+                                At speed of <?php echo $speed ?> emails per hour it will take <?php printf('%.1f', $queued / $speed) ?> hours to finish.
+
+                            <?php } else { ?>
+                                Nothing delivering right now
+                            <?php } ?>
+                        </td>
+
+                    </tr>
                     <tr>
                         <td>Mailing</td>
                         <td>
@@ -390,7 +448,7 @@ $options = $module->get_options('status');
                     <tr>
                         <td>Database wait timeout</td>
                         <td>
-                            <?php if ($wait_timeout < 300) { ?>
+                            <?php if ($wait_timeout < 30) { ?>
                                 <span class="tnp-ko">KO</span>
                             <?php } else { ?>
                                 <span class="tnp-ok">OK</span>
@@ -399,9 +457,9 @@ $options = $module->get_options('status');
                         </td>
                         <td>
                             Your database wait timeout is <?php echo $wait_timeout; ?> seconds<br>
-                            <?php if ($wait_timeout < 300) { ?>
-                                That value is low and could produce database connection errors while sending emails. Ask the provider to raise it
-                                at least to 300 seconds.
+                            <?php if ($wait_timeout < 30) { ?>
+                                That value is low and could produce database connection errors while sending emails or during long import
+                                sessions. Ask the provider to raise it at least to 60 seconds.
                             <?php } ?>
                         </td>
                     </tr>
@@ -571,6 +629,21 @@ $options = $module->get_options('status');
                             <?php } ?>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            Alternate cron
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            <?php if (defined('ALTERNATE_WP_CRON') && ALTERNATE_WP_CRON) { ?>
+                                Using the alternate cron trigger.
+                            <?php } else { ?>
+
+                            <?php } ?>
+                        </td>
+                    </tr>
 
                     <tr>
                         <td>
@@ -585,7 +658,7 @@ $options = $module->get_options('status');
                         </td>
                         <td>
                             <?php if ($wp_cron_calls_avg > NEWSLETTER_CRON_INTERVAL * 1.1) { ?>
-                                The blog cron system is NOT triggere enough often.
+                                The blog cron system is NOT triggered enough often.
 
                             <?php } else { ?>
 
@@ -621,7 +694,7 @@ $options = $module->get_options('status');
                         </td>
                         <td>
                             <?php if (!$res) { ?>
-                                The blog is not responding to Newsletter URLs: ask the provider or your IT consultant to check this problem. Report the URL and error blow<br>
+                                The blog is not responding to Newsletter URLs: ask the provider or your IT consultant to check this problem. Report the URL and error below<br>
                                 Error: <?php echo esc_html($message) ?><br>
                             <?php } else { ?>
 
@@ -732,22 +805,22 @@ $options = $module->get_options('status');
                                 Send details
                             </td>
                             <td>
-                            <?php if ($send_mean > 1) { ?>
-                                <span class="tnp-ko">KO</span>
-                            <?php } else { ?>
-                                <span class="tnp-ok">OK</span>
-                            <?php } ?>
+                                <?php if ($send_mean > 1) { ?>
+                                    <span class="tnp-ko">KO</span>
+                                <?php } else { ?>
+                                    <span class="tnp-ok">OK</span>
+                                <?php } ?>
                             </td>
                             <td>
                                 <?php if ($send_mean > 1) { ?>
-                                <strong>Sending an email is taking more than 1 second, rather slow.</strong>
-                                <a href="https://www.thenewsletterplugin.com/documentation/status-panel#status-performance" target="_blank">Read more</a>.
+                                    <strong>Sending an email is taking more than 1 second, rather slow.</strong>
+                                    <a href="https://www.thenewsletterplugin.com/documentation/status-panel#status-performance" target="_blank">Read more</a>.
                                 <?php } ?>
                                 Average time to send an email: <?php echo sprintf("%.2f", $send_mean) ?> seconds<br>
                                 <?php if ($send_mean > 0) { ?>
-                                Max speed: <?php echo sprintf("%.2f", 1.0/$send_mean*3600) ?> emails per hour<br>
+                                    Max speed: <?php echo sprintf("%.2f", 1.0 / $send_mean * 3600) ?> emails per hour<br>
                                 <?php } ?>
-                                
+
                                 Max mean time measured: <?php echo sprintf("%.2f", $send_max) ?> seconds<br>
                                 Min mean time measured: <?php echo sprintf("%.2f", $send_min) ?> seconds<br>
                                 Total email in the sample: <?php echo $send_total_emails ?><br>
@@ -781,40 +854,43 @@ $options = $module->get_options('status');
 
 
 
-                    <?php
-                    $memory = intval(WP_MEMORY_LIMIT);
-                    if (false !== strpos(WP_MEMORY_LIMIT, 'G'))
-                        $memory *= 1024;
-                    ?>
-                    <tr>
-                        <td>
-                            PHP memory limit
-                        </td>
-                        <td>
-                            <?php if ($memory < 64) { ?>
-                                <span class="tnp-ko">KO</span>
-                            <?php } else if ($memory < 128) { ?>
-                                <span class="tnp-maybe">MAYBE</span>
-                            <?php } else { ?>
-                                <span class="tnp-ok">OK</span>
-                            <?php } ?>    
-                        </td>
-                        <td>
-                            Your memory limit is set to <?php echo $memory ?> megabyte<br>
-                            <?php if ($memory < 64) { ?>
-                                This value is too low you should increase it adding <code>define('WP_MEMORY_LIMIT', '64M');</code> to your <code>wp-config.php</code>.
-                                <a href="https://www.thenewsletterplugin.com/documentation/status-panel#status-memory" target="_blank">Read more</a>.
-                            <?php } else if ($memory < 128) { ?>
-                                The value should be fine, it depends on how many plugins you're running and how many resource are required by your theme.
-                                Blank pages may happen with low memory problems. Eventually increase it adding <code>define('WP_MEMORY_LIMIT', '128M');</code>
-                                to your <code>wp-config.php</code>.
-                                <a href="https://www.thenewsletterplugin.com/documentation/status-panel#status-memory" target="_blank">Read more</a>.
-                            <?php } else { ?>
+                    <?php /*
+                      $memory = intval(WP_MEMORY_LIMIT);
+                      if (false !== strpos(WP_MEMORY_LIMIT, 'G'))
+                      $memory *= 1024;
+                      ?>
+                      <tr>
+                      <td>
+                      PHP memory limit
+                      </td>
+                      <td>
+                      <?php if ($memory < 64) { ?>
+                      <span class="tnp-ko">MAYBE</span>
+                      <?php } else if ($memory < 128) { ?>
+                      <span class="tnp-maybe">MAYBE</span>
+                      <?php } else { ?>
+                      <span class="tnp-ok">OK</span>
+                      <?php } ?>
+                      </td>
+                      <td>
+                      WordPress WP_MEMORY_LIMIT is set to <?php echo $memory ?> megabyte but your PHP setting could allow more than that.
+                      Anyway we suggest to set the value to at least 64M.
+                      <a href="https://www.thenewsletterplugin.com/documentation/status-panel#status-memory" target="_blank">Read more</a>.
+                      <?php if ($memory < 64) { ?>
+                      This value is too low you should increase it adding <code>define('WP_MEMORY_LIMIT', '64M');</code> to your <code>wp-config.php</code>.
+                      <a href="https://www.thenewsletterplugin.com/documentation/status-panel#status-memory" target="_blank">Read more</a>.
+                      <?php } else if ($memory < 128) { ?>
+                      The value should be fine, it depends on how many plugins you're running and how many resource are required by your theme.
+                      Blank pages may happen with low memory problems. Eventually increase it adding <code>define('WP_MEMORY_LIMIT', '128M');</code>
+                      to your <code>wp-config.php</code>.
+                      <a href="https://www.thenewsletterplugin.com/documentation/status-panel#status-memory" target="_blank">Read more</a>.
+                      <?php } else { ?>
 
-                            <?php } ?>
+                      <?php } ?>
 
-                        </td>
-                    </tr>
+                      </td>
+                      </tr>
+                     */ ?>
 
                     <?php
                     $ip = gethostbyname($_SERVER['HTTP_HOST']);

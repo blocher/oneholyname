@@ -129,7 +129,7 @@ class nggGallery {
 	* @param string $template_name Name of the template file (without extension)
 	* @param string $vars Array of variable name=>value that is available to the display code (optional)
 	* @deprecated Use C_Displayed_Gallery_Renderer class
-	* @return void
+	* @return string
 	**/
 	static function capture ($template_name, $vars = array ())
 	{
@@ -140,7 +140,7 @@ class nggGallery {
 	/**
 	 * nggGallery::graphic_library() - switch between GD and ImageMagick
 	 *
-	 * @return path to the selected library
+	 * @return string Path to the selected library
 	 */
 	static function graphic_library() {
 
@@ -216,7 +216,7 @@ class nggGallery {
 				}
 			}
 		}
-		return;
+		return '';
 	}
 
 	/**

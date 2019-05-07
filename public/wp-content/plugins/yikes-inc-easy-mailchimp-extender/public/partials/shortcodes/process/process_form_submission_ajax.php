@@ -5,7 +5,7 @@
 */
 
 // Instantiate our submission handler class
-$submission_handler = new Yikes_Inc_Easy_MailChimp_Extender_Process_Submission_Handler( $is_ajax = true );
+$submission_handler = new Yikes_Inc_Easy_Mailchimp_Extender_Process_Submission_Handler( $is_ajax = true );
 
 // parse our form data
 parse_str( $_POST['form_data'], $data );
@@ -54,15 +54,20 @@ $notifications       = isset( $form_data['custom_notifications'] ) ? $form_data[
 $submission_handler->set_error_messages( $error_messages );
 
 // Some other variables we'll need.
-$page_data       = $_POST['page_data'];
+$page_data       = isset( $_POST['page_data'] ) ? $_POST['page_data'] : '';
 $merge_variables = array();
 $error           = 0;
 $list_handler    = yikes_get_mc_api_manager()->get_list_handler();
 
+// As of 6.4 we no longer pass the post object, only the ID.
+// For any users relying on the $post object for their `yikes-mailchimp-redirect-url` filter we'll grab the post object here.
+// Eventually we should just pass the $post_id into the filter instead of the whole object.
+$page_data       = ! empty( $page_data ) ? get_post( $page_data ) : '';
+
 // Send an error if for some reason we can't find the list_handler
 $submission_handler->handle_empty_list_handler( $list_handler ); 
 
-// Get and sanitize the email
+// Get, sanitize and lowercasify the email
 $submitted_email = isset( $data['EMAIL'] ) ? $data['EMAIL'] : '';
 $sanitized_email = $submission_handler->get_sanitized_email( $submitted_email ); 
 $submission_handler->set_email( $sanitized_email );
@@ -112,7 +117,7 @@ if ( isset( $merge_variables['error'] ) ) {
 	$submission_handler->handle_merge_variables_error( $merge_variables['error'], $merge_error_message );
 }
 
-// This is the array we're going to pass through to the MailChimp API
+// This is the array we're going to pass through to the Mailchimp API
 $member_data = array(
 	'email_address' => $sanitized_email,
 	'merge_fields'  => $merge_variables,
@@ -125,7 +130,7 @@ if ( ! empty( $groups ) ) {
 }
 
 // Check if this member already exists
-$member_exists = $list_handler->get_member( $list_id, md5( strtolower( $sanitized_email ) ), $use_transient = false );
+$member_exists = $list_handler->get_member( $list_id, md5( $sanitized_email ), $use_transient = false );
 
 // If this member does not exist, then we need to add the status_if_new flag and set our $new_subscriber variable
 // Likewise, if this member exists but their status is 'pending' it means we're dealing with a double opt-in list and they never confirmed
@@ -162,7 +167,7 @@ if ( is_wp_error( $member_exists ) || $double_optin_resubscribe === true ) {
 
 	// If this member already exists, then we need to go through our optin settings and run some more logic
 
-	// But first let's set our flag, and set the MailChimp status flag
+	// But first let's set our flag, and set the Mailchimp status flag
 	$new_subscriber = false;
 	$member_data['status'] = 'subscribed';
 
@@ -182,7 +187,7 @@ if ( is_wp_error( $member_exists ) || $double_optin_resubscribe === true ) {
 		$submission_handler->handle_updating_existing_user();
 	}
 	
-	// If $send_update_email is false (we don't send the email) then simply continue (we allow them to update their profile via only an email)
+	// If $send_update_email is false (we don't send the email) then simply continue (we allow them to update their profile via the form using their email address)
 }
 
 /**
@@ -190,14 +195,14 @@ if ( is_wp_error( $member_exists ) || $double_optin_resubscribe === true ) {
  *
  * @since 6.3.0
  *
- * @param array  | $member_data | Array of all the variables sent to the MailChimp API
+ * @param array  | $member_data | Array of all the variables sent to the Mailchimp API
  * @param string | $form_id		| The form ID
  */
 $member_data = apply_filters( 'yikes-mailchimp-filter-subscribe-request', $member_data, $form_id );
 $member_data = apply_filters( "yikes-mailchimp-filter-subscribe-request-{$form_id}", $member_data, $form_id );
 
 // Send the API request to create a new subscriber! (Or update an existing one)
-$subscribe_response = $list_handler->member_subscribe( $list_id, md5( strtolower( $sanitized_email ) ), $member_data );
+$subscribe_response = $list_handler->member_subscribe( $list_id, md5( $sanitized_email ), $member_data );
 
 // Handle the response 
 
@@ -205,6 +210,10 @@ $subscribe_response = $list_handler->member_subscribe( $list_id, md5( strtolower
 if ( is_wp_error( $subscribe_response ) ) {
 	$submission_handler->handle_submission_response_error( $subscribe_response, $form_fields );
 } else {
+
+	// Check if we have any tags to add.
+	$tags_response = $submission_handler->maybe_add_tags( $form_data, $data );
+
 	$submission_handler->handle_submission_response_success( $submission_settings, $page_data, $merge_variables, $notifications, $optin_settings, $new_subscriber );
 }
 

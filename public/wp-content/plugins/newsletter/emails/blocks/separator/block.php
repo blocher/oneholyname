@@ -9,21 +9,21 @@
 /* @var $options array */
 /* @var $wpdb wpdb */
 
+$default_options = array(
+    'color'=>'#dddddd',
+    'height'=>1,
+    'block_padding_top'=>20,
+    'block_padding_bottom'=>20
+    
+);
 
+$options = array_merge($default_options, $options);
 
-if (empty($options['color'])) {
-    $options['color'] = '#dddddd';
-}
-if (empty($options['height'])) {
-    $options['height'] = 1;
-}
 ?>
 
 
-<table border="0" cellpadding="0" cellspacing="0" width="750" class="responsive-table" style="max-width: 100%!important">
+<table border="0" cellpadding="0" align="center" cellspacing="0" width="100%">
     <tr>
-        <td style="padding: 20px;" bgcolor="<?php echo $options['background'] ?>">
-            <div style="height: <?php echo $options['height'] ?>px!important; background-color: <?php echo $options['color'] ?>; border: 0; margin:0; padding: 0; line-height: 0; width: 100%!important; display: block;"></div>
-        </td>
+        <td style="border-bottom: <?php echo $options['height'] ?>px solid <?php echo $options['color'] ?>;"></td>
     </tr>
 </table>

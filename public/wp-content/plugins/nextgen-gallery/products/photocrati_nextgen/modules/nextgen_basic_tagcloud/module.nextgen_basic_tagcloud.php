@@ -24,7 +24,7 @@ class M_NextGen_Basic_Tagcloud extends C_Base_Module
 			NGG_BASIC_TAGCLOUD,
             'NextGen Basic Tagcloud',
             'Provides a tagcloud for NextGEN Gallery',
-            '0.15',
+            '3.1.8',
             'https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/',
             'Imagely',
             'https://www.imagely.com'
@@ -47,7 +47,7 @@ class M_NextGen_Basic_Tagcloud extends C_Base_Module
 
     function _register_utilities()
     {
-        if (apply_filters('ngg_load_frontend_logic', TRUE, $this->module_id))
+        if (!is_admin() && apply_filters('ngg_load_frontend_logic', TRUE, $this->module_id))
             $this->get_registry()->add_utility('I_Taxonomy_Controller', 'C_Taxonomy_Controller');
     }
 
@@ -75,7 +75,7 @@ class M_NextGen_Basic_Tagcloud extends C_Base_Module
             );
         }
 
-        if (apply_filters('ngg_load_frontend_logic', TRUE, $this->module_id))
+        if (!is_admin() && apply_filters('ngg_load_frontend_logic', TRUE, $this->module_id))
         {
             // Provides settings fields and frontend rendering
             $this->get_registry()->add_adapter(
@@ -167,6 +167,7 @@ class C_NextGen_Basic_Tagcloud_Installer extends C_Gallery_Display_Installer
 {
 	/**
 	 * Installs the display type for NextGEN Basic Tagcloud
+     * @param bool $reset (optional) Unused
 	 */
 	function install($reset = FALSE)
 	{

@@ -3,7 +3,7 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,600);
 @import url(//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
 @import url(css/dropdown.css);
-@import url(//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css);
+@import url(vendor/jquery-ui/jquery-ui.min.css);
 
 /* Bootstrap like */
 
@@ -11,6 +11,13 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+/* Color picker patch */
+#tnp-wrap .iris-picker, #tnp-wrap .iris-picker * {
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 #tnp-wrap *:before,
@@ -152,22 +159,28 @@
 .tnp-error {
     border-left: 5px solid #dd0000;
     background-color: #fff;
-    padding: 10px;
+    padding: 15px;
     margin: 15px 0; 
+    font-size: 1.2em;
+    line-height: 1.5em;
 }
 
 .tnp-warning {
     border-left: 5px solid #ffb900;
     background-color: #fff;
-    padding: 10px;
+    padding: 15px;
     margin: 15px 0; 
+    font-size: 1.2em;
+    line-height: 1.5em;
 }
 
 .tnp-message {
     border-left: 5px solid #46b450;
     background-color: #fff;
-    padding: 10px;
+    padding: 15px;
     margin: 15px 0;
+    font-size: 1.2em;
+    line-height: 1.5em;
 }
 
 /* Default font colors for our dark background page body */
@@ -179,11 +192,15 @@
     color: #fff;
 }
 
-#tnp-body a, #tnp-body a:hover, #tnp-body a:visited, #tnp-body a:active {
-    color: #E67E22; /* Orange */
+#tnp-body a, #tnp-body a:active {
+    color: #2980B9; /* Blue */
 }
 
-/* Actiojn button container */
+#tnp-body a:hover {
+    color: #3498DB;
+}
+
+/* Action button container */
 #tnp-body .tnp-submit {
     margin-bottom: 10px;
 }
@@ -203,6 +220,7 @@
     color: #fff;
     background-color: #3498db;
     text-shadow: none;
+    width: auto;
 }
 
 /* Icon in button media selector */
@@ -223,6 +241,7 @@
     background-color: #fff!important;
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
+    width: auto;
 }
 
 /* Form tables correction */
@@ -265,7 +284,7 @@
     max-width: 200px;
     color: #000000;
     background-color: #ECF0F1;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 #tnp-body .form-table th small {
@@ -300,7 +319,7 @@
  */
 
 #tnp-body .widefat {
-    width: auto;
+    width: 90%;
 }
 
 #tnp-body .widefat th {
@@ -320,7 +339,6 @@
 #tnp-body .widefat td, .widefat th {
     vertical-align: middle;
 }
-
 
 /* Buttons on widgets top bar */
 #tnp-body .tnp-widget h3 a, 
@@ -355,6 +373,7 @@
 #tnp-body #tabs .button-secondary:visited, 
 #tnp-body #tabs .button-secondary:hover {
     color: #fff;
+    width: auto;
 }
 
 table.clicks td {
@@ -699,6 +718,7 @@ p.description {
 .wp-core-ui .button-primary {
     background-color: #2b2f3a;
     color: #fff;
+    width: auto;
 }
 
 
@@ -707,10 +727,7 @@ p.description {
 #tnp-body {
     padding: 10px;
     background-color: #28313C;
-    border-color: #28313C;
-    border-width: 10px;
-    border-style: solid;
-    overflow: auto;
+    /*border-color: 10px solid #28313C;*/
 }
 
 .tnp-darkbg {
@@ -739,25 +756,24 @@ p.description {
 
 #tnp-heading {
     padding: 10px;
-    background-color: #28313C;
+    /*background-color: #28313C;*/
     margin-bottom: 10px;
     border-radius: 5px;
 }
 
 #tnp-heading a {
     color: #fff;
-    font-weight: bold;
-    border-bottom: 1.5px solid #fff;
+    border-bottom: 1px solid #fff;
     text-decoration: none;
 }
 
 #tnp-heading a:hover {
     color: #27AE60;
-    border-bottom: 1.5px solid #27AE60;
+    border-bottom: 1px solid #27AE60;
 }
 
 #tnp-heading div p {
-    color: #666;
+    color: #565656;
 }
 
 #tnp-heading h2 {
@@ -773,9 +789,28 @@ p.description {
     margin: 0px;
 }
 
+#tnp-heading h3 {
+    color: #27AE60;
+    font-family: "Montserrat", sans-serif;
+    letter-spacing: 0.1rem;
+    font-size: .8rem;
+    line-height: 1.8rem;
+    text-transform: uppercase;
+    vertical-align: middle;
+    font-weight: 700;
+    padding: 0;
+    margin: 0px;
+}
+
 #tnp-heading p {
     margin: 0px;
     color: #ccc;
+}
+
+/* Style for WP global notices */
+#tnp-heading .notice p {
+    margin: 0.5em 0;
+    padding: 2px;
 }
 
 #tnp-heading .tnp-btn-h1 {
@@ -1008,9 +1043,18 @@ p.description {
     background-color: #ECF0F1;
 }
 
-.wp-core-ui .button-secondary, .wp-core-ui .button, .wp-core-ui .button-primary {
+.wp-core-ui .button-secondary, .wp-core-ui .button-primary {
     background-color: #3498db;
     border: none;
+    box-shadow: none;
+    color: #fff;
+    font-family: 'Montserrat',sans-serif;
+    margin: 0px 2px;
+    width: auto;
+}
+
+.wp-core-ui .button-secondary, .wp-core-ui .button, .wp-core-ui .button-primary {
+    background-color: #3498db;
     box-shadow: none;
     color: #fff;
     font-family: 'Montserrat',sans-serif;
@@ -1020,6 +1064,7 @@ p.description {
 .wp-core-ui .button-secondary:hover, .wp-core-ui .button:hover, .wp-core-ui .button-primary:hover {
     background-color: #5DADE2;
     color: #fff;
+    width: auto;
 }
 
 span.wp-media-buttons-icon:before {
@@ -1134,7 +1179,8 @@ span.wp-media-buttons-icon:before {
 }
 
 .notice a {
-    color: #000 !important;
+    color: #27AE60 !important;
+    text-decoration: underline!important;
 }
 
 .tnp-chart {
@@ -1877,17 +1923,191 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+/* Cossa sea sta roba? ORDINE! */
+
 #tnp-body div.tnp-emails-theme-options table.form-table {
-    margin: 0;
+    margin: 0;  
 }
 
 #tnp-body div.tnp-emails-theme-options h3 {
     color: #000;
 }
 
+
+/* Suggerimenti Oggetto + Inserimento Emoticons */
+
 .tnp-emails-edit #options-subject {
-    font-size: 20px;
+    font-size: 16px;
     display: inline-block;
-    margin-bottom: 10px;
+    margin: 20px 0px;
+    width: 70%;
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+
+.tnp-suggest-button {
+    font-family: "Montserrat", sans-serif;
+    margin-left: 8px;
+    border-radius: 3px;
+    background-color: #2980B9;
+    padding: 10px 15px 8px;
+    font-size: 14px;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.tnp-suggest-button:hover {
+    background-color: #3f8dbf;
+}
+
+.tnp-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .8);
+    z-index: 10000;
+}
+
+.tnp-popup {
+    width: 40vw;
+    height: 66vh;
+    overflow: auto;
+    margin: 100px auto 0 auto;
+    background-color: #181818;
+    padding: 20px;
+    position: relative;
+}
+.tnp-popup-close {
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #181818;
+    color: #fff;
+    font-size: 40px;
+    padding: 10px;
+    text-align: right;
+    cursor: pointer;
+}
+
+.tnp-subjects-header {
+    font-size: 16px;
+    color: #fff;
+    padding: 0px 70px 20px 20px;
+    font-family: "Montserrat", sans-serif;
+    border-bottom: 1px solid #282828;
+}
+
+#tnp-edit-subjects-list {
+    padding: 0px 70px 20px 20px;
+}
+
+#tnp-edit-subjects-list a {
+    padding: 5px;
+}
+
+#tnp-edit-subjects-list svg {
+    margin: 0px 10px 0px 0px;
+    vertical-align: middle;
+}
+
+.tnp-subject-category {
+    color: #565656;
+    margin: 25px 0px 10px 0px;
+    /* font-family: "Montserrat"; */
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+
+#tnp-edit-emoji-list {
+    font-size: 28px;
+}
+#tnp-edit-emoji-list a {
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 5px;  
+}
+
+/* Stili per il campo testo oggetto delle email */
+
+/*#options-subject {
+    background: url(images/idea.svg) no-repeat white 99% 3px;
+    background-size: 25px;
+}
+
+#options-subject:hover {
+    background: url(images/idea.svg) no-repeat red 99% 3px;
+    background-size: 25px;
+}*/
+
+
+/* Stile selettore liste - Schermata di invio newsletter */
+
+.tnp-list-conditions p {
+    margin: 0px 10px;
+}
+
+/* Lists panel */
+.tnp-lists .tnp-notes {
+    margin: 0;
+    font-size: .9em;
+}
+
+/* Codemirror editor with preview */
+iframe.tnp-editor-preview-mobile {
+    box-sizing: border-box; 
+    background-color: #fff;
+    border: 1px solid #bbb; 
+    box-shadow: 1px 1px 10px #777;
+    border-radius: 10px; 
+    padding: 5px; 
+    width: 320px; 
+    height: 500px; 
+    float: left;
+}
+
+iframe.tnp-editor-preview-desktop {
+     box-sizing: border-box; 
+     background-color: #fff; 
+     border: 1px solid #bbb; 
+     border-radius: 10px; 
+     box-shadow: 1px 1px 10px #777; 
+     padding: 15px; 
+     width: 650px; 
+     margin-right: 20px; 
+     height: 500px; 
+     float: left;
+}
+
+
+/* Form inserimento licenza in Addons Manager */
+
+#tnp-license-control  {
+    border-left: 5px solid #27ae60;
+    display: inline-block;
+    padding: 15px 20px;
+    margin-left: -10px;
+    margin-top: 15px;
+    border-radius: 2px;
+    background-color: #fff;
+}
+
+#tnp-license-control form {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#tnp-license-control form input {
+    padding-left: 10px;
+}
+
+#tnp-license-control a {
+    border-bottom: none;
+
 }

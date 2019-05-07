@@ -26,8 +26,8 @@
 **************************************************/
 class Widget_DisplayAlbums extends WP_Widget {
      
-	function Widget_DisplayAlbums() {		
-		// parent::WP_Widget( false, $name = 'Google Picasa Albums' );		
+	//function Widget_DisplayAlbums() {
+    public function __construct() {		
         parent::__construct( false, $name = 'Google Picasa Albums' );
 	}
 

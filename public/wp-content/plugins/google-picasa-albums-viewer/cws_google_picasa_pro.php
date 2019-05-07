@@ -15,9 +15,9 @@
  * @wordpress-plugin
  * Plugin Name:       Google Photos & Picasa Viewer
  * Plugin URI:        http://cheshirewebsolutions.com/
- * Description:       Display Google Photo & Google Picasa Albums in your website.
- * Version:           3.0.13
- * Author:            Ian Kennerley - <a href='http://twitter.com/CheshireWebSol'>@CheshireWebSol</a> on twitter
+ * Description:       Display Google Photo Albums in your website.
+ * Version:           3.2.2
+ * Author:            Cheshire Web Solutions
  * Author URI:        http://cheshirewebsolutions.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt

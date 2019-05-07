@@ -13,6 +13,10 @@ class C_Widget extends C_MVC_Controller
         $this->add_mixin('Mixin_Widget');
         $this->implement('I_Widget');
     }
+    /**
+     * @param bool|string $context
+     * @return C_Widget
+     */
     public static function get_instance($context = FALSE)
     {
         if (!isset(self::$_instances[$context])) {
@@ -26,24 +30,26 @@ class Mixin_Widget extends Mixin
     /**
      * Function for templates without widget support
      *
-     * @return echo the widget content
+     * @return C_Widget_Gallery
      */
     function echo_widget_random($number, $width = '75', $height = '50', $exclude = 'all', $list = '', $show = 'thumbnail')
     {
         $options = array('title' => FALSE, 'items' => $number, 'show' => $show, 'type' => 'random', 'width' => $width, 'height' => $height, 'exclude' => $exclude, 'list' => $list, 'webslice' => FALSE);
         $widget = new C_Widget_Gallery();
         $widget->widget($args = array('widget_id' => 'sidebar_1'), $options);
+        return $widget;
     }
     /**
      * Function for templates without widget support
      *
-     * @return echo the widget content
+     * @return C_Widget_Gallery
      */
     function echo_widget_recent($number, $width = '75', $height = '50', $exclude = 'all', $list = '', $show = 'thumbnail')
     {
         $options = array('title' => FALSE, 'items' => $number, 'show' => $show, 'type' => 'recent', 'width' => $width, 'height' => $height, 'exclude' => $exclude, 'list' => $list, 'webslice' => FALSE);
         $widget = new C_Widget_Gallery();
         $widget->widget($args = array('widget_id' => 'sidebar_1'), $options);
+        return $widget;
     }
     /**
      * Function for templates without widget support
@@ -51,12 +57,13 @@ class Mixin_Widget extends Mixin
      * @param integer $galleryID
      * @param string $width
      * @param string $height
-     * @return echo the widget content
+     * @return C_Widget_Slideshow
      */
     function echo_widget_slideshow($galleryID, $width = '', $height = '')
     {
         $widget = new C_Widget_Slideshow();
         $widget->render_slideshow($galleryID, $width, $height);
+        return $widget;
     }
 }
 class C_Widget_Gallery extends WP_Widget
@@ -72,7 +79,7 @@ class C_Widget_Gallery extends WP_Widget
         $parent = C_Widget::get_instance();
         // defaults
         $instance = wp_parse_args((array) $instance, array('exclude' => 'all', 'height' => '75', 'items' => '4', 'list' => '', 'show' => 'thumbnail', 'title' => 'Gallery', 'type' => 'recent', 'webslice' => TRUE, 'width' => '100'));
-        $parent->render_partial('photocrati-widget#form_gallery', array('self' => $this, 'instance' => $instance, 'title' => esc_attr($instance['title']), 'items' => intval($instance['items']), 'height' => esc_attr($instance['height']), 'width' => esc_attr($instance['width'])));
+        return $parent->render_partial('photocrati-widget#form_gallery', array('self' => $this, 'instance' => $instance, 'title' => esc_attr($instance['title']), 'items' => intval($instance['items']), 'height' => esc_attr($instance['height']), 'width' => esc_attr($instance['width'])));
     }
     function update($new_instance, $old_instance)
     {
@@ -114,9 +121,10 @@ class C_Widget_Gallery extends WP_Widget
     }
     function widget($args, $instance)
     {
+        $settings = C_NextGen_Settings::get_instance();
         $router = C_Router::get_instance();
-        wp_enqueue_style('nextgen_widgets_style', $router->get_static_url('photocrati-widget#widgets.css'), FALSE, NGG_SCRIPT_VERSION);
-        wp_enqueue_style('nextgen_basic_thumbnails_style', $router->get_static_url('photocrati-nextgen_basic_gallery#thumbnails/nextgen_basic_thumbnails.css'), FALSE, NGG_SCRIPT_VERSION);
+        wp_enqueue_style('nextgen_widgets_style', $router->get_static_url('photocrati-widget#widgets.css'), array(), NGG_SCRIPT_VERSION);
+        wp_enqueue_style('nextgen_basic_thumbnails_style', $router->get_static_url('photocrati-nextgen_basic_gallery#thumbnails/nextgen_basic_thumbnails.css'), array(), NGG_SCRIPT_VERSION);
         // these are handled by extract() but I want to silence my IDE warnings that these vars don't exist
         $before_widget = NULL;
         $before_title = NULL;
@@ -155,7 +163,35 @@ class C_Widget_Gallery extends WP_Widget
                 $params['container_ids'] = $instance['list'];
                 break;
         }
-        echo $renderer->display_images($params);
+        // "Random" galleries are a bit resource intensive when querying the database and widgets are generally
+        // going to be on every page a site may serve. Because the displayed gallery renderer does *NOT* cache the
+        // HTML of random galleries the following is a bit of a workaround: for random widgets we create a displayed
+        // gallery object and then cache the results of get_entities() so that, for at least as long as
+        // NGG_RENDERING_CACHE_TTL seconds, widgets will be temporarily cached
+        if (in_array($params['source'], array('random', 'random_images')) && (double) $settings->random_widget_cache_ttl > 0) {
+            $displayed_gallery = $renderer->params_to_displayed_gallery($params);
+            if (is_null($displayed_gallery->id())) {
+                $displayed_gallery->id(md5(json_encode($displayed_gallery->get_entity())));
+            }
+            $cache_group = 'random_widget_gallery_ids';
+            $cache_params = array($displayed_gallery->get_entity());
+            $transientM = C_Photocrati_Transient_Manager::get_instance();
+            $key = $transientM->generate_key($cache_group, $cache_params);
+            $ids = $transientM->get($key, FALSE);
+            if (!empty($ids)) {
+                $params['image_ids'] = $ids;
+            } else {
+                $ids = array();
+                foreach ($displayed_gallery->get_entities($instance['items'], FALSE, TRUE) as $item) {
+                    $ids[] = $item->{$item->id_field};
+                }
+                $params['image_ids'] = implode(',', $ids);
+                $transientM->set($key, $params['image_ids'], (double) $settings->random_widget_cache_ttl * 60);
+            }
+            $params['source'] = 'images';
+            unset($params['container_ids']);
+        }
+        print $renderer->display_images($params);
     }
 }
 class C_Widget_MediaRSS extends WP_Widget
@@ -172,7 +208,7 @@ class C_Widget_MediaRSS extends WP_Widget
         $parent = C_Widget::get_instance();
         // defaults
         $instance = wp_parse_args((array) $instance, array('mrss_text' => __('Media RSS', 'nggallery'), 'mrss_title' => __('Link to the main image feed', 'nggallery'), 'show_global_mrss' => TRUE, 'show_icon' => TRUE, 'title' => 'Media RSS'));
-        $parent->render_partial('photocrati-widget#form_mediarss', array('self' => $this, 'instance' => $instance, 'title' => esc_attr($instance['title']), 'mrss_text' => esc_attr($instance['mrss_text']), 'mrss_title' => esc_attr($instance['mrss_title'])));
+        return $parent->render_partial('photocrati-widget#form_mediarss', array('self' => $this, 'instance' => $instance, 'title' => esc_attr($instance['title']), 'mrss_text' => esc_attr($instance['mrss_text']), 'mrss_title' => esc_attr($instance['mrss_title'])));
     }
     function update($new_instance, $old_instance)
     {
@@ -229,7 +265,7 @@ class C_Widget_Slideshow extends WP_Widget
         $parent = C_Widget::get_instance();
         // defaults
         $instance = wp_parse_args((array) $instance, array('galleryid' => '0', 'height' => '120', 'title' => 'Slideshow', 'width' => '160', 'limit' => '10'));
-        $parent->render_partial('photocrati-widget#form_slideshow', array('self' => $this, 'instance' => $instance, 'title' => esc_attr($instance['title']), 'height' => esc_attr($instance['height']), 'width' => esc_attr($instance['width']), 'limit' => esc_attr($instance['limit']), 'tables' => $wpdb->get_results("SELECT * FROM {$wpdb->nggallery} ORDER BY 'name' ASC")));
+        return $parent->render_partial('photocrati-widget#form_slideshow', array('self' => $this, 'instance' => $instance, 'title' => esc_attr($instance['title']), 'height' => esc_attr($instance['height']), 'width' => esc_attr($instance['width']), 'limit' => esc_attr($instance['limit']), 'tables' => $wpdb->get_results("SELECT * FROM {$wpdb->nggallery} ORDER BY 'name' ASC")));
     }
     function update($new_instance, $old_instance)
     {
@@ -255,8 +291,8 @@ class C_Widget_Slideshow extends WP_Widget
     function widget($args, $instance)
     {
         $router = C_Router::get_instance();
-        wp_enqueue_style('nextgen_widgets_style', $router->get_static_url('photocrati-widget#widgets.css'), FALSE, NGG_SCRIPT_VERSION);
-        wp_enqueue_style('nextgen_basic_slideshow_style', $router->get_static_url('photocrati-nextgen_basic_gallery#slideshow/nextgen_basic_slideshow.css'), FALSE, NGG_SCRIPT_VERSION);
+        wp_enqueue_style('nextgen_widgets_style', $router->get_static_url('photocrati-widget#widgets.css'), array(), NGG_SCRIPT_VERSION);
+        wp_enqueue_style('nextgen_basic_slideshow_style', $router->get_static_url('photocrati-nextgen_basic_gallery#slideshow/nextgen_basic_slideshow.css'), array(), NGG_SCRIPT_VERSION);
         // these are handled by extract() but I want to silence my IDE warnings that these vars don't exist
         $before_widget = NULL;
         $before_title = NULL;

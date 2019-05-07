@@ -20,22 +20,47 @@ jQuery( document ).ready( function() {
 
 		/* Submit an ajax request to send off the update email */
 		var data = {
-			'action': 'easy_forms_send_email',
+			'action'    : 'easy_forms_send_email',
 			'user_email': jQuery( this ).attr( 'data-user-email' ),
-			'list_id': jQuery( this ).attr( 'data-list-id' ),
-			'form_id': jQuery( this ).attr( 'data-form-id' ),
+			'list_id'   : jQuery( this ).attr( 'data-list-id' ),
+			'form_id'   : jQuery( this ).attr( 'data-form-id' ),
+			'page_id'   : form_submission_helpers.page_data,
 		};
 		jQuery( this ).parent( 'p' ).fadeTo( 'fast', .75 ).append( '<img src="' + form_submission_helpers.preloader_url + '" class="update-email-preloader" />' );
 		jQuery.post( form_submission_helpers.ajax_url, data, function(response) {
 			if( response.success ) {
 				jQuery( '.yikes-easy-mc-error-message' ).removeClass( 'yikes-easy-mc-error-message' ).addClass( 'yikes-easy-mc-success-message' ).html( response.data.response_text );
+
+				// Check for a form redirect...
+				if ( response.data.redirection === 1 ) {
+					yikes_mc_redirect_after_submission( response.data.redirect, response.data.redirect_timer, response.data.new_window );
+				}
+
 			} else {
 				jQuery( '.yikes-easy-mc-error-message' ).fadeTo( 'fast', 1 ).html( response.data.response_text );
 			}
 		});
 		return false;
 	});
+
+	jQuery( '.yikes-easy-mc-url' ).blur( yikes_mc_format_url_field );
+
+	jQuery( '.yikes-easy-mc-phone[data-phone-type="us"]' ).blur( yikes_mc_format_us_phone_number_field );
 });
+
+/**
+* Redirect to the specified URL.
+*/
+function yikes_mc_redirect_after_submission( redirect_url, redirect_timer, new_window ) {
+	var new_window_code = new_window === '1' ? '_blank' : '_self';
+
+	setTimeout( 
+		function() {
+			window.open( redirect_url, new_window_code );
+		},
+		redirect_timer
+	);
+}
 
 /**
 * Show/Hide zip-address field based on the chosen country.
@@ -111,4 +136,41 @@ function yikes_mc_does_country_have_states( clicked_element, country_value ) {
 		}
 	});
 	return country_has_states;
+}
+
+function yikes_mc_format_url_field() {
+	var url_value = jQuery( this ).val();
+
+	if ( typeof url_value.length === 'number' && url_value.length > 0 && url_value.indexOf( "http://" ) === -1 && url_value.indexOf( "https://" ) === -1 ) {
+		jQuery( this ).val( 'http://' + url_value );
+	}
+}
+
+function yikes_mc_format_us_phone_number_field() {
+	var phone_number     = this.value;
+	var new_phone_number = phone_number.replace(/\(|\)/g, "").replace(/-/g, "").trim(); // replace all '-,' '(' and ')'
+	formatted_us_number  = new_phone_number.substring( 0, 10 ); // strip all characters after 10th number (10 = length of US numbers 215-555-5555
+	formatted_us_number  = formatted_us_number.replace(/(\d\d\d)(\d\d\d)(\d\d\d\d)/, "$1-$2-$3"); // split the string into the proper format
+	jQuery( this ).val( formatted_us_number );
+}
+
+function renderReCaptchaCallback() {
+	var x = 1;
+	jQuery( '.g-recaptcha' ).each( function() {
+
+		jQuery( this ).attr( 'id', 'recaptcha-' + x );
+
+		var recaptcha_parameters = {
+			'sitekey' : jQuery( this ).data( 'sitekey' ),
+			'type' : jQuery( this ).data( 'type' ),
+			'theme' : jQuery( this ).data( 'theme' ),
+			'size' : jQuery( this ).data( 'size' ),
+			'callback' : jQuery( this ).data( 'callback' ),
+			'expired-callback' : jQuery( this ).data( 'expired-callback' ),
+		};
+
+		grecaptcha.render( 'recaptcha-' + x, recaptcha_parameters );
+
+		x++;
+	});
 }

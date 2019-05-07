@@ -27,6 +27,10 @@ require_once 'Google/Model.php';
 require_once 'Google/Service.php';
 require_once 'Google/Service/Resource.php';
 
+require_once 'Google/Service/PhotosLibrary/Resource/Albums.php';
+require_once 'Google/Service/PhotosLibrary/Resource/MediaItems.php';
+require_once 'Google/Service/PhotosLibrary/Resource/SharedAlbums.php';
+
 /**
  * The Google API Client
  * http://code.google.com/p/google-api-php-client/

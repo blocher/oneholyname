@@ -318,6 +318,11 @@ class Google_Service_Gmail extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'metadataHeaders' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ),
                 'format' => array(
                   'location' => 'query',
                   'type' => 'string',
@@ -332,6 +337,10 @@ class Google_Service_Gmail extends Google_Service
                   'type' => 'string',
                   'required' => true,
                 ),
+                'internalDateSource' => array(
+                  'location' => 'query',
+                  'type' => 'string',
+                ),
               ),
             ),'insert' => array(
               'path' => '{userId}/messages',
@@ -341,6 +350,10 @@ class Google_Service_Gmail extends Google_Service
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ),
+                'internalDateSource' => array(
+                  'location' => 'query',
+                  'type' => 'string',
                 ),
               ),
             ),'list' => array(
@@ -898,6 +911,8 @@ class Google_Service_Gmail_UsersMessages_Resource extends Google_Service_Resourc
    * The ID of the message to retrieve.
    * @param array $optParams Optional parameters.
    *
+   * @opt_param string metadataHeaders
+   * When given and format is METADATA, only include headers specified.
    * @opt_param string format
    * The format to return the message in.
    * @return Google_Service_Gmail_Message
@@ -909,13 +924,17 @@ class Google_Service_Gmail_UsersMessages_Resource extends Google_Service_Resourc
     return $this->call('get', array($params), "Google_Service_Gmail_Message");
   }
   /**
-   * Directly imports a message into only this user's mailbox, similar to
-   * receiving via SMTP. Does not send a message. (messages.import)
+   * Imports a message into only this user's mailbox, with standard email delivery
+   * scanning and classification similar to receiving via SMTP. Does not send a
+   * message. (messages.import)
    *
    * @param string $userId
    * The user's email address. The special value me can be used to indicate the authenticated user.
    * @param Google_Message $postBody
    * @param array $optParams Optional parameters.
+   *
+   * @opt_param string internalDateSource
+   * Source for Gmail's internal date of the message.
    * @return Google_Service_Gmail_Message
    */
   public function import($userId, Google_Service_Gmail_Message $postBody, $optParams = array())
@@ -925,13 +944,17 @@ class Google_Service_Gmail_UsersMessages_Resource extends Google_Service_Resourc
     return $this->call('import', array($params), "Google_Service_Gmail_Message");
   }
   /**
-   * Directly inserts a message into only this user's mailbox. Does not send a
-   * message. (messages.insert)
+   * Directly inserts a message into only this user's mailbox similar to IMAP
+   * APPEND, bypassing most scanning and classification. Does not send a message.
+   * (messages.insert)
    *
    * @param string $userId
    * The user's email address. The special value me can be used to indicate the authenticated user.
    * @param Google_Message $postBody
    * @param array $optParams Optional parameters.
+   *
+   * @opt_param string internalDateSource
+   * Source for Gmail's internal date of the message.
    * @return Google_Service_Gmail_Message
    */
   public function insert($userId, Google_Service_Gmail_Message $postBody, $optParams = array())
@@ -1216,6 +1239,7 @@ class Google_Service_Gmail_Draft extends Google_Model
 
 class Google_Service_Gmail_History extends Google_Collection
 {
+  protected $collection_key = 'messages';
   public $id;
   protected $messagesType = 'Google_Service_Gmail_Message';
   protected $messagesDataType = 'array';
@@ -1302,6 +1326,7 @@ class Google_Service_Gmail_Label extends Google_Model
 
 class Google_Service_Gmail_ListDraftsResponse extends Google_Collection
 {
+  protected $collection_key = 'drafts';
   protected $draftsType = 'Google_Service_Gmail_Draft';
   protected $draftsDataType = 'array';
   public $nextPageToken;
@@ -1340,6 +1365,7 @@ class Google_Service_Gmail_ListDraftsResponse extends Google_Collection
 
 class Google_Service_Gmail_ListHistoryResponse extends Google_Collection
 {
+  protected $collection_key = 'history';
   protected $historyType = 'Google_Service_Gmail_History';
   protected $historyDataType = 'array';
   public $historyId;
@@ -1378,6 +1404,7 @@ class Google_Service_Gmail_ListHistoryResponse extends Google_Collection
 
 class Google_Service_Gmail_ListLabelsResponse extends Google_Collection
 {
+  protected $collection_key = 'labels';
   protected $labelsType = 'Google_Service_Gmail_Label';
   protected $labelsDataType = 'array';
 
@@ -1394,6 +1421,7 @@ class Google_Service_Gmail_ListLabelsResponse extends Google_Collection
 
 class Google_Service_Gmail_ListMessagesResponse extends Google_Collection
 {
+  protected $collection_key = 'messages';
   protected $messagesType = 'Google_Service_Gmail_Message';
   protected $messagesDataType = 'array';
   public $nextPageToken;
@@ -1432,6 +1460,7 @@ class Google_Service_Gmail_ListMessagesResponse extends Google_Collection
 
 class Google_Service_Gmail_ListThreadsResponse extends Google_Collection
 {
+  protected $collection_key = 'threads';
   public $nextPageToken;
   public $resultSizeEstimate;
   protected $threadsType = 'Google_Service_Gmail_Thread';
@@ -1470,6 +1499,7 @@ class Google_Service_Gmail_ListThreadsResponse extends Google_Collection
 
 class Google_Service_Gmail_Message extends Google_Collection
 {
+  protected $collection_key = 'labelIds';
   public $historyId;
   public $id;
   public $labelIds;
@@ -1563,6 +1593,7 @@ class Google_Service_Gmail_Message extends Google_Collection
 
 class Google_Service_Gmail_MessagePart extends Google_Collection
 {
+  protected $collection_key = 'parts';
   protected $bodyType = 'Google_Service_Gmail_MessagePartBody';
   protected $bodyDataType = '';
   public $filename;
@@ -1699,6 +1730,7 @@ class Google_Service_Gmail_MessagePartHeader extends Google_Model
 
 class Google_Service_Gmail_ModifyMessageRequest extends Google_Collection
 {
+  protected $collection_key = 'removeLabelIds';
   public $addLabelIds;
   public $removeLabelIds;
 
@@ -1725,6 +1757,7 @@ class Google_Service_Gmail_ModifyMessageRequest extends Google_Collection
 
 class Google_Service_Gmail_ModifyThreadRequest extends Google_Collection
 {
+  protected $collection_key = 'removeLabelIds';
   public $addLabelIds;
   public $removeLabelIds;
 
@@ -1751,6 +1784,7 @@ class Google_Service_Gmail_ModifyThreadRequest extends Google_Collection
 
 class Google_Service_Gmail_Thread extends Google_Collection
 {
+  protected $collection_key = 'messages';
   public $historyId;
   public $id;
   protected $messagesType = 'Google_Service_Gmail_Message';

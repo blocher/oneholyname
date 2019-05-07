@@ -98,7 +98,11 @@ function cws_gpp_shortcode_images_in_album( $atts ) {
         
         // if no id set from [cws_gpp_images_by_albumid] then use $cws_album
         if( $id === NULL || $id == "" ){
-            $cws_album = $_GET[ 'cws_album' ]; // $cws_album = get_query_var( 'cws_album' );
+
+            if( isset( $_GET['cws_album'] ) ){
+                $cws_album = $_GET[ 'cws_album' ]; // $cws_album = get_query_var( 'cws_album' );
+            }
+            
         } else {
             $cws_album = $id;
         }
@@ -250,6 +254,10 @@ $strOutput .=  $strOutput;
                     wp_enqueue_script( 'cws_gpp_psui', plugin_dir_url( __FILE__ )  . '../shortcodes/partials_pro/props/js/photoswipe-ui-default.min.js', array(), false, false ); 
                     wp_enqueue_script( 'cws_gpp_init_ps', plugin_dir_url( __FILE__ )  . '../shortcodes/partials_pro/props/js/init_ps.js', array( 'jquery' ), false, false );
 
+// added this line to support jig and grid on the same page...
+                    wp_enqueue_script( 'cws_gpp_init_ps_for_grid', plugin_dir_url( __FILE__ )  . '../shortcodes/partials_pro/grid/js/init_ps.js', array( 'jquery' ), false, false );
+
+
                     // end inclucde PhotoSwipe files
 
                     wp_enqueue_style( 'projig-style1', plugin_dir_url( __FILE__ )  . '../shortcodes/partials_pro/projig/css/justifiedGallery.css' );
@@ -339,7 +347,7 @@ $strOutput .=  $strOutput;
 
                 // If Pro use Photoswipe for improved responsiveness and better ux
                 if( $plugin->get_isPro() == 1 ){
-                    include 'partials_pro/photoswipe.html'; 
+                    //include 'partials_pro/photoswipe.html'; 
 
                     if( $plugin->get_isPro() == 1 ){
                         // Enque Pro FX CSS
@@ -378,7 +386,7 @@ $strOutput .=  $strOutput;
                 // If Pro use Photoswipe for improved responsiveness and better ux
                 if( $plugin->get_isPro() == 1 ){
 
-                    include 'partials_pro/photoswipe.html'; 
+                    //include 'partials_pro/photoswipe.html'; 
 
                     // Start include PhotoSwipe files
                     wp_enqueue_style( 'props-style1', plugin_dir_url( __FILE__ )  . '../shortcodes/partials_pro/props/css/photoswipe.css' );
@@ -456,7 +464,7 @@ echo "slidestoscroll: $slidestoscroll<br>";
                 // If Pro use Photoswipe for improved responsiveness and better ux
                 if( $plugin->get_isPro() == 1 ){
 
-                    include 'partials_pro/photoswipe.html'; 
+                    //include 'partials_pro/photoswipe.html'; 
 
                     // Start include PhotoSwipe files
                     wp_enqueue_style( 'props-style1', plugin_dir_url( __FILE__ )  . '../shortcodes/partials_pro/props/css/photoswipe.css' );

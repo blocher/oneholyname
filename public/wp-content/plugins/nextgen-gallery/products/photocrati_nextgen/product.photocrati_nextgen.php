@@ -22,17 +22,19 @@ class P_Photocrati_NextGen extends C_Base_Product
 		'photocrati-ajax'                       =>  'always',
 		'photocrati-datamapper'                 =>  'always',
 		'photocrati-nextgen-legacy'             =>  'always',
+		'photocrati-simple_html_dom'            =>  'always',
 		'photocrati-nextgen-data'               =>  'always',
+		'photocrati-nextgen_block'              =>  'always',
 
 		// We should look at how to make the modules below only
 		// require loading in wp-admin
 		'photocrati-dynamic_thumbnails'         =>  'always',
 		'photocrati-nextgen_admin'              =>  'always',
 		'photocrati-nextgen_gallery_display'    =>  'always',
-		'photocrati-frame_communication'        =>  'always',
+		'photocrati-frame_communication'        =>  'backend',
 		'photocrati-attach_to_post'             =>  'always',
-		'photocrati-nextgen_addgallery_page'    =>  'always',
-		'photocrati-nextgen_other_options'      =>  'always',
+		'photocrati-nextgen_addgallery_page'    =>  'backend',
+		'photocrati-nextgen_other_options'      =>  'backend',
 		'photocrati-nextgen_pagination'         =>  'always',
 
 		// Front-end only
@@ -52,7 +54,8 @@ class P_Photocrati_NextGen extends C_Base_Product
 		'photocrati-widget'                     =>  'always',
 		'photocrati-third_party_compat'         =>  'always',
 		'photocrati-nextgen_xmlrpc'             =>  'always',
-		'photocrati-wpcli'                      =>  'always'
+		'photocrati-wpcli'                      =>  'always',
+        'photocrati-imagify'                    =>  'backend'
 	);
 
 	function get_modules_provided()
@@ -69,10 +72,13 @@ class P_Photocrati_NextGen extends C_Base_Product
 				case 'always':
 					$retval[] = $module_name;
 					break;
-				case 'backend':
-					if (is_admin())
-						$retval[] = $module_name;
+
+				// Hack. If this is a photocrati ajax request, is_admin() will evaluate to false. But
+				// we probably want to load the module if the ajax request is initiated from a wp-admin page
+				case ($condition == 'backend' && (is_admin() || strpos($_SERVER['REQUEST_URI'], 'ajax') !== FALSE || isset($_REQUEST['photocrati_ajax']))):
+					$retval[] = $module_name;					
 					break;
+
 				case 'frontend':
 					if (!is_admin())
 						$retval[] = $module_name;

@@ -5,11 +5,17 @@ Plugin Name: Print, PDF & Email by PrintFriendly
 Plugin URI: http://www.printfriendly.com
 Description: PrintFriendly & PDF button for your website. Optimizes your pages and brand for print, pdf, and email.
 Name and URL are included to ensure repeat visitors and new visitors when printed versions are shared.
-Version: 3.13.0
+Version: 3.14.5
 Author: Print, PDF, & Email by PrintFriendly
 Author URI: http://www.PrintFriendly.com
 
 Changelog :
+3.14.5 - New Feature: Password protected image option. Select this option if your images are password protected so they can be included in PDFs.
+3.14.4 - Make save options work without Pro field(email, domain) validation check.
+3.14.3 - Plugin copy and style changes. No functionality changes.
+3.14.2 - GDPR Compliant notification for PrintFriendly Pro and links to Privacy Policy.
+3.14.1 - Fix client side pro domain validation
+3.14.0 - Integrate instant free Pro Trial, and Pro status.
 3.13.0 - Add Notification alerting websites using Password Protection or JavaScript to display content they need to upgrade to PrintFriendly Pro
 3.12.5 - Chanage link in settings page
 3.12.4 - Bug fix, avoid "undefined variable: return"
@@ -124,7 +130,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
      * Current plugin version.
      * @var string
      */
-    var $plugin_version = '3.13.0';
+    var $plugin_version = '3.14.5';
 
     /**
      * The hook, used for text domain as well as hooks on pages and in get requests for admin.
@@ -148,7 +154,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
      * Database version, used to allow for easy upgrades to / additions in plugin options between plugin versions.
      * @var int
      */
-    var $db_version = 16;
+    var $db_version = 17;
 
     /**
      * Settings page, used within the plugin to reliably load the plugins admin JS and CSS files only on the admin page.
@@ -375,9 +381,11 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
       try {
 ?>
     <style type="text/css" media="screen">
-      div.printfriendly a, div.printfriendly a:link, div.printfriendly a:hover, div.printfriendly a:visited {
+      div.printfriendly a, div.printfriendly a:link, div.printfriendly a:hover, div.printfriendly a:visited, div.printfriendly a:focus {
         text-decoration: none;
         border: none;
+        -webkit-box-shadow:none!important;
+        box-shadow:none!important;
       }
     </style>
    <?php
@@ -463,6 +471,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
           var pfdisableClickToDel = '<?php echo esc_js($this->options['click_to_delete']); ?>';
           var pfImagesSize = '<?php echo esc_js($this->options['images-size']); ?>';
           var pfImageDisplayStyle = '<?php echo esc_js($this->options['image-style']); ?>';
+          var pfEncodeImages = '<?php echo esc_js($this->options['password_protected'] == 'yes' ? 1 : 0); ?>';
           var pfDisableEmail = '<?php echo esc_js($this->options['email']); ?>';
           var pfDisablePDF = '<?php echo esc_js($this->options['pdf']); ?>';
           var pfDisablePrint = '<?php echo esc_js($this->options['print']); ?>';
@@ -563,7 +572,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
           if($this->google_analytics_enabled()) {
               $onclick = $onclick.' onclick="'.$analytics_code.'"';
           }
-          $href = "https://www.printfriendly.com/print?headerImageUrl=".urlencode($this->options['image_url'])."&headerTagline=".urlencode($this->options['tagline'])."&pfCustomCSS=".urlencode($this->options['custom_css_url'])."&imageDisplayStyle=".urlencode($this->options['image-style'])."&disableClickToDel=".urlencode($this->options['click_to_delete'])."&disablePDF=".urlencode($this->options['pdf'])."&disablePrint=".urlencode($this->options['print'])."&disableEmail=".urlencode($this->options['email'])."&imagesSize=".urlencode($this->options['images-size'])."&url=".urlencode(get_permalink())."&source=wp";
+          $href = "https://www.printfriendly.com/print?headerImageUrl=".urlencode($this->options['image_url'])."&headerTagline=".urlencode($this->options['tagline'])."&pfCustomCSS=".urlencode($this->options['custom_css_url'])."&imageDisplayStyle=".urlencode($this->options['image-style'])."&disableClickToDel=".urlencode($this->options['click_to_delete']).".&disablePDF=".urlencode($this->options['pdf'])."&disablePrint=".urlencode($this->options['print'])."&disableEmail=".urlencode($this->options['email'])."&imagesSize=".urlencode($this->options['images-size'])."&url=".urlencode(get_permalink())."&source=wp";
         }
         if ( !is_singular() && '' != $onclick && $js_enabled)  {
           $onclick = '';
@@ -652,7 +661,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
           'buttons/print-button-gray.png', // buttongroup3
           'custom-button' // custom
         ) ) ) {
-        $valid_input['button_type'] = 'buttons/printfriendly-button.png';
+        $valid_input['button_type'] = 'printfriendly-pdf-button.png';
       }
 
       if ( !isset( $input['custom_button_icon'] ) || !in_array( $input['custom_button_icon'], array(
@@ -680,7 +689,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
 
       // Custom button selected, but no url nor text given, reset button type to default
       if( 'custom-button' === $valid_input['button_type'] && ( '' === $valid_input['custom_image'] && '' === $input['custom_text'] ) ) {
-        $valid_input['button_type'] = 'buttons/printfriendly-button.png';
+        $valid_input['button_type'] = 'buttons/printfriendly-pdf-button.png';
         add_settings_error( $this->option_name, 'invalid_custom_image', __( 'No valid custom image url received, please enter a valid url to use a custom image.', $this->hook ) );
       }
 
@@ -867,13 +876,14 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
     function admin_enqueue_scripts( $screen_id ) {
       try {
         if ( $this->settings_page == $screen_id ) {
-          $ver = '3.2.5';
+          $ver = '3.14.5';
           wp_register_script( 'pf-color-picker', plugins_url( 'colorpicker.js', __FILE__ ), array( 'jquery', 'media-upload' ), $ver );
           wp_register_script( 'pf-admin-js', plugins_url( 'admin.js', __FILE__ ), array( 'jquery', 'media-upload' ), $ver );
+          wp_register_script( 'pf-admin-pro-js', plugins_url( 'admin_pro.js', __FILE__ ), array( 'jquery', 'media-upload' ), $ver );
 
           wp_enqueue_script( 'pf-color-picker' );
           wp_enqueue_script( 'pf-admin-js' );
-
+          wp_enqueue_script( 'pf-admin-pro-js' );
 
           wp_enqueue_style( 'printfriendly-admin-css', plugins_url( 'admin.css', __FILE__ ), array(), $ver);
         }
@@ -916,7 +926,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
       try {
         // Set some defaults
         $this->options = array(
-          'button_type' => 'buttons/printfriendly-button.png',
+          'button_type' => 'buttons/printfriendly-pdf-button.png',
           'content_position' => 'left',
           'content_placement' => 'after',
           'custom_button_icon' => 'https://cdn.printfriendly.com/icons/printfriendly-icon-md.png',
@@ -1171,6 +1181,22 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
       if ($this->options['db_version'] < 16) {
         if ($this->options['custom_button_icon'] == 'icons/printfriendly-icon-md.png') {
           $this->options['custom_button_icon'] = 'https://cdn.printfriendly.com/icons/printfriendly-icon-md.png';
+        }
+      }
+
+      if ($this->options['db_version'] < 17) {
+        try {
+          $this->options['pro_email'] = get_bloginfo( 'admin_email' );
+        } catch (Exception $e) {
+          $this->raven_catch($e);
+        }
+
+        try {
+          $url = get_bloginfo( 'url' );
+          $parsed_url = parse_url( $url );
+          $this->options['pro_domain'] = $parsed_url['host'];
+        } catch (Exception $e) {
+          $this->raven_catch($e);
         }
       }
 
@@ -1448,299 +1474,108 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
     }
 ?>
 
-      <style type="text/css">
-        input[type="radio"], img {
-          vertical-align: middle;
-        }
-      </style>
-      <div class="notice notice-warning is-dismissible">
-        <br /><h2>Does your website use these technologies?</h2>
-        <ul>
-            <li>- Password protected websites (paywall or intranet)</li>
-            <li>- JavaScript to display content (Angular/React applications)</li>
-        </ul>
-        <p>If yes, you need to <a href="https://www.printfriendly.com/button/pro">purchase a PrintFriendly Pro subscription</a> for the plugin to work properly on your website (<a href="http://blog.printfriendly.com/2017/11/printfriendly-pdf-plugin-is-changing.html">learn why</a>).</p>
-        <p>If you are an existing Pro customer, no further action is required</p>
-      </div>
-      <div id="pf_settings" class="wrap">
+<div id="pf_settings" class="wrap">
+      <div class="icon32" id="printfriendly"></div>
+      <h2><?php _e( 'Print Friendly & PDF Settings', $this->hook ); ?></h2>
 
-        <div class="icon32" id="printfriendly"></div>
-        <h2><?php _e( 'Print Friendly & PDF Settings', $this->hook ); ?></h2>
+      <form id="pf-options-form" action="options.php" method="post">
+        <?php wp_nonce_field( 'pf-options', 'pf-nonce' ); ?>
+        <?php settings_fields( $this->option_name ); ?>
 
-        <form action="options.php" method="post">
-          <?php wp_nonce_field( 'pf-options', 'pf-nonce' ); ?>
-          <?php settings_fields( $this->option_name ); ?>
+        <div id="pf-pro" class="pf-notice pf-pro">
+          <h3 style="margin: 1rem 0 0 0">Pro - <span id="pf-pro-status-header"></span></h3>
+          <p class="pf-alert-success">PrintFriendly is <strong>GDPR Compliant</strong> <a href="https://www.printfriendly.com/privacy" target="_blank">Learn more</a>.
 
-          <h3><?php _e( "Pick Your Button Style", $this->hook ); ?></h3>
-
-          <fieldset id="button-style">
-            <div id="buttongroup1">
-              <?php $this->radio('buttons/printfriendly-pdf-email-button.png'); ?>
-              <?php $this->radio('buttons/printfriendly-pdf-email-button-md.png'); ?>
-              <?php $this->radio('buttons/printfriendly-pdf-email-button-notext.png'); ?>
-            </div>
-            <div id="buttongroup2">
-              <?php $this->radio('buttons/printfriendly-pdf-button.png'); ?>
-              <?php $this->radio('buttons/printfriendly-pdf-button-nobg.png'); ?>
-              <?php $this->radio('buttons/printfriendly-pdf-button-nobg-md.png'); ?>
-            </div>
-            <div id="buttongroup3">
-              <?php $this->radio('buttons/printfriendly-button.png'); ?>
-              <?php $this->radio('buttons/printfriendly-button-nobg.png'); ?>
-              <?php $this->radio('buttons/printfriendly-button-md.png'); ?>
-              <?php $this->radio('buttons/printfriendly-button-lg.png'); ?>
-            </div>
-            <div id="buttongroup4">
-              <?php $this->radio('buttons/print-button.png'); ?>
-              <?php $this->radio('buttons/print-button-nobg.png'); ?>
-              <?php $this->radio('buttons/print-button-gray.png'); ?>
-            </div>
-
-            <div id="custom-btn-group" class="clear">
-              <label>
-                <?php echo '<input id="custom-btn" class="radio" name="'.$this->option_name.'[button_type]" type="radio" value="custom-button" '.$this->checked( 'button_type', 'custom-button', false ).'/>'; ?>
-                <?php _e( "Custom Button", $this->hook ); ?>
-              </label>
-
-              <div id="custom-img" style="float: left;">
-                <h2><?php _e( 'Image', $this->hook ); ?></h2><br>
-                <?php $this->radio_custom_image('https://cdn.printfriendly.com/icons/printfriendly-icon-sm.png'); ?>
-                <?php $this->radio_custom_image('https://cdn.printfriendly.com/icons/printfriendly-icon-md.png'); ?>
-                <?php $this->radio_custom_image('https://cdn.printfriendly.com/icons/printfriendly-icon-lg.png'); ?>
-
-                <label class="radio-custom-btn">
-                  <input id="custom-image-rb" type="radio" name="<?php echo $this->option_name ?>[custom_button_icon]" value="custom-image" <?php $this->checked( 'custom_button_icon', 'custom-image'); ?>>
-                  <b><?php _e( 'Use Your Image', $this->hook ); ?></b>
-                  <div id="enter-image-url" style="margin: 10px 0 0 30px">
-                    <?php _e( 'Enter Image URL', $this->hook ); ?><br>
-                    <input id="custom_image" type="text" class="clear regular-text" name="<?php echo $this->option_name; ?>[custom_image]" value="<?php $this->val( 'custom_image' ); ?>" />
-                    <div id="pf-custom-button-error"></div>
-                    <div class="description"><?php _e( "Ex: https://www.example.com/<br>Ex: /wp/wp-content/uploads/example.png", $this->hook ); ?>
-                    </div>
-                  </div>
-                </label>
-
-                <label class="radio-custom-btn">
-                  <input type="radio" name="<?php echo $this->option_name ?>[custom_button_icon]" value="no-image" <?php $this->checked( 'custom_button_icon', 'no-image'); ?>>
-                  <b><?php _e( 'No Image', $this->hook ); ?></b>
-                </label>
-              </div>
-
-              <div id="custom-txt" style="float: left;">
-                <h2><?php _e( 'Text', $this->hook ); ?></h2>
-                <div id="txt-enter">
-                  <label>
-                    <input id="custom-text-rb" type="radio" name="<?php echo $this->option_name; ?>[custom_button_text]" value="custom-text" <?php $this->checked( 'custom_button_text', 'custom-text'); ?>>
-                    <input type="text" size="10" class="clear regular-text" name="<?php echo $this->option_name; ?>[custom_text]" id="custom_text" value="<?php $this->val( 'custom_text' ); ?>">
-                  </label>
-                  <label>
-                    <input type="radio" name="<?php echo $this->option_name; ?>[custom_button_text]" value="no-text" <?php $this->checked( 'custom_button_text', 'no-text'); ?>>
-                    <b><?php _e( 'No Text', $this->hook ); ?></b>
-                  </label>
-                </div>
-                <div>
-                  <div id="txt-color">
-                    <?php _e( "Text Color", $this->hook ); ?>
-                    <input type="hidden" name="<?php echo $this->option_name; ?>[text_color]" id="text_color" value="<?php $this->val( 'text_color' ); ?>"/><br>
-                    <div id="colorSelector">
-                      <div style="background-color: <?php echo $this->options['text_color']; ?>;"></div>
-                    </div>
-                  </div>
-                  <div id="txt-size">
-                    <?php _e( "Text Size", $this->hook ); ?><br>
-                    <input type="number" id="text_size" min="9" max="25" class="small-text" name="<?php echo $this->option_name; ?>[text_size]" value="<?php $this->val( 'text_size' ); ?>"/>
-                  </div>
-                </div>
-              </div>
-
-              <div id="custom-button-preview" style="float: left;">
-                <h2><?php _e( 'Preview', $this->hook ); ?></h2>
-                <?php $this->custom_button_preview(); ?>
-              </div>
-            </div>
-          </fieldset>
-          <br class="clear">
-
-    <!--Section 2 Button Positioning-->
-          <div id="button-positioning">
-            <h3><?php _e( "Button Positioning", $this->hook ); ?>
-      <span id="css"><input type="checkbox" name="<?php echo $this->option_name; ?>[enable_css]" value="<?php $this->val('enable_css');?>" <?php $this->checked('enable_css', 'off'); ?> /><?php _e('Do not use CSS for button styles'); ?></span>
-            </h3>
-            <div id="button-positioning-options">
-              <div id="alignment">
-                <label<?php /*for="pf_content_position"*/ ?>>
-                  <select id="pf_content_position" name="<?php echo $this->option_name; ?>[content_position]" >
-                    <option value="left" <?php selected( $this->options['content_position'], 'left' ); ?>><?php _e( "Left Align", $this->hook ); ?></option>
-                    <option value="right" <?php selected( $this->options['content_position'], 'right' ); ?>><?php _e( "Right Align", $this->hook ); ?></option>
-                    <option value="center" <?php selected( $this->options['content_position'], 'center' ); ?>><?php _e( "Center", $this->hook ); ?></option>
-                    <option value="none" <?php selected( $this->options['content_position'], 'none' ); ?>><?php _e( "None", $this->hook ); ?></option>
-                  </select>
-                </label>
-              </div>
-              <div class="content_placement">
-                <label<?php /* for="pf_content_placement"*/ ?>>
-                  <select id="pf_content_placement" name="<?php echo $this->option_name; ?>[content_placement]" >
-                    <option value="before" <?php selected( $this->options['content_placement'], 'before' ); ?>><?php _e( "Above Content", $this->hook ); ?></option>
-                    <option value="after" <?php selected( $this->options['content_placement'], 'after' ); ?>><?php _e( "Below Content", $this->hook ); ?></option>
-                  </select>
-                </label>
-              </div>
-              <div id="margin">
-                <label for="pf-margin_left">
-                  <input type="number" name="<?php echo $this->option_name; ?>[margin_left]" id="pf-margin_left" value="<?php $this->val( 'margin_left' ); ?>" maxlength="3"/>
-                  <?php _e( "Margin Left", $this->hook ); ?>
-                </label>
-                <label for="pf-margin_right">
-                  <input type="number" name="<?php echo $this->option_name; ?>[margin_right]" id="pf-margin_right" value="<?php $this->val( 'margin_right' ); ?>"/> <?php _e( "Margin Right", $this->hook ); ?>
-                </label>
-                <label for="pf-margin_top">
-                  <input type="number" name="<?php echo $this->option_name; ?>[margin_top]" id="pf-margin_top" value="<?php $this->val( 'margin_top' ); ?>" maxlength="3"/> <?php _e( "Margin Top", $this->hook ); ?>
-                </label>
-                <label for="pf-margin_bottom">
-                  <input type="number" name="<?php echo $this->option_name; ?>[margin_bottom]" id="pf-margin_bottom" value="<?php $this->val( 'margin_bottom' ); ?>" maxlength="3"/> <?php _e( "Margin Bottom", $this->hook ); ?>
-                </label>
-              </div>
-            </div>
-          </div>
-          <br class="clear">
-
-    <!--Section 3 Button Placement-->
-          <div id="button-placement">
-            <h3><?php _e( "Display button on:", $this->hook ); ?></h3>
-            <div id="pages">
-              <?php $this->create_checkbox('posts', __( 'Posts', $this->hook )); ?>
-              <?php $this->create_checkbox('pages', __( 'Pages', $this->hook )); ?>
-              <?php $this->create_checkbox('homepage', __( 'Homepage', $this->hook )); ?>
-              <?php $this->create_checkbox('categories', __( 'Category Pages', $this->hook )); ?>
-              <?php $this->create_checkbox('taxonomies', __( 'Taxonomy Pages', $this->hook )); ?>
-              <label for="show_on_template"><input type="checkbox" class="show_template" name="show_on_template" id="show_on_template" /><?php echo _e( 'Add direct to template', $this->hook ); ?></label>
-              <textarea id="pf-shortcode" class="code" rows="2" cols="40">&lt;?php if(function_exists('pf_show_link')){echo pf_show_link();} ?&gt;</textarea>
-              <label<?php /* for="pf-shortcode2"*/ ?>><?php _e( "or use shortcode inside your page/article", $this->hook ); ?></label>
-              <textarea<?php /*  id="pf-shortcode2"*/ ?> class="code" rows="2" cols="40">[printfriendly]</textarea>
-              <?php /* <input type="hidden" name="<? php echo $this->option_name; ?>[category_ids]" id="category_ids" value="<?php echo implode(',', $this->options['category_ids']); ? >" /> */ ?>
-            </div>
-          </div>
-          <?php /*if($this->wp_version_gt30()) { ? >
-          <div id="pf-categories">
-            <h4><?php printf( __( '<a %s>Additional filter</a>', $this->hook), ' href="javascript:void(0)" id="toggle-categories"' ); ?></h4>
-            <div id="pf-categories-metabox">
-              <?php $this->create_category_metabox(); ?>
-            </div>
-           </div>
-          <? php } */ ?>
-
-          <br class="clear">
-
-    <!--Section 4 Button Print Options-->
-          <div id="print-options">
-            <h3><?php _e( "Print PDF Options", $this->hook ); ?></h3>
-            <label id="pf-favicon" for="favicon"<?php /*for="pf-logo"*/ ?>>
-              <?php _e( "Page header", $this->hook ); ?>
-              <select id="pf-logo" name="<?php echo $this->option_name; ?>[logo]" >
-                <option value="favicon" <?php selected( $this->options['logo'], 'favicon' ); ?>><?php _e( "My Website Icon", $this->hook ); ?></option>
-                <option value="upload-an-image" <?php selected( $this->options['logo'], 'upload-an-image' ); ?>><?php _e( "Upload an Image", $this->hook ); ?></option>
-              </select>
+          </p>
+          <div class="pf-col-1 ">
+            <label class="pf-no-margin">
+              <strong><?php _e( "Email", $this->hook ); ?></strong><span class="description"> (To send account details)</span><br>
+              <input id="pf-pro-email" type="email" class="regular-text" maxlength="80" name="<?php echo $this->option_name; ?>[pro_email]" value="<?php $this->val( 'pro_email' ); ?>" placeholder="hello@my-website.com" />
+              <br>
+              <span id="pf-pro-email-error" class="pf-error">Email is invalid</span>
             </label>
-<?php /*            <div class="custom-logo">
-        <label for="upload-an-image"><?php _e( "Enter url", $this->hook ); ?></label><input id="upload-an-image" type="text" class="regular-text" name="<?php echo $this->option_name; ?>[image_url]" value="<?php $this->val( 'image_url' ); ?>" />
-        <label for="image-tagline"><?php _e( "Text (optional)", $this->hook ); ?></label><input id="image-tagline" type="text" class="regular-text" name="<?php echo $this->option_name; ?>[tagline]" value="<?php $this->val( 'tagline' ); ?>" />
-      </div> */ ?>
-            <div class="custom-logo"><label for="Enter_URL"><?php _e( "Enter url", $this->hook ); ?></label><input id="upload-an-image" type="text" class="regular-text" name="<?php echo $this->option_name; ?>[image_url]" value="<?php $this->val( 'image_url' ); ?>" /><label for="Text__optional_"><?php _e( "Text (optional)", $this->hook ); ?></label><input id="image-tagline" type="text" class="regular-text" name="<?php echo $this->option_name; ?>[tagline]" value="<?php $this->val( 'tagline' ); ?>" /></div>
-            <div id="pf-image-error"></div>
-            <div id="pf-image-preview"></div>
-            <label for="click_to_delete">
-              <?php _e( "Click-to-delete", $this->hook ); ?>
-              <select name="<?php echo $this->option_name; ?>[click_to_delete]" id="click-to-delete">
-                <option value="0" <?php selected( $this->options['click_to_delete'], '0' ); ?>><?php _e( "Allow", $this->hook ); ?></option>
-                <option value="1" <?php selected( $this->options['click_to_delete'], '1' ); ?>><?php _e( "Not Allow", $this->hook ); ?></option>
-              </select>
+
+            <label>
+              <strong><?php _e( "Production Domain", $this->hook ); ?></strong><span class="description"> (Your website domain)</span><br>
+              <input id="pf-pro-domain" type="text" class="regular-text" maxlength="80" pattern="^[a-zA-Z0-9][a-zA-Z0-9.-]+[a-zA-Z0-9]$" name="<?php echo $this->option_name; ?>[pro_domain]" value="<?php $this->val( 'pro_domain' ); ?>" placeholder="my-website.com" />
+              <br/>
+              <span id="pf-pro-domain-error" class="pf-error">Domain is invalid</span>
             </label>
-            <label for="images-size">
-              <?php _e( "Images", $this->hook ); ?>
-              <select name="<?php echo $this->option_name; ?>[images-size]" id="images-size">
-                <option value="full-size" <?php selected( $this->options['images-size'], 'full-size' ); ?>><?php _e( "Full Size", $this->hook ); ?></option>
-                <option value="large" <?php selected( $this->options['images-size'], 'large' ); ?>><?php _e( "Large", $this->hook ); ?></option>
-                <option value="medium" <?php selected( $this->options['images-size'], 'medium' ); ?>><?php _e( "Medium", $this->hook ); ?></option>
-                <option value="small" <?php selected( $this->options['images-size'], 'small' ); ?>><?php _e( "Small", $this->hook ); ?></option>
-                <option value="remove-images" <?php selected( $this->options['images-size'], 'remove-images' ); ?>><?php _e( "Remove Images", $this->hook ); ?></option>
-              </select>
-            </label>
-            <label for="image-style">
-              <?php _e( "Image style", $this->hook ); ?>
-              <select name="<?php echo $this->option_name; ?>[image-style]" id="image-style">
-                <option value="right" <?php selected( $this->options['image-style'], 'right' ); ?>><?php _e( "Align Right", $this->hook ); ?></option>
-                <option value="left" <?php selected( $this->options['image-style'], 'left' ); ?>><?php _e( "Align Left", $this->hook ); ?></option>
-                <option value="none" <?php selected( $this->options['image-style'], 'none' ); ?>><?php _e( "Align None", $this->hook ); ?></option>
-                <option value="block" <?php selected( $this->options['image-style'], 'block' ); ?>><?php _e( "Center/Block", $this->hook ); ?></option>
-              </select>
-            </label>
-            <label for="email">
-              <?php _e( "Email", $this->hook ); ?>
-              <select name="<?php echo $this->option_name; ?>[email]" id="email">
-                <option value="0" <?php selected( $this->options['email'], '0' ); ?>><?php _e( "Allow", $this->hook ); ?></option>
-                <option value="1" <?php selected( $this->options['email'], '1' ); ?>><?php _e( "Not Allow", $this->hook ); ?></option>
-              </select>
-            </label>
-            <label for="pdf">
-              <span class="alignleft"><?php _e( "PDF", $this->hook ); ?></span>
-              <select name="<?php echo $this->option_name; ?>[pdf]" id="pdf" class="alignleft clear">
-                <option value="0" <?php selected( $this->options['pdf'], '0' ); ?>><?php _e( "Allow", $this->hook ); ?></option>
-                <option value="1" <?php selected( $this->options['pdf'], '1' ); ?>><?php _e( "Not Allow", $this->hook ); ?></option>
-              </select>
-              <p class="alignleft">
-                  <h4 class="alignleft notice"><abbr class="required"><?php _e( "Developer Note: ", $this->hook ); ?></abbr><?php _e( "On localhost the images can not be included in the PDF. Once the website is live/public images will be included in the PDF.", $this->hook ); ?></h4>
-              </p>
-            </label>
-            <label for="print" class="clear">
-              <?php _e( "Print", $this->hook ); ?>
-              <select name="<?php echo $this->option_name; ?>[print]" id="print">
-                <option value="0" <?php selected( $this->options['print'], '0' ); ?>><?php _e( "Allow", $this->hook ); ?></option>
-                <option value="1" <?php selected( $this->options['print'], '1' ); ?>><?php _e( "Not Allow", $this->hook ); ?></option>
-              </select>
-            </label>
-            <label for="custom_css_url">
-              <?php _e( "Custom css url", $this->hook ); ?>
-              <input id="custom_css_url" type="text" class="regular-text" name="<?php echo $this->option_name; ?>[custom_css_url]" value="<?php $this->val( 'custom_css_url' ); ?>" />
-              <span class="description pf-help-link"><a target="_howto" href="https://support.printfriendly.com/customer/portal/articles/895256-custom-css-styles"><?php _e( '?', $this->hook ); ?></a></span>
-            </label>
+
+            <p id="pf-pro-activate" class="pf-hidden">
+              <button id="pf-pro-activate-btn" type="button" class="button-primary">Activate</button>
+              <span class="pf-btn-message">Free 30 days trial, no credit card required.</span>
+            </p>
+
+            <p id="pf-pro-buy" class="pf-hidden">
+              <a id="pf-pro-buy-btn" class="button-primary">Buy Now</a>
+              <span id="pf-pro-status-message" class="pf-btn-message"></span>
+            </p>
+
+            <p id="pf-pro-loading" class="pf-hidden">
+              <b class="pf-text-success"><span id="pf-pro-loading-message"></span> Please wait...</b>
+            </p>
+
+            <p id="pf-pro-communication-error" class="pf-hidden">
+              <b class="pf-text-error"><span id="pf-pro-communication-error-message"></span></b>
+            </p>
           </div>
 
-   <!--Section 5 WebMaster-->
+          <div class="pf-col-2 pf-pro-features">
+            <strong>Pro Features</strong>
+            <ul>
+                <li>- Faster, better experience for end-user</li>
+                <li>- Cache-free, so any updates are instantly included</li>
+                <li>- Ad-Free for companies and organizations</li>
+                <li>- Works on all sites (Password protected, Angular/React/Ember)</li>
+                <li>- Email support</li>
+            </ul>
+            <p>Have a development/staging domain? <a href="https://support.printfriendly.com/button/pro/development-domain/">Add Free Development Domain</a>.</p>
+          </div>
+          <br />
+        </div>
+
+        <!--Section 1 WebMaster-->
         <h3><?php _e( "Webmaster Settings", $this->hook ); ?></h3>
-
-        <label for="password_protected"><?php _e( 'Password Protected Content', $this->hook ); ?>
-          <select id="password_protected" name="<?php echo $this->option_name; ?>[password_protected]">
+        <div>
+          <label for="password_protected" class="pf-no-margin"><?php _e( 'Password Protected Content', $this->hook ); ?></label>
+          <select id="password_protected" name="<?php echo $this->option_name; ?>[password_protected]" class="alignleft">
             <option value="no" <?php selected( $this->options['password_protected'], 'no' ); ?>><?php _e( "No", $this->hook ); ?></option>
             <option value="yes" <?php selected( $this->options['password_protected'], 'yes' ); ?>><?php _e( "Yes", $this->hook ); ?></option>
           </select>
-        </label>
-        <label for="javascript"><?php _e( 'Use JavaScript', $this->hook ); ?><br>
-          <select id="javascript" name="<?php echo $this->option_name; ?>[javascript]>">
-            <option value="yes" <?php $this->selected( 'javascript', 'yes' ); ?>> <?php _e( "Yes", $this->hook ); ?></option>
-            <option value="no" <?php $this->selected( 'javascript', 'no' ); ?>> <?php _e( "No", $this->hook ); ?></option>
-          </select>
-          <span class="description javascript no-italics">
-            <?php _e( "Preview appears on the page in a Lightbox.", $this->hook ); ?>
+
+          <span class="password_protected_yes pf-alert-warning alignleft">
+            <?php _e( "Password protected content requires Pro subscription.", $this->hook ); ?>
+            <a href="https://www.printfriendly.com/pro">Learn More</a>
           </span>
-          <span class="description no-javascript no-italics">
-            <?php _e( "Preview opens a new browser tab.", $this->hook ); ?>
+          <div class="clearfloat"></div>
+        </div>
+        <br class="clear">
+
+        <div>
+          <label for="dynamic_content" class="pf-no-margin"><?php _e( 'My site uses React/Angular/Ember or uses JS to deliver content', $this->hook ); ?></label>
+          <select id="dynamic_content" name="<?php echo $this->option_name; ?>[dynamic_content]" class="alignleft">
+            <option value="no" <?php selected( $this->options['dynamic_content'], 'no' ); ?>><?php _e( "No", $this->hook ); ?></option>
+            <option value="yes" <?php selected( $this->options['dynamic_content'], 'yes' ); ?>><?php _e( "Yes", $this->hook ); ?></option>
+          </select>
+
+          <span class="dynamic_content_yes pf-alert-warning alignleft">
+            <?php _e( "JS generated content requires a Pro subscription.", $this->hook ); ?>
+            <a href="https://www.printfriendly.com/pro">Learn More</a>
           </span>
+          <div class="clearfloat"></div>
+        </div>
+
+        <label for="javascript"><?php _e( 'Use JavaScript (Lightbox) for PrintFriendly Preview', $this->hook ); ?><br>
+        <select id="javascript" name="<?php echo $this->option_name; ?>[javascript]>">
+          <option value="yes" <?php $this->selected( 'javascript', 'yes' ); ?>> <?php _e( "Yes", $this->hook ); ?></option>
+          <option value="no" <?php $this->selected( 'javascript', 'no' ); ?>> <?php _e( "No", $this->hook ); ?></option>
+        </select>
+        <span class="description no-javascript no-italics">
+          <?php _e( "Preview opens a new browser tab.", $this->hook ); ?>
+        </span>
         </label>
-        <label for="pf-analytics-tracking"><?php _e( 'Track in Google Analytics', $this->hook ); ?><br>
-          <select id="pf-analytics-tracking" name="<?php echo $this->option_name; ?>[enable_google_analytics]">
-            <option value="yes" <?php $this->selected( 'enable_google_analytics', 'yes' ); ?>> <?php _e( "Yes", $this->hook ); ?></option>
-            <option value="no" <?php $this->selected( 'enable_google_analytics', 'no' ); ?>> <?php _e( "No", $this->hook ); ?></option>
-          </select>
-        </label>
-        <label for="pf-error-reporting"><?php _e( 'Error Reporting', $this->hook ); ?>
-          <span class="description no-italics" ><?php _e( 'Ensure PrintFriendly is working - Automatically send anonymous alert if PrintFriendly encounters an error.', $this->hook ); ?>
-          <br>
-          <select id="pf-error-reporting" name="<?php echo $this->option_name; ?>[enable_error_reporting]">
-            <option value="yes" <?php $this->selected( 'enable_error_reporting', 'yes' ); ?>> <?php _e( "Yes", $this->hook ); ?></option>
-            <option value="no" <?php $this->selected( 'enable_error_reporting', 'no' ); ?>> <?php _e( "No", $this->hook ); ?></option>
-          </select>
-        </label>
-        <label for="pf-algo-usage"><?php _e( 'My Page Content Selected By:', $this->hook ); ?>  <span class="description no-italics" ><?php _e( 'Change this setting if your content is not showing in the preview.', $this->hook ); ?></span><br>
+        <label for="pf-algo-usage"><?php _e( 'Select content using:', $this->hook ); ?>  <span class="description no-italics" ><?php _e( 'Change this setting if your content is not showing in the preview.', $this->hook ); ?></span><br>
 
         <?php
           if (class_exists('WooCommerce')) {
@@ -1756,12 +1591,273 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
         <?php
         }
         ?>
-
         </label>
+        <label for="pf-analytics-tracking"><?php _e( 'Track in Google Analytics', $this->hook ); ?><br>
+        <select id="pf-analytics-tracking" name="<?php echo $this->option_name; ?>[enable_google_analytics]">
+          <option value="yes" <?php $this->selected( 'enable_google_analytics', 'yes' ); ?>> <?php _e( "Yes", $this->hook ); ?></option>
+          <option value="no" <?php $this->selected( 'enable_google_analytics', 'no' ); ?>> <?php _e( "No", $this->hook ); ?></option>
+        </select>
+        </label>
+        <label for="pf-error-reporting"><?php _e( 'Error Reporting', $this->hook ); ?>
+        <span class="description no-italics" ><?php _e( 'Ensure PrintFriendly is working - Automatically send anonymous alert if PrintFriendly encounters an error.', $this->hook ); ?></span>
+        <br>
+        <select id="pf-error-reporting" name="<?php echo $this->option_name; ?>[enable_error_reporting]">
+          <option value="yes" <?php $this->selected( 'enable_error_reporting', 'yes' ); ?>> <?php _e( "Yes", $this->hook ); ?></option>
+          <option value="no" <?php $this->selected( 'enable_error_reporting', 'no' ); ?>> <?php _e( "No", $this->hook ); ?></option>
+        </select>
+        </label>
+        <br class="clear">
 
         <p class="submit">
-          <input type="submit" class="button-primary" value="<?php esc_attr_e( "Save Options", $this->hook ); ?>"/>
-          <input type="reset" class="button-secondary" value="<?php esc_attr_e( "Cancel", $this->hook ); ?>"/>
+        <input type="submit" class="button-primary" value="<?php esc_attr_e( "Save Options", $this->hook ); ?>"/>
+        <input type="reset" class="button-secondary" value="<?php esc_attr_e( "Cancel", $this->hook ); ?>"/>
+        </p>
+
+         <!--Section 2 Pick Button Style-->
+        <h3><?php _e( "Pick Your Button Style", $this->hook ); ?></h3>
+
+        <fieldset id="button-style">
+          <div id="buttongroup1">
+            <?php $this->radio('buttons/printfriendly-pdf-email-button.png'); ?>
+            <?php $this->radio('buttons/printfriendly-pdf-email-button-md.png'); ?>
+            <?php $this->radio('buttons/printfriendly-pdf-email-button-notext.png'); ?>
+          </div>
+          <div id="buttongroup2">
+            <?php $this->radio('buttons/printfriendly-pdf-button.png'); ?>
+            <?php $this->radio('buttons/printfriendly-pdf-button-nobg.png'); ?>
+            <?php $this->radio('buttons/printfriendly-pdf-button-nobg-md.png'); ?>
+          </div>
+          <div id="buttongroup3">
+            <?php $this->radio('buttons/printfriendly-button.png'); ?>
+            <?php $this->radio('buttons/printfriendly-button-nobg.png'); ?>
+            <?php $this->radio('buttons/printfriendly-button-md.png'); ?>
+            <?php $this->radio('buttons/printfriendly-button-lg.png'); ?>
+          </div>
+          <div id="buttongroup4">
+            <?php $this->radio('buttons/print-button.png'); ?>
+            <?php $this->radio('buttons/print-button-nobg.png'); ?>
+            <?php $this->radio('buttons/print-button-gray.png'); ?>
+          </div>
+
+          <div id="custom-btn-group" class="clear">
+            <label>
+              <?php echo '<input id="custom-btn" class="radio" name="'.$this->option_name.'[button_type]" type="radio" value="custom-button" '.$this->checked( 'button_type', 'custom-button', false ).'/>'; ?>
+              <?php _e( "Custom Button", $this->hook ); ?>
+            </label>
+
+            <div id="custom-img" style="float: left;">
+              <h2><?php _e( 'Image', $this->hook ); ?></h2><br>
+              <?php $this->radio_custom_image('https://cdn.printfriendly.com/icons/printfriendly-icon-sm.png'); ?>
+              <?php $this->radio_custom_image('https://cdn.printfriendly.com/icons/printfriendly-icon-md.png'); ?>
+              <?php $this->radio_custom_image('https://cdn.printfriendly.com/icons/printfriendly-icon-lg.png'); ?>
+
+              <label for="custom-image-rb" class="radio-custom-btn"></label>
+              <input id="custom-image-rb" type="radio" name="<?php echo $this->option_name ?>[custom_button_icon]" value="custom-image" <?php $this->checked( 'custom_button_icon', 'custom-image'); ?>>
+              <b><?php _e( 'Use Your Image', $this->hook ); ?></b>
+              <div id="enter-image-url" style="margin: 10px 0 0 30px">
+                <?php _e( 'Enter Image URL', $this->hook ); ?><br>
+                <input id="custom_image" type="text" class="clear regular-text" name="<?php echo $this->option_name; ?>[custom_image]" value="<?php $this->val( 'custom_image' ); ?>" />
+                <div id="pf-custom-button-error"></div>
+                <div class="description"><?php _e( "Ex: https://www.example.com/<br>Ex: /wp/wp-content/uploads/example.png", $this->hook ); ?>
+                </div>
+              </div>
+
+              <label class="radio-custom-btn">
+                <input type="radio" name="<?php echo $this->option_name ?>[custom_button_icon]" value="no-image" <?php $this->checked( 'custom_button_icon', 'no-image'); ?>>
+                <b><?php _e( 'No Image', $this->hook ); ?></b>
+              </label>
+            </div>
+
+            <div id="custom-txt" style="float: left;">
+              <h2><?php _e( 'Text', $this->hook ); ?></h2>
+              <div id="txt-enter">
+                <div class="pf-form-element">
+                  <input id="custom-text-rb" type="radio" name="<?php echo $this->option_name; ?>[custom_button_text]" value="custom-text" <?php $this->checked( 'custom_button_text', 'custom-text'); ?>>
+                  <input id="custom_text" type="text" size="10" class="clear regular-text" name="<?php echo $this->option_name; ?>[custom_text]" value="<?php $this->val( 'custom_text' ); ?>">
+                </div>
+                <label>
+                  <input type="radio" name="<?php echo $this->option_name; ?>[custom_button_text]" value="no-text" <?php $this->checked( 'custom_button_text', 'no-text'); ?>>
+                  <b><?php _e( 'No Text', $this->hook ); ?></b>
+                </label>
+              </div>
+              <div>
+                <div id="txt-color">
+                  <?php _e( "Text Color", $this->hook ); ?>
+                  <input type="hidden" name="<?php echo $this->option_name; ?>[text_color]" id="text_color" value="<?php $this->val( 'text_color' ); ?>"/><br>
+                  <div id="colorSelector">
+                    <div style="background-color: <?php echo $this->options['text_color']; ?>;"></div>
+                  </div>
+                </div>
+                <div id="txt-size">
+                  <?php _e( "Text Size", $this->hook ); ?><br>
+                  <input type="number" id="text_size" min="9" max="25" class="small-text" name="<?php echo $this->option_name; ?>[text_size]" value="<?php $this->val( 'text_size' ); ?>"/>
+                </div>
+              </div>
+            </div>
+
+            <div id="custom-button-preview" style="float: left;">
+              <h2><?php _e( 'Preview', $this->hook ); ?></h2>
+              <?php $this->custom_button_preview(); ?>
+            </div>
+          </div>
+        </fieldset>
+
+        <br class="clear">
+
+        <p class="submit">
+        <input type="submit" class="button-primary" value="<?php esc_attr_e( "Save Options", $this->hook ); ?>"/>
+        <input type="reset" class="button-secondary" value="<?php esc_attr_e( "Cancel", $this->hook ); ?>"/>
+        </p>
+
+        <!--Section 3 Button Positioning-->
+        <div id="button-positioning">
+          <h3><?php _e( "Button Positioning", $this->hook ); ?>
+          <span id="css"><input type="checkbox" name="<?php echo $this->option_name; ?>[enable_css]" value="<?php $this->val('enable_css');?>" <?php $this->checked('enable_css', 'off'); ?> /><?php _e('Do not use CSS for button styles'); ?></span>
+                </h3>
+                <div id="button-positioning-options">
+                  <div id="alignment">
+                    <label<?php /*for="pf_content_position"*/ ?>>
+                      <select id="pf_content_position" name="<?php echo $this->option_name; ?>[content_position]" >
+                        <option value="left" <?php selected( $this->options['content_position'], 'left' ); ?>><?php _e( "Left Align", $this->hook ); ?></option>
+                        <option value="right" <?php selected( $this->options['content_position'], 'right' ); ?>><?php _e( "Right Align", $this->hook ); ?></option>
+                        <option value="center" <?php selected( $this->options['content_position'], 'center' ); ?>><?php _e( "Center", $this->hook ); ?></option>
+                        <option value="none" <?php selected( $this->options['content_position'], 'none' ); ?>><?php _e( "None", $this->hook ); ?></option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="content_placement">
+                    <label<?php /* for="pf_content_placement"*/ ?>>
+                      <select id="pf_content_placement" name="<?php echo $this->option_name; ?>[content_placement]" >
+                        <option value="before" <?php selected( $this->options['content_placement'], 'before' ); ?>><?php _e( "Above Content", $this->hook ); ?></option>
+                        <option value="after" <?php selected( $this->options['content_placement'], 'after' ); ?>><?php _e( "Below Content", $this->hook ); ?></option>
+                      </select>
+                    </label>
+                  </div>
+                  <div id="margin">
+                    <label for="pf-margin_left">
+                      <input type="number" name="<?php echo $this->option_name; ?>[margin_left]" id="pf-margin_left" value="<?php $this->val( 'margin_left' ); ?>"/>
+                      <?php _e( "Margin Left", $this->hook ); ?>
+                    </label>
+                    <label for="pf-margin_right">
+                      <input type="number" name="<?php echo $this->option_name; ?>[margin_right]" id="pf-margin_right" value="<?php $this->val( 'margin_right' ); ?>"/> <?php _e( "Margin Right", $this->hook ); ?>
+                    </label>
+                    <label for="pf-margin_top">
+                      <input type="number" name="<?php echo $this->option_name; ?>[margin_top]" id="pf-margin_top" value="<?php $this->val( 'margin_top' ); ?>"/> <?php _e( "Margin Top", $this->hook ); ?>
+                    </label>
+                    <label for="pf-margin_bottom">
+                      <input type="number" name="<?php echo $this->option_name; ?>[margin_bottom]" id="pf-margin_bottom" value="<?php $this->val( 'margin_bottom' ); ?>"/> <?php _e( "Margin Bottom", $this->hook ); ?>
+                    </label>
+                  </div>
+                </div>
+              </div>
+			<br class="clear">
+
+			<p class="submit">
+			<input type="submit" class="button-primary" value="<?php esc_attr_e( "Save Options", $this->hook ); ?>"/>
+			<input type="reset" class="button-secondary" value="<?php esc_attr_e( "Cancel", $this->hook ); ?>"/>
+			</p>
+
+        <!--Section 4 Button Placement-->
+        <div id="button-placement">
+          <h3><?php _e( "Display button on:", $this->hook ); ?></h3>
+          <div id="pages">
+            <?php $this->create_checkbox('posts', __( 'Posts', $this->hook )); ?>
+            <?php $this->create_checkbox('pages', __( 'Pages', $this->hook )); ?>
+            <?php $this->create_checkbox('homepage', __( 'Homepage', $this->hook )); ?>
+            <?php $this->create_checkbox('categories', __( 'Category Pages', $this->hook )); ?>
+            <?php $this->create_checkbox('taxonomies', __( 'Taxonomy Pages', $this->hook )); ?>
+            <label for="show_on_template"><input type="checkbox" class="show_template" name="show_on_template" id="show_on_template" /><?php echo _e( 'Add direct to template', $this->hook ); ?></label>
+            <textarea id="pf-shortcode" class="code" rows="2" cols="40">&lt;?php if(function_exists('pf_show_link')){echo pf_show_link();} ?&gt;</textarea>
+            <label<?php /* for="pf-shortcode2"*/ ?>><?php _e( "or use shortcode inside your page/article", $this->hook ); ?></label>
+            <textarea<?php /*  id="pf-shortcode2"*/ ?> class="code" rows="2" cols="40">[printfriendly]</textarea>
+            <?php /* <input type="hidden" name="<? php echo $this->option_name; ?>[category_ids]" id="category_ids" value="<?php echo implode(',', $this->options['category_ids']); ? >" /> */ ?>
+          </div>
+        </div>
+
+        <br class="clear">
+
+        <p class="submit">
+        <input type="submit" class="button-primary" value="<?php esc_attr_e( "Save Options", $this->hook ); ?>"/>
+        <input type="reset" class="button-secondary" value="<?php esc_attr_e( "Cancel", $this->hook ); ?>"/>
+        </p>
+        <!--Section 5 Button Print Options-->
+        <div id="print-options">
+          <h3><?php _e( "Print PDF Options", $this->hook ); ?></h3>
+          <label id="pf-favicon" for="pf-logo">
+            <?php _e( "Page header", $this->hook ); ?>
+            <select id="pf-logo" name="<?php echo $this->option_name; ?>[logo]" >
+              <option value="favicon" <?php selected( $this->options['logo'], 'favicon' ); ?>><?php _e( "My Website Icon", $this->hook ); ?></option>
+              <option value="upload-an-image" <?php selected( $this->options['logo'], 'upload-an-image' ); ?>><?php _e( "Upload an Image", $this->hook ); ?></option>
+            </select>
+          </label>
+
+          <div class="custom-logo"><label><?php _e( "Enter url", $this->hook ); ?></label><input id="upload-an-image" type="text" class="regular-text" name="<?php echo $this->option_name; ?>[image_url]" value="<?php $this->val( 'image_url' ); ?>" /><label for="image-tagline"><?php _e( "Text (optional)", $this->hook ); ?></label><input id="image-tagline" type="text" class="regular-text" name="<?php echo $this->option_name; ?>[tagline]" value="<?php $this->val( 'tagline' ); ?>" /></div>
+          <div id="pf-image-error"></div>
+          <div id="pf-image-preview"></div>
+          <label>
+            <?php _e( "Click-to-delete", $this->hook ); ?>
+            <select name="<?php echo $this->option_name; ?>[click_to_delete]" id="click-to-delete">
+              <option value="0" <?php selected( $this->options['click_to_delete'], '0' ); ?>><?php _e( "Allow", $this->hook ); ?></option>
+              <option value="1" <?php selected( $this->options['click_to_delete'], '1' ); ?>><?php _e( "Not Allow", $this->hook ); ?></option>
+            </select>
+          </label>
+          <label for="images-size">
+            <?php _e( "Images", $this->hook ); ?>
+            <select name="<?php echo $this->option_name; ?>[images-size]" id="images-size">
+              <option value="full-size" <?php selected( $this->options['images-size'], 'full-size' ); ?>><?php _e( "Full Size", $this->hook ); ?></option>
+              <option value="large" <?php selected( $this->options['images-size'], 'large' ); ?>><?php _e( "Large", $this->hook ); ?></option>
+              <option value="medium" <?php selected( $this->options['images-size'], 'medium' ); ?>><?php _e( "Medium", $this->hook ); ?></option>
+              <option value="small" <?php selected( $this->options['images-size'], 'small' ); ?>><?php _e( "Small", $this->hook ); ?></option>
+              <option value="remove-images" <?php selected( $this->options['images-size'], 'remove-images' ); ?>><?php _e( "Remove Images", $this->hook ); ?></option>
+            </select>
+          </label>
+          <label for="image-style">
+            <?php _e( "Image style", $this->hook ); ?>
+            <select name="<?php echo $this->option_name; ?>[image-style]" id="image-style">
+              <option value="right" <?php selected( $this->options['image-style'], 'right' ); ?>><?php _e( "Align Right", $this->hook ); ?></option>
+              <option value="left" <?php selected( $this->options['image-style'], 'left' ); ?>><?php _e( "Align Left", $this->hook ); ?></option>
+              <option value="none" <?php selected( $this->options['image-style'], 'none' ); ?>><?php _e( "Align None", $this->hook ); ?></option>
+              <option value="block" <?php selected( $this->options['image-style'], 'block' ); ?>><?php _e( "Center/Block", $this->hook ); ?></option>
+            </select>
+          </label>
+          <label for="email">
+            <?php _e( "Email", $this->hook ); ?>
+            <select name="<?php echo $this->option_name; ?>[email]" id="email">
+              <option value="0" <?php selected( $this->options['email'], '0' ); ?>><?php _e( "Allow", $this->hook ); ?></option>
+              <option value="1" <?php selected( $this->options['email'], '1' ); ?>><?php _e( "Not Allow", $this->hook ); ?></option>
+            </select>
+          </label>
+          <label for="pdf">
+            <span class="alignleft"><?php _e( "PDF", $this->hook ); ?></span>
+            <select name="<?php echo $this->option_name; ?>[pdf]" id="pdf" class="alignleft clear">
+              <option value="0" <?php selected( $this->options['pdf'], '0' ); ?>><?php _e( "Allow", $this->hook ); ?></option>
+              <option value="1" <?php selected( $this->options['pdf'], '1' ); ?>><?php _e( "Not Allow", $this->hook ); ?></option>
+            </select>
+            <span class="alignleft pf-alert-warning">
+              <strong><?php _e( "Developer Note: ", $this->hook ); ?></strong><?php _e( "On localhost the images can not be included in the PDF. Once the website is live/public images will be included in the PDF.", $this->hook ); ?>
+            </span>
+          </label>
+          <label for="print" class="clear">
+            <?php _e( "Print", $this->hook ); ?>
+            <select name="<?php echo $this->option_name; ?>[print]" id="print">
+              <option value="0" <?php selected( $this->options['print'], '0' ); ?>><?php _e( "Allow", $this->hook ); ?></option>
+              <option value="1" <?php selected( $this->options['print'], '1' ); ?>><?php _e( "Not Allow", $this->hook ); ?></option>
+            </select>
+          </label>
+          <strong>Print/PDF Custom CSS</strong>
+          <div>Custom the styles of the printed/pdf page using your own CSS. Create your custom CSS, and put the URL to your Custom CSS file in the box below. <a target="_blank" href="https://support.printfriendly.com/customer/portal/articles/895256-custom-css-styles"><?php _e( 'Learn More', $this->hook ); ?></a></div>
+          <label for="custom_css_url">
+            <?php _e( "Custom CSS URL", $this->hook ); ?>
+            <input id="custom_css_url" type="text" class="regular-text" name="<?php echo $this->option_name; ?>[custom_css_url]" value="<?php $this->val( 'custom_css_url' ); ?>" />
+
+          </label>
+        </div>
+
+        <br class="clear">
+
+        <p class="submit">
+        <input type="submit" class="button-primary" value="<?php esc_attr_e( "Save Options", $this->hook ); ?>"/>
+        <input type="reset" class="button-secondary" value="<?php esc_attr_e( "Cancel", $this->hook ); ?>"/>
         </p>
         <div id="after-submit">
           <p>
@@ -1771,8 +1867,9 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
           <p>
             <?php _e( "Need help or have suggestions?", $this->hook ); ?> <a href="mailto:support@printfriendly.com?subject=Support%20for%20PrintFriendly%20WordPress%20plugin">support@PrintFriendly.com</a>
           </p>
-          </div>
-        </form>
+        </div>
+      </form>
+    </div>
 <?php
     }
   }

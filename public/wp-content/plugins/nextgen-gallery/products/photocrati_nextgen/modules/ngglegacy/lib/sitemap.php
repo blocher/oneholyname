@@ -11,15 +11,9 @@ class nggSitemaps {
 
     var $images	= array();
 
-    /**
-     * nggSitemaps::__construct()
-     *
-     * @return
-     */
-    function __construct() {
-
+    function __construct()
+    {
         add_filter('wpseo_sitemap_urlimages', array( &$this, 'add_wpseo_xml_sitemap_images'), 10, 2);
-
     }
 
     /**
@@ -27,7 +21,7 @@ class nggSitemaps {
      *
      * @since Version 1.8.0
      * @param array $images
-     * @param int $post ID
+     * @param int $post_id
      * @return array $image list of all founded images
      */
     function add_wpseo_xml_sitemap_images( $images, $post_id )  {
@@ -59,20 +53,23 @@ class nggSitemaps {
     /**
      * Parse the gallery/imagebrowser/slideshow shortcode and return all images into an array
      *
+     * @TODO: replace or remove this function, it's return value isn't even linked to the queries it performs
      * @param string $atts
-     * @return
+     * @return string
      */
     function add_gallery( $atts ) {
 
         global $wpdb;
 
-        extract(shortcode_atts(array(
-            'id'        => 0
-        ), $atts ));
+        $tmp = shortcode_atts(array(
+            'id' => 0
+        ), $atts);
+        extract($tmp);
 
 	    $gallery_mapper = C_Gallery_Mapper::get_instance();
 	    if (!is_numeric($id)) {
-		    if (($gallery = array_shift($gallery_mapper->select()->where(array('name = %s', $id))->limit(1)->run_query()))) {
+	        $tmp = $gallery_mapper->select()->where(array('name = %s', $id))->limit(1)->run_query();
+		    if (($gallery = array_shift($tmp))) {
 			    $id = $gallery->{$gallery->id_field};
 		    }
 		    else $id = NULL;
@@ -97,20 +94,19 @@ class nggSitemaps {
      * Parse the single image shortcode and return all images into an array
      *
      * @param array $atts
-     * @return
+     * @return string
      */
     function add_images( $atts ) {
 
-        extract(shortcode_atts(array(
-            'id'        => 0
-        ), $atts ));
+        $tmp = shortcode_atts(array('id' => 0), $atts );
+        extract($tmp);
 
         // make an array out of the ids (for thumbs shortcode))
         $pids = explode( ',', $id );
 
         // Some error checks
         if ( count($pids) == 0 )
-            return;
+            return '';
 
         $images = nggdb::find_images_in_list( $pids );
 

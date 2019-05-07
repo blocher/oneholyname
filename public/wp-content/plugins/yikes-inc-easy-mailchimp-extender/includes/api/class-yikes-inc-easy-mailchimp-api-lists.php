@@ -3,12 +3,12 @@
 /**
  *
  */
-class Yikes_Inc_Easy_MailChimp_API_Lists extends Yikes_Inc_Easy_MailChimp_API_Abstract_Items {
+class Yikes_Inc_Easy_Mailchimp_API_Lists extends Yikes_Inc_Easy_Mailchimp_API_Abstract_Items {
 
 	/**
 	 * Our API object.
 	 *
-	 * @var Yikes_Inc_Easy_MailChimp_API
+	 * @var Yikes_Inc_Easy_Mailchimp_API
 	 */
 	protected $api;
 
@@ -64,7 +64,7 @@ class Yikes_Inc_Easy_MailChimp_API_Lists extends Yikes_Inc_Easy_MailChimp_API_Ab
 	 *
 	 * @author Jeremy Pry
 	 *
-	 * @param string $list_id       The list ID in MailChimp.
+	 * @param string $list_id       The list ID in Mailchimp.
 	 * @param array  $limit_fields  Array of fields to limit the results. The fields should be keys in the array.
 	 * @param bool   $use_transient Whether to use a transient.
 	 *
@@ -128,7 +128,7 @@ class Yikes_Inc_Easy_MailChimp_API_Lists extends Yikes_Inc_Easy_MailChimp_API_Ab
 	 *
 	 * @author Jeremy Pry
 	 *
-	 * @param string $list_id       The list ID in MailChimp.
+	 * @param string $list_id       The list ID in Mailchimp.
 	 * @param bool   $use_transient Whether to use a transient.
 	 *
 	 * @return array|WP_Error
@@ -171,6 +171,8 @@ class Yikes_Inc_Easy_MailChimp_API_Lists extends Yikes_Inc_Easy_MailChimp_API_Ab
 			'_links'        => array(),
 		);
 
+		$email_field = apply_filters( 'yikes-easy-mailchimp-email-address-field', $email_field, $list_id );
+
 		array_unshift( $merge_fields, $email_field );
 		$merge_object['merge_fields'] = $merge_fields;
 		set_transient( "yikes_eme_merge_variables_{$list_id}", $merge_object, HOUR_IN_SECONDS );
@@ -185,7 +187,7 @@ class Yikes_Inc_Easy_MailChimp_API_Lists extends Yikes_Inc_Easy_MailChimp_API_Ab
 	*
 	* @since 6.3.3
 	*
-	* @param string | $list_id			| The ID of the MailChimp list
+	* @param string | $list_id			| The ID of the Mailchimp list
 	* @param string | $field_id			| The ID of the merge field
 	* @param array  | $field_data		| An array of field data constituting the body of our API request
 	* @param bool	| $clear_transient	| Flag whether we should delete the transients associated with this list
@@ -256,26 +258,27 @@ class Yikes_Inc_Easy_MailChimp_API_Lists extends Yikes_Inc_Easy_MailChimp_API_Ab
 	 * @author Jeremy Pry
 	 *
 	 * @param string $list_id       The list ID.
+	 * @param string $type          The segment type. Valid types are saved, static, or fuzzy.
 	 * @param bool   $use_transient Whether to use a transient.
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_segments( $list_id, $use_transient = true ) {
-		$transient = get_transient( "yikes_eme_segments_{$list_id}" );
+	public function get_segments( $list_id, $type = 'saved', $use_transient = true ) {
+		$transient = get_transient( "yikes_eme_segments_{$list_id}_{$type}" );
 		if ( false !== $transient && $use_transient ) {
 			return $transient;
 		}
 
 		// @todo: Include members in the segments?
 		$base_path = "{$this->base_path}/{$list_id}/segments";
-		$base_path = add_query_arg( 'type', 'saved', $base_path );
+		$base_path = add_query_arg( 'type', $type, $base_path );
 		$segments  = $this->maybe_return_error( $this->loop_items( $base_path, 'segments' ) );
 
 		if ( is_wp_error( $segments ) ) {
 			return $segments;
 		}
 
-		set_transient( "yikes_eme_segments_{$list_id}", $segments, HOUR_IN_SECONDS );
+		set_transient( "yikes_eme_segments_{$list_id}_{$type}", $segments, HOUR_IN_SECONDS );
 
 		return $segments;
 	}
@@ -378,7 +381,7 @@ class Yikes_Inc_Easy_MailChimp_API_Lists extends Yikes_Inc_Easy_MailChimp_API_Ab
 	/**
 	 * Subscribe a member to the list.
 	 *
-	 * For keys to include in the $member_data array, see the MailChimp API documentation (link below).
+	 * For keys to include in the $member_data array, see the Mailchimp API documentation (link below).
 	 *
 	 * @author Jeremy Pry
 	 * @see    http://developer.mailchimp.com/documentation/mailchimp/reference/lists/members/#edit-put_lists_list_id_members_subscriber_hash
@@ -416,6 +419,42 @@ class Yikes_Inc_Easy_MailChimp_API_Lists extends Yikes_Inc_Easy_MailChimp_API_Ab
 
 		// Clear the list members transient
 		delete_transient( "yikes_eme_members_{$list_id}" );
+
+		return $this->maybe_return_error( $response );
+	}
+
+	/**
+	 * Add a note to a member's profile
+	 *
+	 * @author Kevin Utz
+	 *
+	 * @param string $list_id    The list ID.
+	 * @param string $member_id  The member ID. This is the MD5 hash of the email address.
+	 * @param array  $notes_data The data for the user's note
+	 *
+	 * @return array|WP_Error
+	 */
+	public function create_member_note( $list_id, $member_id, $notes_data ) {
+		$path     = "{$this->base_path}/{$list_id}/members/{$member_id}/notes";
+		$response = $this->post_to_api( $path, $notes_data );
+
+		return $this->maybe_return_error( $response );
+	}
+
+	/**
+	 * Add a tag to a subscriber.
+	 *
+	 * @author Kevin Utz
+	 *
+	 * @param string $list_id The list ID.
+	 * @param string $tag_id  The tag ID.
+	 * @param array  $email   The user's email, in the format array( 'email_address' => 'theemail' ).
+	 *
+	 * @return array|WP_Error
+	 */
+	public function create_member_tags( $list_id, $tag_id, $email ) {
+		$path     = "{$this->base_path}/{$list_id}/segments/{$tag_id}/members";
+		$response = $this->post_to_api( $path, $email );
 
 		return $this->maybe_return_error( $response );
 	}

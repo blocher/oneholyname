@@ -184,15 +184,22 @@ $merge_field_data = $available_merge_variables['merge_fields'][ $index ];
 									</label>
 								</td>
 								<td>
+									<?php $pre_selected = ! empty( $merge_field_data['default_choice'] ) ? $merge_field_data['default_choice'] : 'no-default'; ?>
+									<label for="<?php echo $merge_field_data['tag'] . '-no-default'; ?>">
+										<input id="<?php echo $merge_field_data['tag'] . '-no-default'; ?>"
+										       type="radio"
+										       name="field[<?php echo $merge_field_data['tag']; ?>][default_choice]"
+										       value="no-default" <?php checked( $pre_selected, 'no-default' ); ?>
+										>
+										No Default&nbsp;
+									</label>
 									<?php
 									$x = 0;
-									foreach ( $merge_field_data['options']['choices'] as $choice => $value ) {
-										$pre_selected = ! empty( $merge_field_data['default_choice'] ) ? $merge_field_data['default_choice'] : '0';
-										?>
+									foreach ( $merge_field_data['options']['choices'] as $choice => $value ) { ?>
 										<label>
 											<input type="radio" name="field[<?php echo $merge_field_data['tag']; ?>][default_choice]" value="<?php echo $x; ?>" <?php checked( $pre_selected, $choice ); ?>><?php echo $value; ?>
 										</label>
-										<?php $x ++;
+										<?php $x++;
 									} ?>
 									<p class="description"><small><?php _e( "Select the option that should be selected by default.", 'yikes-inc-easy-mailchimp-extender' );?></small></p>
 								</td>
@@ -211,9 +218,9 @@ $merge_field_data = $available_merge_variables['merge_fields'][ $index ];
 								</td>
 								<td>
 									<select type="default" name="field[<?php echo $merge_field_data['tag']; ?>][default_choice]">
-										<?php foreach ( $merge_field_data['options']['choices'] as $choice => $value ) {
-											$pre_selected = ! empty( $merge_field_data['default_choice'] ) ? $merge_field_data['default_choice'] : '0';
-											?>
+										<?php $pre_selected = ! empty( $merge_field_data['default_choice'] ) ? $merge_field_data['default_choice'] : 'no-default'; ?>
+										<option value="no-default" <?php selected( $pre_selected, $choice ); ?>>No Default</option>
+										<?php foreach ( $merge_field_data['options']['choices'] as $choice => $value ) { ?>
 											<option value="<?php echo $choice; ?>" <?php selected( $pre_selected, $choice ); ?>><?php echo stripslashes( $value ); ?></option>
 										<?php } ?>
 									</select>
@@ -239,7 +246,7 @@ $merge_field_data = $available_merge_variables['merge_fields'][ $index ];
 					</td>
 				</tr>
 				<!-- Description Above Field -->
-				<tr valign="top">
+				<tr valign="top" class="yikes-checkbox-container">
 					<td scope="row">
 						<label for="description_above_<?php echo esc_attr( $merge_field_data['tag'] ); ?>">
 							<?php _e( 'Description Above Field' , 'yikes-inc-easy-mailchimp-extender' ); ?>
@@ -247,7 +254,7 @@ $merge_field_data = $available_merge_variables['merge_fields'][ $index ];
 					</td>
 					<td>
 						<input type="checkbox" id="description_above_<?php echo esc_attr( $merge_field_data['tag'] ); ?>" class="widefat field-description-input" name="field[<?php echo $merge_field_data['tag']; ?>][description_above]" value="1" />
-						<span class="description"><small><?php _e( "By default the description will appear undearneath the field. Check this box if you'd like the description to appear above the field.", 'yikes-inc-easy-mailchimp-extender' );?></small></span>
+						<p class="description"><small><?php _e( "By default the description will appear undearneath the field. Check this box if you'd like the description to appear above the field.", 'yikes-inc-easy-mailchimp-extender' );?></small></p>
 					</td>
 				</tr>
 				<!-- Additional Classes -->
@@ -263,7 +270,7 @@ $merge_field_data = $available_merge_variables['merge_fields'][ $index ];
 					</td>
 				</tr>
 					<!-- Required Toggle -->
-					<tr valign="top">
+					<tr valign="top" class="yikes-checkbox-container">
 						<td scope="row">
 							<label for="field-required">
 								<?php _e( 'Field Required?' , 'yikes-inc-easy-mailchimp-extender' ); ?>
@@ -275,7 +282,7 @@ $merge_field_data = $available_merge_variables['merge_fields'][ $index ];
 						</td>
 					</tr>
 					<!-- Visible Toggle -->
-					<tr valign="top">
+					<tr valign="top" class="yikes-checkbox-container">
 						<td scope="row">
 							<label for="hide-field">
 								<?php _e( 'Hide Field' , 'yikes-inc-easy-mailchimp-extender' ); ?>
@@ -287,7 +294,7 @@ $merge_field_data = $available_merge_variables['merge_fields'][ $index ];
 						</td>
 					</tr>
 					<!-- Toggle Field Label Visibility -->
-					<tr valign="top">
+					<tr valign="top" class="yikes-checkbox-container">
 						<td scope="row">
 							<label for="placeholder">
 								<?php _e( 'Hide Label' , 'yikes-inc-easy-mailchimp-extender' ); ?>
@@ -339,7 +346,7 @@ $merge_field_data = $available_merge_variables['merge_fields'][ $index ];
 										<strong><?php echo $format; ?></strong>
 										<input type="hidden" name="field[<?php echo $merge_field_data['tag']; ?>][<?php echo $format_name; ?>]" value="<?php echo $format; ?>" />
 										<p class="description"><small>
-											<?php printf( __( 'To change the %s please head over to <a href="%s" title="MailChimp" target="_blank">MailChimp</a>. If you alter the format, you should re-import this field.', 'yikes-inc-easy-mailchimp-extender' ), strtolower( $type ), esc_url( 'http://www.mailchimp.com' ) ); ?>
+											<?php printf( __( 'To change the %s please head over to <a href="%s" title="Mailchimp" target="_blank">Mailchimp</a>. If you alter the format, you should re-import this field.', 'yikes-inc-easy-mailchimp-extender' ), strtolower( $type ), esc_url( 'http://www.mailchimp.com' ) ); ?>
 										</small></p>
 									</td>
 								</tr>

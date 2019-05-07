@@ -3,8 +3,8 @@
 namespace WPMailSMTP\Providers\Gmail;
 
 use WPMailSMTP\Debug;
+use WPMailSMTP\MailCatcher;
 use WPMailSMTP\Providers\MailerAbstract;
-use WPMailSMTP\WP;
 
 /**
  * Class Mailer.
@@ -17,19 +17,16 @@ class Mailer extends MailerAbstract {
 	 * URL to make an API request to.
 	 * Not used for Gmail, as we are using its API.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @var string
 	 */
-	protected $url = 'https://www.googleapis.com/upload/gmail/v1/users/userId/messages/send';
-
-	/**
-	 * Gmail custom Auth library.
-	 *
-	 * @var Auth
-	 */
-	protected $auth;
+	protected $url = 'https://www.googleapis.com/upload/gmail/v1/users/{userId}/messages/send';
 
 	/**
 	 * Gmail message.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @var \Google_Service_Gmail_Message
 	 */
@@ -48,12 +45,6 @@ class Mailer extends MailerAbstract {
 		if ( ! $this->is_php_compatible() ) {
 			return;
 		}
-
-		// Include the Google library.
-		require wp_mail_smtp()->plugin_path . '/vendor/autoload.php';
-
-		$this->auth    = new Auth();
-		$this->message = new \Google_Service_Gmail_Message();
 	}
 
 	/**
@@ -66,7 +57,7 @@ class Mailer extends MailerAbstract {
 	public function process_phpmailer( $phpmailer ) {
 		// Make sure that we have access to MailCatcher class methods.
 		if (
-			! $phpmailer instanceof \WPMailSMTP\MailCatcher &&
+			! $phpmailer instanceof MailCatcher &&
 			! $phpmailer instanceof \PHPMailer
 		) {
 			return;
@@ -82,20 +73,32 @@ class Mailer extends MailerAbstract {
 	 */
 	public function send() {
 
-		// Get the raw MIME email using \PHPMailer data.
-		$mime = $this->phpmailer->getSentMIMEMessage();
-		$data = base64_encode( $mime );
-		$data = str_replace( array( '+', '/', '=' ), array( '-', '_', '' ), $data ); // url safe.
-		$this->message->setRaw( $data );
+		// Include the Google library.
+		require_once wp_mail_smtp()->plugin_path . '/vendor/autoload.php';
 
-		$service = new \Google_Service_Gmail( $this->auth->get_client() );
+		$auth    = new Auth();
+		$message = new \Google_Service_Gmail_Message();
+
+		// Get the raw MIME email using \MailCatcher data.
+		$base64 = str_replace(
+			array( '+', '/', '=' ),
+			array( '-', '_', '' ),
+			base64_encode( $this->phpmailer->getSentMIMEMessage() )
+		); // url safe.
+
+		$message->setRaw( $base64 );
+
+		$service = new \Google_Service_Gmail( $auth->get_client() );
 
 		try {
-			$response = $service->users_messages->send( 'me', $this->message );
+			$response = $service->users_messages->send( 'me', $message );
 
 			$this->process_response( $response );
 		} catch ( \Exception $e ) {
-			Debug::set( 'Error while sending via Gmail mailer: ' . $e->getMessage() );
+			Debug::set(
+				'Mailer: Gmail' . "\r\n" .
+				$e->getMessage()
+			);
 
 			return;
 		}
@@ -120,13 +123,19 @@ class Mailer extends MailerAbstract {
 	 * @return bool
 	 */
 	public function is_email_sent() {
+
 		$is_sent = false;
 
 		if ( method_exists( $this->response, 'getId' ) ) {
 			$message_id = $this->response->getId();
 			if ( ! empty( $message_id ) ) {
-				return true;
+				$is_sent = true;
 			}
+		}
+
+		// Clear debug messages if email is successfully sent.
+		if ( $is_sent ) {
+			Debug::clear();
 		}
 
 		return $is_sent;
@@ -139,8 +148,13 @@ class Mailer extends MailerAbstract {
 
 		$gmail_text = array();
 
-		$options = new \WPMailSMTP\Options();
-		$gmail   = $options->get_group( 'gmail' );
+		$options  = new \WPMailSMTP\Options();
+		$gmail    = $options->get_group( 'gmail' );
+		$curl_ver = 'No';
+		if ( function_exists( 'curl_version' ) ) {
+			$curl     = curl_version(); // phpcs:ignore
+			$curl_ver = $curl['version'];
+		}
 
 		$gmail_text[] = '<strong>Client ID/Secret:</strong> ' . ( ! empty( $gmail['client_id'] ) && ! empty( $gmail['client_secret'] ) ? 'Yes' : 'No' );
 		$gmail_text[] = '<strong>Auth Code:</strong> ' . ( ! empty( $gmail['auth_code'] ) ? 'Yes' : 'No' );
@@ -148,13 +162,43 @@ class Mailer extends MailerAbstract {
 
 		$gmail_text[] = '<br><strong>Server:</strong>';
 
-		$gmail_text[] = '<strong>OpenSSL:</strong> ' . ( extension_loaded( 'openssl' ) ? 'Yes' : 'No' );
+		$gmail_text[] = '<strong>OpenSSL:</strong> ' . ( extension_loaded( 'openssl' ) && defined( 'OPENSSL_VERSION_TEXT' ) ? OPENSSL_VERSION_TEXT : 'No' );
 		$gmail_text[] = '<strong>PHP.allow_url_fopen:</strong> ' . ( ini_get( 'allow_url_fopen' ) ? 'Yes' : 'No' );
 		$gmail_text[] = '<strong>PHP.stream_socket_client():</strong> ' . ( function_exists( 'stream_socket_client' ) ? 'Yes' : 'No' );
 		$gmail_text[] = '<strong>PHP.fsockopen():</strong> ' . ( function_exists( 'fsockopen' ) ? 'Yes' : 'No' );
-		$gmail_text[] = '<strong>PHP.curl_version():</strong> ' . ( function_exists( 'curl_version' ) ? 'Yes' : 'No' );
-		$gmail_text[] = '<strong>Apache.mod_security:</strong> ' . ( in_array( 'mod_security', apache_get_modules(), true ) || in_array( 'mod_security2', apache_get_modules(), true ) ? 'Yes' : 'No' );
+		$gmail_text[] = '<strong>PHP.curl_version():</strong> ' . $curl_ver; // phpcs:ignore
+		if ( function_exists( 'apache_get_modules' ) ) {
+			$modules      = apache_get_modules();
+			$gmail_text[] = '<strong>Apache.mod_security:</strong> ' . ( in_array( 'mod_security', $modules, true ) || in_array( 'mod_security2', $modules, true ) ? 'Yes' : 'No' );
+		}
+		if ( function_exists( 'selinux_is_enabled' ) ) {
+			$gmail_text[] = '<strong>OS.SELinux:</strong> ' . ( selinux_is_enabled() ? 'Yes' : 'No' );
+		}
+		if ( function_exists( 'grsecurity_is_enabled' ) ) {
+			$gmail_text[] = '<strong>OS.grsecurity:</strong> ' . ( grsecurity_is_enabled() ? 'Yes' : 'No' );
+		}
 
 		return implode( '<br>', $gmail_text );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function is_mailer_complete() {
+
+		if ( ! $this->is_php_compatible() ) {
+			return false;
+		}
+
+		$auth = new Auth();
+
+		if (
+			$auth->is_clients_saved() &&
+			! $auth->is_auth_required()
+		) {
+			return true;
+		}
+
+		return false;
 	}
 }

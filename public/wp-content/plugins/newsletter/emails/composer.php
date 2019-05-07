@@ -13,6 +13,8 @@ wp_enqueue_style('tnpc-style', plugins_url('/tnp-composer/_css/newsletter-builde
 //wp_enqueue_style('tnpc-newsletter-style', plugins_url('/tnp-composer/css/newsletter.css', __FILE__));
 wp_enqueue_style('tnpc-newsletter-style', home_url('/') . '?na=emails-composer-css');
 
+include NEWSLETTER_INCLUDES_DIR . '/codemirror.php';
+
 if (($controls->is_action('save') || $controls->is_action('preview')) && !isset($_GET['id'])) {
 
     $module->save_options($controls->data);
@@ -20,7 +22,7 @@ if (($controls->is_action('save') || $controls->is_action('preview')) && !isset(
     $email = array();
     $email['status'] = 'new';
     $email['subject'] = __('Here the email subject', 'newsletter');
-    $email['track'] = 1;
+    $email['track'] = Newsletter::instance()->options['track'];
     $email['token'] = $module->get_token();
 
     $email['message'] = $controls->data['body'];

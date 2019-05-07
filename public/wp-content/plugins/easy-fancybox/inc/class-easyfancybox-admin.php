@@ -6,7 +6,7 @@ class easyFancyBox_Admin extends easyFancyBox {
 
 	public static $pagehook;
 
-	public static $compat_pro_min = '1.5.3';
+	public static $compat_pro_min = '1.8';
 
 	public static $do_compat_warning = false;
 
@@ -14,35 +14,44 @@ class easyFancyBox_Admin extends easyFancyBox {
 	     ADMIN FUNCTIONS
 	 ***********************/
 
-	public static function register_settings($args = array()) {
+	public static function add_settings_section() {
+ 		add_settings_section('fancybox_section', __('FancyBox','easy-fancybox'), array(__CLASS__, 'settings_section'), 'media');
+ 	}
+
+	public static function register_settings( $args = array() ) {
+		if ( empty( $args ) ) $args = parent::$options;
 		foreach ($args as $key => $value) {
 			// check to see if the section is enabled, else skip to next
-			if ( !isset($value['input']) || array_key_exists($key, parent::$options['Global']['options']['Enable']['options']) && !get_option( parent::$options['Global']['options']['Enable']['options'][$key]['id'], parent::$options['Global']['options']['Enable']['options'][$key]['default']) )
-				continue;
+			if ( !isset($value['input'])
+				|| array_key_exists($key, parent::$options['Global']['options']['Enable']['options'])
+				&& !get_option( parent::$options['Global']['options']['Enable']['options'][$key]['id'], parent::$options['Global']['options']['Enable']['options'][$key]['default'])
+				) continue;
 
 			switch($value['input']) {
 				case 'deep':
-					// go deeper by looping back on itself
-					self::register_settings($value['options']);
-					break;
+				// go deeper by looping back on itself
+				self::register_settings($value['options']);
+				break;
+
 				case 'multiple':
-					add_settings_field( 'fancybox_'.$key, '<a name="'.$value['title'].'"></a>'.$value['title'], array(__CLASS__, 'settings_fields'), 'media', 'fancybox_section', $value);
-					foreach ( $value['options'] as $_value ) {
-						if ( !isset($_value['sanitize_callback']) )
-							$sanitize_callback = '';
-						else
-							$sanitize_callback = array(__CLASS__, $_value['sanitize_callback']);
-						if ( isset($_value['id']) )
-							register_setting( 'media', $_value['id'], $sanitize_callback );
-					}
-					break;
+				add_settings_field( 'fancybox_'.$key, '<a name="'.$value['title'].'"></a>'.$value['title'], array(__CLASS__, 'settings_fields'), 'media', 'fancybox_section', $value);
+				foreach ( $value['options'] as $_value ) {
+					if ( !isset($_value['sanitize_callback']) )
+						$sanitize_callback = '';
+					else
+						$sanitize_callback = array(__CLASS__, $_value['sanitize_callback']);
+					if ( isset($_value['id']) )
+						register_setting( 'media', $_value['id'], $sanitize_callback );
+				}
+				break;
+
 				default:
-					if ( !isset($value['sanitize_callback']) )
-							$sanitize_callback = '';
-						else
-							$sanitize_callback = array(__CLASS__, $value['sanitize_callback']);
-					if ( isset($value['id']) )
-						register_setting( 'media', 'fancybox_'.$key, $sanitize_callback );
+				if ( !isset($value['sanitize_callback']) )
+					$sanitize_callback = '';
+				else
+					$sanitize_callback = array(__CLASS__, $value['sanitize_callback']);
+				if ( isset($value['id']) )
+					register_setting( 'media', 'fancybox_'.$key, $sanitize_callback );
 			}
 		}
 	}
@@ -50,13 +59,16 @@ class easyFancyBox_Admin extends easyFancyBox {
 	// add our FancyBox Media Settings Section on Settings > Media admin page
 	public static function settings_section() {
 		echo '<style type="text/css">.options-media-php br { display: initial; }</style><!-- undo WP style rule introduced in 4.9 on settings-media -->
-		<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=Easy%20FancyBox&item_number='.EASY_FANCYBOX_VERSION.'&no_shipping=0&tax=0&charset=UTF%2d8&currency_code=EUR" title="'.__('Donate to keep the Easy FancyBox plugin development going!','easy-fancybox').'"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" style="border:none;float:right;margin:5px 0 0 10px" alt="'.__('Donate to keep the Easy FancyBox plugin development going!','easy-fancybox').'" width="92" height="26" /></a>'.sprintf(__('The options in this section are provided by the plugin %s and determine the <strong>Media Lightbox</strong> overlay appearance and behavior controlled by %s.','easy-fancybox'),'<strong><a href="http://status301.net/wordpress-plugins/easy-fancybox/">'.__('Easy FancyBox','easy-fancybox').'</a></strong>','<strong><a href="http://fancybox.net/">'.__('FancyBox','easy-fancybox').'</a></strong>').'</p><p>'.__('First enable each sub-section that you need. Then save and come back to adjust its specific settings.','easy-fancybox').' '.__('Note: Each additional sub-section and features like <em>Auto-detection</em>, <em>Elastic transitions</em> and all <em>Easing effects</em> (except Swing) will have some extra impact on client-side page speed. Enable only those sub-sections and options that you actually need on your site.','easy-fancybox').' '.__('Some setting like Transition options are unavailable for SWF video, PDF and iFrame content to ensure browser compatibility and readability.','easy-fancybox').'</p>';
+		<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=Easy%20FancyBox&item_number='.EASY_FANCYBOX_VERSION.'&no_shipping=0&tax=0&charset=UTF%2d8&currency_code=EUR" title="'.__('Donate to keep the Easy FancyBox plugin development going!','easy-fancybox').'">
+		<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" style="border:none;float:right;margin:5px 0 0 10px" alt="'.__('Donate to keep the Easy FancyBox plugin development going!','easy-fancybox').'" width="92" height="26" /></a>';
+		echo sprintf(__('The options in this section are provided by the plugin %s and determine the <strong>Media Lightbox</strong> overlay appearance and behavior controlled by %s.','easy-fancybox'),'<strong><a href="http://status301.net/wordpress-plugins/easy-fancybox/">'.__('Easy FancyBox','easy-fancybox').'</a></strong>','<strong><a href="http://fancybox.net/">'.__('FancyBox','easy-fancybox').'</a></strong>');
+		echo '</p><p>'.__('First enable each sub-section that you need. Then save and come back to adjust its specific settings.','easy-fancybox').' '.__('Note: Each additional sub-section and features like <em>Auto-detection</em>, <em>Elastic transitions</em> and all <em>Easing effects</em> (except Swing) will have some extra impact on client-side page speed. Enable only those sub-sections and options that you actually need on your site.','easy-fancybox').' '.__('Some setting like Transition options are unavailable for SWF video, PDF and iFrame content to ensure browser compatibility and readability.','easy-fancybox').'</p>';
 
 		/* Black Friday offer */
 		if ( !class_exists('easyFancyBox_Advanced')
 			&& current_user_can( 'install_plugins' )
-			&& strtotime('now') > strtotime('23-11-2017')
-			&& strtotime('now') < strtotime('28-11-2017') ) {
+			&& strtotime('now') > strtotime('23-11-2018')
+			&& strtotime('now') < strtotime('27-11-2018') ) {
 			echo '<p style="background-color:#F9D400;padding:5px 10px;border-radius:15px;box-shadow:#333 0 1px 1px;color:#000;">
 				<strong>Easy FancyBox advanced options at 30% OFF!</strong>
 				Black Friday to Cyber Monday: THE BIG 30 SALE at Status301.
@@ -208,13 +220,13 @@ class easyFancyBox_Admin extends easyFancyBox {
 		return $setting;
 	}
 
-
 	/***********************
 	    ACTIONS & FILTERS
 	 ***********************/
 
-	public static function admin_notice() {
-		global $current_user ;
+	public static function admin_notice()
+	{
+		global $current_user;
 
 		/* Version Nag */
 		if ( self::$do_compat_warning && current_user_can( 'install_plugins' ) && !get_user_meta($current_user->ID, 'easy_fancybox_ignore_notice') ) {
@@ -229,31 +241,11 @@ class easyFancyBox_Admin extends easyFancyBox {
 		}
 	}
 
-	/**********************
-	         RUN
-	 **********************/
-
-	public static function run() {
-		add_action('plugins_loaded', array(__CLASS__, 'load_textdomain'));
-		add_action('admin_init', array(__CLASS__, 'admin_init'));
-	}
-
-	public static function load_textdomain(){
+	public static function load_textdomain() {
 		load_plugin_textdomain('easy-fancybox', false, dirname( parent::$plugin_basename ) . '/languages' );
 	}
 
 	public static function admin_init() {
-		add_action('admin_notices', array(__CLASS__, 'admin_notice'));
-
-		add_filter('plugin_action_links_'.parent::$plugin_basename, array(__CLASS__, 'add_action_link') );
-
-		// in preparation of dedicated admin page move:
-		//add_action('admin_menu', array(__CLASS__, 'add_menu'));
-
-		add_settings_section('fancybox_section', __('FancyBox','easy-fancybox'), array(__CLASS__, 'settings_section'), 'media');
-
-		self::register_settings( parent::$options );
-
 		/* Dismissable notice */
 		/* If user clicks to ignore the notice, add that to their user meta */
 		global $current_user;
@@ -267,4 +259,20 @@ class easyFancyBox_Admin extends easyFancyBox {
 			self::$do_compat_warning = true;
 	}
 
+	/**********************
+	         RUN
+	 **********************/
+
+	public function __construct() {
+		add_action('plugins_loaded', array(__CLASS__, 'load_textdomain'));
+		add_action('admin_notices', array(__CLASS__, 'admin_notice'));
+		add_filter('plugin_action_links_'.parent::$plugin_basename, array(__CLASS__, 'add_action_link') );
+
+		// in preparation of dedicated admin page move:
+		//add_action('admin_menu', array(__CLASS__, 'add_menu'));
+
+		add_action('admin_init', array(__CLASS__, 'add_settings_section'));
+		add_action('admin_init', array(__CLASS__, 'register_settings'));
+		add_action('admin_init', array(__CLASS__, 'admin_init'));
+	}
 }

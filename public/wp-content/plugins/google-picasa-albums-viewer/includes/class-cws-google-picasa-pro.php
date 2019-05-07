@@ -69,7 +69,7 @@ class CWS_Google_Picasa_Pro {
 	public function __construct() {
         
 		$this->plugin_name = 'cws-google-picasa-pro';
-		$this->version = '3.0.13';
+		$this->version = '3.2.2';
 		$this->isPro = 0;
 		$this->load_dependencies();
 		$this->set_locale();
@@ -114,6 +114,14 @@ class CWS_Google_Picasa_Pro {
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-cws-google-picasa-pro-admin.php';
+
+
+		/**
+		 * The class responsible for defining all Google Photos related actions. Extends admin/class-cws-google-picasa-pro-admin.php
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-cws-google-photos-pro-admin.php';
+
+		//
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -186,11 +194,22 @@ $this->define_constants(); // Added v3.0.10 when making Google api lib play nice
 		// Added 2.3 to allow extra page with album shortcode details...
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_menu_page' );
 
+
+// Added 3.1.6 to help with daily quota
+$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_gapi_page' );
+
+
 		// Added 3.0.9 to allow exra page with details of how to get started...
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_gs_page' );
 
+		// Added 3.1 to allow user to search for Google Photos API Album ID since Google now uses a different album id to the one displayed on photos.google.com
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_gp_albumIdHelper_page' );
+
+
+
 		// If Pro add Shortcode Snippet page to admin menu
-		if( $this->get_isPro() ){
+		//if( $this->get_isPro() )
+		{
 			$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_sc_page' );
 		}
 

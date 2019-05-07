@@ -14,7 +14,7 @@ class M_DataMapper extends C_Base_Module
 			'photocrati-datamapper',
 			'DataMapper',
 			'Provides a database abstraction layer following the DataMapper pattern',
-			'0.10',
+			'3.1.19',
             'https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/',
             'Imagely',
             'https://www.imagely.com'
@@ -170,13 +170,15 @@ class M_DataMapper extends C_Base_Module
 		elseif (($value = $wp_query->get('post_title__like'))) {
 			$where .= " AND {$wpdb->posts}.post_title LIKE '{$value}'";
 		}
+
+		return $where;
 	}
 
 
 	/**
 	 * Adds post_name to the where clause
-	 * @param type $where
-	 * @param type $wp_query
+	 * @param string $where
+	 * @param WP_Query $wp_query
 	 */
 	function add_post_name_where_clauses(&$where, &$wp_query)
 	{
@@ -192,46 +194,27 @@ class M_DataMapper extends C_Base_Module
 	}
 
     /**
-     * Unserializes data using our proprietary format
+     * Unserializes data
+     *
+     * @deprecated Used only by the Pro Lightbox
      * @param string $value
      * @return mixed
      */
-    static function unserialize($value)
-    {
-        $retval = NULL;
-        if (is_string($value))
-        {
-            $retval = stripcslashes($value);
-
-            if (strlen($value) > 1)
-            {
-                // We can't always rely on base64_decode() or json_decode() to return FALSE as their documentation
-                // claims so check if $retval begins with a: as that indicates we have a serialized PHP object.
-                if (strpos($retval, 'a:') === 0)
-                {
-                    $er = error_reporting(0);
-                    $retval = unserialize($value);
-                    error_reporting($er);
-                }
-                else {
-                    // We use json_decode() here because PHP's unserialize() is not Unicode safe.
-                    $retval = json_decode(base64_decode($retval), TRUE);
-                }
-            }
-        }
-
-        return $retval;
+	public static function unserialize($value)
+	{
+        return C_NextGen_Serializable::unserialize($value);
     }
 
     /**
      * Serializes the data
+     *
+     * @deprecated Used only by the Pro Lightbox
      * @param mixed $value
      * @return string
      */
     static function serialize($value)
     {
-        //Using json_encode here because PHP's serialize is not Unicode safe
-        return base64_encode(json_encode($value));
+	    return C_NextGen_Serializable::serialize($value);
     }
 
     function get_type_list()
@@ -261,5 +244,4 @@ class C_DataMapper_Installer
 		$this->settings->set_default_value('datamapper_driver', 'custom_post_datamapper');
 	}
 }
-
 new M_DataMapper();

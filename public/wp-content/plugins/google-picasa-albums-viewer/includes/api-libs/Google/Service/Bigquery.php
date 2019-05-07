@@ -692,7 +692,8 @@ class Google_Service_Bigquery_Jobs_Resource extends Google_Service_Resource
   }
   /**
    * Lists all the Jobs in the specified project that were started by the user.
-   * (jobs.listJobs)
+   * The job list returns in reverse chronological order of when the jobs were
+   * created, starting with the most recent job created. (jobs.listJobs)
    *
    * @param string $projectId
    * Project ID of the jobs to list
@@ -960,6 +961,7 @@ class Google_Service_Bigquery_Tables_Resource extends Google_Service_Resource
 
 class Google_Service_Bigquery_Dataset extends Google_Collection
 {
+  protected $collection_key = 'access';
   protected $accessType = 'Google_Service_Bigquery_DatasetAccess';
   protected $accessDataType = 'array';
   public $creationTime;
@@ -1135,6 +1137,7 @@ class Google_Service_Bigquery_DatasetAccess extends Google_Model
 
 class Google_Service_Bigquery_DatasetList extends Google_Collection
 {
+  protected $collection_key = 'datasets';
   protected $datasetsType = 'Google_Service_Bigquery_DatasetListDatasets';
   protected $datasetsDataType = 'array';
   public $etag;
@@ -1307,6 +1310,7 @@ class Google_Service_Bigquery_ErrorProto extends Google_Model
 
 class Google_Service_Bigquery_GetQueryResultsResponse extends Google_Collection
 {
+  protected $collection_key = 'rows';
   public $cacheHit;
   public $etag;
   public $jobComplete;
@@ -1584,6 +1588,7 @@ class Google_Service_Bigquery_JobConfiguration extends Google_Model
 
 class Google_Service_Bigquery_JobConfigurationExtract extends Google_Collection
 {
+  protected $collection_key = 'destinationUris';
   public $compression;
   public $destinationFormat;
   public $destinationUri;
@@ -1666,6 +1671,7 @@ class Google_Service_Bigquery_JobConfigurationExtract extends Google_Collection
 
 class Google_Service_Bigquery_JobConfigurationLink extends Google_Collection
 {
+  protected $collection_key = 'sourceUri';
   public $createDisposition;
   protected $destinationTableType = 'Google_Service_Bigquery_TableReference';
   protected $destinationTableDataType = '';
@@ -1715,6 +1721,7 @@ class Google_Service_Bigquery_JobConfigurationLink extends Google_Collection
 
 class Google_Service_Bigquery_JobConfigurationLoad extends Google_Collection
 {
+  protected $collection_key = 'sourceUris';
   public $allowJaggedRows;
   public $allowQuotedNewlines;
   public $createDisposition;
@@ -2013,6 +2020,7 @@ class Google_Service_Bigquery_JobConfigurationQuery extends Google_Model
 
 class Google_Service_Bigquery_JobConfigurationTableCopy extends Google_Collection
 {
+  protected $collection_key = 'sourceTables';
   public $createDisposition;
   protected $destinationTableType = 'Google_Service_Bigquery_TableReference';
   protected $destinationTableDataType = '';
@@ -2075,6 +2083,7 @@ class Google_Service_Bigquery_JobConfigurationTableCopy extends Google_Collectio
 
 class Google_Service_Bigquery_JobList extends Google_Collection
 {
+  protected $collection_key = 'jobs';
   public $etag;
   protected $jobsType = 'Google_Service_Bigquery_JobListJobs';
   protected $jobsDataType = 'array';
@@ -2415,6 +2424,7 @@ class Google_Service_Bigquery_JobStatistics3 extends Google_Model
 
 class Google_Service_Bigquery_JobStatus extends Google_Collection
 {
+  protected $collection_key = 'errors';
   protected $errorResultType = 'Google_Service_Bigquery_ErrorProto';
   protected $errorResultDataType = '';
   protected $errorsType = 'Google_Service_Bigquery_ErrorProto';
@@ -2459,6 +2469,7 @@ class Google_Service_Bigquery_JsonObject extends Google_Model
 
 class Google_Service_Bigquery_ProjectList extends Google_Collection
 {
+  protected $collection_key = 'projects';
   public $etag;
   public $kind;
   public $nextPageToken;
@@ -2687,6 +2698,7 @@ class Google_Service_Bigquery_QueryRequest extends Google_Model
 
 class Google_Service_Bigquery_QueryResponse extends Google_Collection
 {
+  protected $collection_key = 'rows';
   public $cacheHit;
   public $jobComplete;
   protected $jobReferenceType = 'Google_Service_Bigquery_JobReference';
@@ -2980,6 +2992,7 @@ class Google_Service_Bigquery_TableCell extends Google_Model
 
 class Google_Service_Bigquery_TableDataInsertAllRequest extends Google_Collection
 {
+  protected $collection_key = 'rows';
   public $kind;
   protected $rowsType = 'Google_Service_Bigquery_TableDataInsertAllRequestRows';
   protected $rowsDataType = 'array';
@@ -3033,6 +3046,7 @@ class Google_Service_Bigquery_TableDataInsertAllRequestRows extends Google_Model
 
 class Google_Service_Bigquery_TableDataInsertAllResponse extends Google_Collection
 {
+  protected $collection_key = 'insertErrors';
   protected $insertErrorsType = 'Google_Service_Bigquery_TableDataInsertAllResponseInsertErrors';
   protected $insertErrorsDataType = 'array';
   public $kind;
@@ -3060,6 +3074,7 @@ class Google_Service_Bigquery_TableDataInsertAllResponse extends Google_Collecti
 
 class Google_Service_Bigquery_TableDataInsertAllResponseInsertErrors extends Google_Collection
 {
+  protected $collection_key = 'errors';
   protected $errorsType = 'Google_Service_Bigquery_ErrorProto';
   protected $errorsDataType = 'array';
   public $index;
@@ -3087,6 +3102,7 @@ class Google_Service_Bigquery_TableDataInsertAllResponseInsertErrors extends Goo
 
 class Google_Service_Bigquery_TableDataList extends Google_Collection
 {
+  protected $collection_key = 'rows';
   public $etag;
   public $kind;
   public $pageToken;
@@ -3147,6 +3163,7 @@ class Google_Service_Bigquery_TableDataList extends Google_Collection
 
 class Google_Service_Bigquery_TableFieldSchema extends Google_Collection
 {
+  protected $collection_key = 'fields';
   public $description;
   protected $fieldsType = 'Google_Service_Bigquery_TableFieldSchema';
   protected $fieldsDataType = 'array';
@@ -3207,6 +3224,7 @@ class Google_Service_Bigquery_TableFieldSchema extends Google_Collection
 
 class Google_Service_Bigquery_TableList extends Google_Collection
 {
+  protected $collection_key = 'tables';
   public $etag;
   public $kind;
   public $nextPageToken;
@@ -3364,6 +3382,7 @@ class Google_Service_Bigquery_TableReference extends Google_Model
 
 class Google_Service_Bigquery_TableRow extends Google_Collection
 {
+  protected $collection_key = 'f';
   protected $fType = 'Google_Service_Bigquery_TableCell';
   protected $fDataType = 'array';
 
@@ -3380,6 +3399,7 @@ class Google_Service_Bigquery_TableRow extends Google_Collection
 
 class Google_Service_Bigquery_TableSchema extends Google_Collection
 {
+  protected $collection_key = 'fields';
   protected $fieldsType = 'Google_Service_Bigquery_TableFieldSchema';
   protected $fieldsDataType = 'array';
 

@@ -580,6 +580,7 @@ class Google_Service_Replicapool_AccessConfig extends Google_Model
 
 class Google_Service_Replicapool_Action extends Google_Collection
 {
+  protected $collection_key = 'envVariables';
   public $commands;
   protected $envVariablesType = 'Google_Service_Replicapool_EnvVariable';
   protected $envVariablesDataType = 'array';
@@ -837,6 +838,7 @@ class Google_Service_Replicapool_Label extends Google_Model
 
 class Google_Service_Replicapool_Metadata extends Google_Collection
 {
+  protected $collection_key = 'items';
   public $fingerPrint;
   protected $itemsType = 'Google_Service_Replicapool_MetadataItem';
   protected $itemsDataType = 'array';
@@ -890,6 +892,7 @@ class Google_Service_Replicapool_MetadataItem extends Google_Model
 
 class Google_Service_Replicapool_NetworkInterface extends Google_Collection
 {
+  protected $collection_key = 'accessConfigs';
   protected $accessConfigsType = 'Google_Service_Replicapool_AccessConfig';
   protected $accessConfigsDataType = 'array';
   public $network;
@@ -979,6 +982,7 @@ class Google_Service_Replicapool_NewDisk extends Google_Model
 class Google_Service_Replicapool_NewDiskInitializeParams extends Google_Model
 {
   public $diskSizeGb;
+  public $diskType;
   public $sourceImage;
 
   public function setDiskSizeGb($diskSizeGb)
@@ -989,6 +993,16 @@ class Google_Service_Replicapool_NewDiskInitializeParams extends Google_Model
   public function getDiskSizeGb()
   {
     return $this->diskSizeGb;
+  }
+
+  public function setDiskType($diskType)
+  {
+    $this->diskType = $diskType;
+  }
+
+  public function getDiskType()
+  {
+    return $this->diskType;
   }
 
   public function setSourceImage($sourceImage)
@@ -1004,6 +1018,7 @@ class Google_Service_Replicapool_NewDiskInitializeParams extends Google_Model
 
 class Google_Service_Replicapool_Pool extends Google_Collection
 {
+  protected $collection_key = 'targetPools';
   public $autoRestart;
   public $baseInstanceName;
   public $currentNumReplicas;
@@ -1176,6 +1191,7 @@ class Google_Service_Replicapool_Pool extends Google_Collection
 
 class Google_Service_Replicapool_PoolsDeleteRequest extends Google_Collection
 {
+  protected $collection_key = 'abandonInstances';
   public $abandonInstances;
 
   public function setAbandonInstances($abandonInstances)
@@ -1191,6 +1207,7 @@ class Google_Service_Replicapool_PoolsDeleteRequest extends Google_Collection
 
 class Google_Service_Replicapool_PoolsListResponse extends Google_Collection
 {
+  protected $collection_key = 'resources';
   public $nextPageToken;
   protected $resourcesType = 'Google_Service_Replicapool_Pool';
   protected $resourcesDataType = 'array';
@@ -1330,6 +1347,7 @@ class Google_Service_Replicapool_ReplicasDeleteRequest extends Google_Model
 
 class Google_Service_Replicapool_ReplicasListResponse extends Google_Collection
 {
+  protected $collection_key = 'resources';
   public $nextPageToken;
   protected $resourcesType = 'Google_Service_Replicapool_Replica';
   protected $resourcesDataType = 'array';
@@ -1357,6 +1375,7 @@ class Google_Service_Replicapool_ReplicasListResponse extends Google_Collection
 
 class Google_Service_Replicapool_ServiceAccount extends Google_Collection
 {
+  protected $collection_key = 'scopes';
   public $email;
   public $scopes;
 
@@ -1383,6 +1402,7 @@ class Google_Service_Replicapool_ServiceAccount extends Google_Collection
 
 class Google_Service_Replicapool_Tag extends Google_Collection
 {
+  protected $collection_key = 'items';
   public $fingerPrint;
   public $items;
 
@@ -1409,6 +1429,7 @@ class Google_Service_Replicapool_Tag extends Google_Collection
 
 class Google_Service_Replicapool_Template extends Google_Collection
 {
+  protected $collection_key = 'healthChecks';
   protected $actionType = 'Google_Service_Replicapool_Action';
   protected $actionDataType = '';
   protected $healthChecksType = 'Google_Service_Replicapool_HealthCheck';
@@ -1460,6 +1481,7 @@ class Google_Service_Replicapool_Template extends Google_Collection
 
 class Google_Service_Replicapool_VmParams extends Google_Collection
 {
+  protected $collection_key = 'serviceAccounts';
   public $baseInstanceName;
   public $canIpForward;
   public $description;

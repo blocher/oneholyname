@@ -40,6 +40,10 @@ if (!class_exists('C_Photocrati_Installer'))
 	class C_Photocrati_Installer
 	{
 		static $_instance = NULL;
+
+        /**
+         * @return C_Photocrati_Installer
+         */
 		static function get_instance()
 		{
 			if (is_null(self::$_instance)) {
@@ -48,7 +52,6 @@ if (!class_exists('C_Photocrati_Installer'))
 			}
 			return self::$_instance;
 		}
-
 
 		/**
 		 * Each product and module will register it's own handler (a class, with an install() and uninstall() method)
@@ -123,9 +126,9 @@ if (!class_exists('C_Photocrati_Installer'))
             $global_settings    = C_NextGen_Global_Settings::get_instance();
 
             // Somehow some installations are missing several default settings
-            // Because gallerystorage_driver is essential to know we do a 'soft' reset here
+            // Because imgWidth is essential to know we do a 'soft' reset here
             // by filling in any missing options from the default settings
-            if (is_null($local_settings->gallerystorage_driver)) {
+            if (!$local_settings->imgWidth) {
                 $settings_installer = new C_NextGen_Settings_Installer();
 
                 $local_settings->reset();
@@ -185,10 +188,9 @@ if (!class_exists('C_Photocrati_Installer'))
                     apc_clear_cache();
                 }
 
-				// We flush ALL transients
+				// Clear all of our transients
 				wp_cache_flush();
-				global $wpdb;
-				$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient%'");
+                C_Photocrati_Transient_Manager::flush();
 
 				// Remove all NGG created cron jobs
 				self::refresh_cron();
@@ -222,6 +224,9 @@ if (!class_exists('C_Photocrati_Installer'))
 				// Save any changes settings
 				$global_settings->save();
 				$local_settings->save();
+
+				// Set role capabilities
+				self::set_role_caps();
             }
 
             // Another workaround to an issue caused by NextGen's lack of multisite compatibility. It's possible
@@ -242,6 +247,36 @@ if (!class_exists('C_Photocrati_Installer'))
 				self::done_upgrade();
 			}
 		}
+
+		public static function set_role_caps()
+		{
+			// Set the capabilities for the administrator
+			$role = get_role('administrator');
+	
+			// We need this role, no other chance
+			if (empty($role))
+			{
+				update_option("ngg_init_check", __('Sorry, NextGEN Gallery works only with a role called administrator',"nggallery"));
+				return;
+			}
+	
+			$capabilities = array(
+				'NextGEN Attach Interface',
+				'NextGEN Change options',
+				'NextGEN Change style',
+				'NextGEN Edit album',
+				'NextGEN Gallery overview',
+				'NextGEN Manage gallery',
+				'NextGEN Manage others gallery',
+				'NextGEN Manage tags',
+				'NextGEN Upload images',
+				'NextGEN Use TinyMCE'
+			);
+	
+			foreach ($capabilities as $capability) {
+				$role->add_cap($capability);
+			}
+		}		
 
         static function _get_last_module_list($reset=FALSE)
         {

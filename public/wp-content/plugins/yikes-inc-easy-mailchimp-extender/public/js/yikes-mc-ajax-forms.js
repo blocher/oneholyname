@@ -21,7 +21,9 @@ window.Yikes_Mailchimp_Ajax = window.Yikes_Mailchimp_Ajax || {};
 			submitted_form.find( 'input, label, button' ).not( ':hidden' ).fadeTo( 'fast', .5 );
 
 			// Append our preloader
-			submitted_form.append( '<img src="' + app.l10n.preloader_url + '" class="yikes-mailchimp-preloader" />')
+			if ( typeof app.l10n.preloader_url === 'string' && app.l10n.preloader_url.length > 1 ) {
+				submitted_form.append( '<img src="' + app.l10n.preloader_url + '" class="yikes-mailchimp-preloader" />' );
+			}
 
 			// Remove the missing required fields class
 			$( '.yikes-mc-required-field-not-filled' ).removeClass( 'yikes-mc-required-field-not-filled' );
@@ -30,7 +32,9 @@ window.Yikes_Mailchimp_Ajax = window.Yikes_Mailchimp_Ajax || {};
 			$( '.yikes-mailchimp-submit-button-span-text' ).hide();
 
 			// And then append the loading dots gif
-			submitted_form.find( '.yikes-easy-mc-submit-button' ).append( '<img src="' + app.l10n.loading_dots + '" class="loading-dots yikes-mc-loading-dots" />' );
+			if ( typeof app.l10n.loading_dots === 'string' && app.l10n.loading_dots.length > 1 ) {
+				submitted_form.find( '.yikes-easy-mc-submit-button' ).append( '<img src="' + app.l10n.loading_dots + '" class="loading-dots yikes-mc-loading-dots" />' );
+			}
 
 			// Get the form id
 			var form_id = submitted_form.attr( 'data-attr-form-id' );
@@ -117,6 +121,8 @@ window.Yikes_Mailchimp_Ajax = window.Yikes_Mailchimp_Ajax || {};
 					// As of 6.3.0 we add a class to the form, so remove it if we're here
 					submitted_form.removeClass( 'yikes-mc-submitted-form-loading' );
 
+					submitted_form.trigger( 'yikes_mailchimp_ajax_submission', response );
+
 					/* Success */
 					if( response.success ) {
 						response = response.data;
@@ -144,22 +150,14 @@ window.Yikes_Mailchimp_Ajax = window.Yikes_Mailchimp_Ajax || {};
 						$( '.yikes-mailchimp-required-interest-group-error' ).remove();
 
 						/* redirect if setup */
-						if( response.redirection === 1 ) {
-
-							var redirect_url 	= response.redirect;
-							var redirect_timer  = response.redirect_timer;
-							var new_window		= response.new_window;
-							var new_window_code = new_window === '1' ? '_blank' : '_self';
-
-							setTimeout( 
-								function() {
-									window.open( redirect_url, new_window_code );
-								},
-								redirect_timer
-							);
+						if ( response.redirection === 1 ) {
+							yikes_mc_redirect_after_submission( response.redirect, response.redirect_timer, response.new_window );
 						}
+
 						/* clear the inputs - but don't clear submit button, radio, select, list_id, or form */
-						submitted_form.find( 'input' ).not( '.yikes-easy-mc-submit-button, input[type="radio"], input[type="select"], input[type="checkbox"], #yikes-mailchimp-associated-list-id, #yikes-mailchimp-submitted-form' ).val( '' );
+						submitted_form.trigger( 'yikes_clear_input_fields_after_successful_submission' );
+						submitted_form.find( 'input' ).not( '.yikes-easy-mc-submit-button, input[type="radio"], input[type="select"], input[type="checkbox"], input[name="yikes-mailchimp-associated-list-id"], input[name="yikes-mailchimp-submitted-form"]' ).val( '' );
+
 						/* ajax to increase submission count by 1 */
 						var new_data = {
 							'action' : 'increase_submission_count',
@@ -177,7 +175,7 @@ window.Yikes_Mailchimp_Ajax = window.Yikes_Mailchimp_Ajax || {};
 								console.error( errorThrown );
 							}
 						});
-						/* console.log( 'Successfully submit subscriber data to MailChimp.' ); */
+						/* console.log( 'Successfully submit subscriber data to Mailchimp.' ); */
 					} else {
 						response = response.data;
 
@@ -215,7 +213,7 @@ window.Yikes_Mailchimp_Ajax = window.Yikes_Mailchimp_Ajax || {};
 					console.log( textStatus );
 				},
 				complete : function( jqXHR, textStatus ) {
-					/* console.log( 'Yikes Easy MailChimp AJAX submission complete.' ); */
+					/* console.log( 'Yikes Easy Mailchimp AJAX submission complete.' ); */
 					/* enable the button to prevent double click */
 					submitted_form.find( '.yikes-easy-mc-submit-button' ).removeAttr( 'disabled' , 'disabled' );
 				}

@@ -121,6 +121,21 @@ class Google_Service_AndroidPublisher extends Google_Service
                   'required' => true,
                 ),
               ),
+            ),'validate' => array(
+              'path' => '{packageName}/edits/{editId}:validate',
+              'httpMethod' => 'POST',
+              'parameters' => array(
+                'packageName' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+                'editId' => array(
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ),
+              ),
             ),
           )
         )
@@ -1148,6 +1163,23 @@ class Google_Service_AndroidPublisher_Edits_Resource extends Google_Service_Reso
     $params = array('packageName' => $packageName, 'postBody' => $postBody);
     $params = array_merge($params, $optParams);
     return $this->call('insert', array($params), "Google_Service_AndroidPublisher_AppEdit");
+  }
+  /**
+   * Checks that the edit can be successfully committed. The edit's changes are
+   * not applied to the live app. (edits.validate)
+   *
+   * @param string $packageName
+   * Unique identifier for the Android app that is being updated; for example, "com.spiffygame".
+   * @param string $editId
+   * Unique identifier for this edit.
+   * @param array $optParams Optional parameters.
+   * @return Google_Service_AndroidPublisher_AppEdit
+   */
+  public function validate($packageName, $editId, $optParams = array())
+  {
+    $params = array('packageName' => $packageName, 'editId' => $editId);
+    $params = array_merge($params, $optParams);
+    return $this->call('validate', array($params), "Google_Service_AndroidPublisher_AppEdit");
   }
 }
 
@@ -2187,6 +2219,7 @@ class Google_Service_AndroidPublisher_ApkListing extends Google_Model
 
 class Google_Service_AndroidPublisher_ApkListingsListResponse extends Google_Collection
 {
+  protected $collection_key = 'listings';
   public $kind;
   protected $listingsType = 'Google_Service_AndroidPublisher_ApkListing';
   protected $listingsDataType = 'array';
@@ -2214,6 +2247,7 @@ class Google_Service_AndroidPublisher_ApkListingsListResponse extends Google_Col
 
 class Google_Service_AndroidPublisher_ApksListResponse extends Google_Collection
 {
+  protected $collection_key = 'apks';
   protected $apksType = 'Google_Service_AndroidPublisher_Apk';
   protected $apksDataType = 'array';
   public $kind;
@@ -2394,6 +2428,7 @@ class Google_Service_AndroidPublisher_Image extends Google_Model
 
 class Google_Service_AndroidPublisher_ImagesDeleteAllResponse extends Google_Collection
 {
+  protected $collection_key = 'deleted';
   protected $deletedType = 'Google_Service_AndroidPublisher_Image';
   protected $deletedDataType = 'array';
 
@@ -2410,6 +2445,7 @@ class Google_Service_AndroidPublisher_ImagesDeleteAllResponse extends Google_Col
 
 class Google_Service_AndroidPublisher_ImagesListResponse extends Google_Collection
 {
+  protected $collection_key = 'images';
   protected $imagesType = 'Google_Service_AndroidPublisher_Image';
   protected $imagesDataType = 'array';
 
@@ -2595,6 +2631,7 @@ class Google_Service_AndroidPublisher_InAppProductPrices extends Google_Model
 
 class Google_Service_AndroidPublisher_InappproductsBatchRequest extends Google_Collection
 {
+  protected $collection_key = 'entrys';
   protected $entrysType = 'Google_Service_AndroidPublisher_InappproductsBatchRequestEntry';
   protected $entrysDataType = 'array';
 
@@ -2661,6 +2698,7 @@ class Google_Service_AndroidPublisher_InappproductsBatchRequestEntry extends Goo
 
 class Google_Service_AndroidPublisher_InappproductsBatchResponse extends Google_Collection
 {
+  protected $collection_key = 'entrys';
   protected $entrysType = 'Google_Service_AndroidPublisher_InappproductsBatchResponseEntry';
   protected $entrysDataType = 'array';
   public $kind;
@@ -2759,6 +2797,7 @@ class Google_Service_AndroidPublisher_InappproductsInsertResponse extends Google
 
 class Google_Service_AndroidPublisher_InappproductsListResponse extends Google_Collection
 {
+  protected $collection_key = 'inappproduct';
   protected $inappproductType = 'Google_Service_AndroidPublisher_InAppProduct';
   protected $inappproductDataType = 'array';
   public $kind;
@@ -2901,6 +2940,7 @@ class Google_Service_AndroidPublisher_Listing extends Google_Model
 
 class Google_Service_AndroidPublisher_ListingsListResponse extends Google_Collection
 {
+  protected $collection_key = 'listings';
   public $kind;
   protected $listingsType = 'Google_Service_AndroidPublisher_Listing';
   protected $listingsDataType = 'array';
@@ -3098,6 +3138,7 @@ class Google_Service_AndroidPublisher_SubscriptionPurchase extends Google_Model
 
 class Google_Service_AndroidPublisher_Testers extends Google_Collection
 {
+  protected $collection_key = 'googlePlusCommunities';
   public $googleGroups;
   public $googlePlusCommunities;
 
@@ -3150,6 +3191,7 @@ class Google_Service_AndroidPublisher_TokenPagination extends Google_Model
 
 class Google_Service_AndroidPublisher_Track extends Google_Collection
 {
+  protected $collection_key = 'versionCodes';
   public $track;
   public $userFraction;
   public $versionCodes;
@@ -3187,6 +3229,7 @@ class Google_Service_AndroidPublisher_Track extends Google_Collection
 
 class Google_Service_AndroidPublisher_TracksListResponse extends Google_Collection
 {
+  protected $collection_key = 'tracks';
   public $kind;
   protected $tracksType = 'Google_Service_AndroidPublisher_Track';
   protected $tracksDataType = 'array';

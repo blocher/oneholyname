@@ -2,13 +2,14 @@
 
 /**
  * Get plugin info
- * 
+ *
  * @since 2.0.0
  * @param string $plugin_slug
  * @return array
  */
 function wpmm_plugin_info($plugin_slug) {
-	add_filter('extra_plugin_headers', create_function('', 'return array("GitHub Plugin URI","Twitter");'));
+	add_filter('extra_plugin_headers', 'wpmm_add_extra_plugin_headers', 99, 1);
+
 	$plugin_data = get_plugin_data(WPMM_PATH . $plugin_slug . '.php');
 
 	return $plugin_data;
@@ -18,7 +19,7 @@ function wpmm_plugin_info($plugin_slug) {
  * Count db records using where
  *
  * EDIT: PHP Notice:  wpdb::prepare was called <strong>incorrectly</strong>. The query argument of wpdb::prepare() must have a placeholder.
- * 
+ *
  * @since 2.0.0
  * @global object $wpdb
  * @param string $table
@@ -64,7 +65,7 @@ function wpmm_multiselect($values, $current) {
 
 /**
  * Return list of banners
- * 
+ *
  * @since 2.0.4
  * @return array
  */
@@ -80,28 +81,34 @@ function wpmm_get_banners() {
 				'utm' => false
 			),
 			array(
-				'title' => 'Qards',
-				'link' => 'http://designmodo.com/qards/',
-				'image' => $banners_path . 'qards.jpg',
+				'title' => 'Free Stock Images',
+				'link' => 'https://freephotos.cc/',
+				'image' => $banners_path . 'freephotoscc.jpg',
+				'utm' => true
+			),
+			array(
+				'title' => 'Postcards',
+				'link' => 'https://designmodo.com/postcards/',
+				'image' => $banners_path . 'postcards.jpg',
 				'utm' => true
 			)
 		),
 		'resource' => array(
 			array(
 				'title' => 'Free WordPress Theme',
-				'link' => 'http://designmodo.com/free-wordpress-theme/',
+				'link' => 'https://designmodo.com/free-wordpress-theme/',
 				'image' => $banners_path . 'ayoshop.jpg',
 				'utm' => true
 			),
 			array(
 				'title' => 'Linecons',
-				'link' => 'http://designmodo.com/linecons-free/',
+				'link' => 'https://designmodo.com/linecons-free/',
 				'image' => $banners_path . 'linecons.jpg',
 				'utm' => true
 			),
 			array(
 				'title' => 'Flat UI Free',
-				'link' => 'http://designmodo.com/flat-free/',
+				'link' => 'https://designmodo.com/flat-free/',
 				'image' => $banners_path . 'flatui.jpg',
 				'utm' => true
 			)
@@ -111,11 +118,11 @@ function wpmm_get_banners() {
 
 /**
  * Sanitize Google Analytics SiteID code
- * 
+ *
  * Valid examples:
  * UA-..........
  * UA-..........-....
- * 
+ *
  * @since 2.0.7
  * @param string $string
  * @return string
@@ -126,24 +133,47 @@ function wpmm_sanitize_ga_code($string) {
 	return isset($matches[0]) ? $matches[0] : '';
 }
 
+/**
+ * Return allowed HTML tags for GDPR module textareas
+ * 
+ * @since 2.2.2
+ * @return array
+ */
+function wpmm_gdpr_textarea_allowed_html() {
+	$allowed_html = array(
+		'a' => array(
+			'href' => array(),
+			'title' => array(),
+			'class' => array(),
+			'rel' => array(),
+			'target' => array()
+		),
+		'strong' => array(),
+		'em' => array(),
+		'p' => array(),
+	);
+
+	return apply_filters('wpmm_gdpr_textarea_allowed_html', $allowed_html);
+}
+
 if (!function_exists('wp_scripts')) {
 
 	/**
 	 * Initialize $wp_scripts if it has not been set.
-	 * 
+	 *
 	 * (to maintain backward compatibility for those with WP < 4.2.0)
-	 * 
+	 *
 	 * @since 2.0.8
 	 * @global WP_Scripts $wp_scripts
 	 * @return WP_Scripts instance
 	 */
 	function wp_scripts() {
 		global $wp_scripts;
-		
+
 		if (!( $wp_scripts instanceof WP_Scripts )) {
 			$wp_scripts = new WP_Scripts();
 		}
-		
+
 		return $wp_scripts;
 	}
 

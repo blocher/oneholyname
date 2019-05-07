@@ -45,11 +45,12 @@ class Core {
 		// Activation hook.
 		add_action( 'activate_wp-mail-smtp/wp_mail_smtp.php', array( $this, 'activate' ) );
 
+		// Redefine PHPMailer.
 		add_action( 'plugins_loaded', array( $this, 'get_processor' ) );
 		add_action( 'plugins_loaded', array( $this, 'replace_phpmailer' ) );
-		add_action( 'plugins_loaded', array( $this, 'init_notifications' ) );
 
-		add_action( 'admin_notices', array( '\WPMailSMTP\WP', 'display_admin_notices' ) );
+		// Awesome Motive Notifications.
+		add_action( 'plugins_loaded', array( $this, 'init_notifications' ) );
 
 		add_action( 'init', array( $this, 'init' ) );
 	}
@@ -62,17 +63,29 @@ class Core {
 	public function init() {
 
 		// Load translations just in case.
-		load_plugin_textdomain( 'wp-mail-smtp', false, wp_mail_smtp()->plugin_path . '/languages' );
+		load_plugin_textdomain( 'wp-mail-smtp', false, plugin_basename( wp_mail_smtp()->plugin_path ) . '/languages' );
 
 		/*
 		 * Constantly check in admin area, that we don't need to upgrade DB.
 		 * Do not wait for the `admin_init` hook, because some actions are already done
 		 * on `plugins_loaded`, so migration has to be done before.
+		 * We should not fire this in AJAX requests.
 		 */
 		if ( WP::in_wp_admin() ) {
 			$this->get_migration();
 			$this->get_upgrade();
+			$this->detect_conflicts();
+		}
+
+		// In admin area, regardless of AJAX or not AJAX request.
+		if ( is_admin() ) {
 			$this->get_admin();
+		}
+
+		// Plugin admin area notices. Display to "admins" only.
+		if ( current_user_can( 'manage_options' ) ) {
+			add_action( 'admin_notices', array( '\WPMailSMTP\WP', 'display_admin_notices' ) );
+			add_action( 'admin_notices', array( $this, 'display_general_notices' ) );
 		}
 	}
 
@@ -185,6 +198,249 @@ class Core {
 	}
 
 	/**
+	 * Display all debug mail-delivery related notices.
+	 *
+	 * @since 1.3.0
+	 */
+	public static function display_general_notices() {
+
+		if ( Options::init()->get( 'general', 'do_not_send' ) ) {
+			?>
+
+			<div id="message" class="<?php echo WP::ADMIN_NOTICE_ERROR; ?> notice">
+				<p>
+					<?php
+					printf(
+						wp_kses(
+							/* translators: %1$s - plugin name and its version, %2$s - plugin Misc settings page. */
+							__( '<strong>EMAILING DISABLED:</strong> The %1$s is currently blocking all emails from being sent. To send emails, go to plugin <a href="%2$s">Misc settings</a> and disable the "Do Not Send" option.', 'wp-mail-smtp' ),
+							array(
+								'strong' => array(),
+								'a'      => array(
+									'href' => array(),
+								),
+							)
+						),
+						esc_html( 'WP Mail SMTP v' . WPMS_PLUGIN_VER ),
+						esc_url( add_query_arg( 'tab', 'misc', wp_mail_smtp()->get_admin()->get_admin_page_url() ) )
+					);
+					?>
+				</p>
+			</div>
+
+			<?php
+			return;
+		}
+
+		$notice = Debug::get_last();
+
+		if ( ! empty( $notice ) ) {
+			?>
+
+			<div id="message" class="<?php echo WP::ADMIN_NOTICE_ERROR; ?> notice">
+				<p>
+					<?php
+					printf(
+						wp_kses(
+							/* translators: %s - plugin name and its version. */
+							__( '<strong>EMAIL DELIVERY ERROR:</strong> the plugin %s logged this error during the last time it tried to send an email:', 'wp-mail-smtp' ),
+							array(
+								'strong' => array(),
+							)
+						),
+						esc_html( 'WP Mail SMTP v' . WPMS_PLUGIN_VER )
+					);
+					?>
+				</p>
+
+				<blockquote>
+					<pre><?php echo $notice; ?></pre>
+				</blockquote>
+
+				<p>
+					<?php
+					if ( ! wp_mail_smtp()->get_admin()->is_admin_page() ) {
+						printf(
+							wp_kses(
+								/* translators: %s - plugin admin page URL. */
+								__( 'Please review your WP Mail SMTP settings in <a href="%s">plugin admin area</a>.' ) . ' ',
+								array(
+									'a' => array(
+										'href' => array(),
+									),
+								)
+							),
+							esc_url( wp_mail_smtp()->get_admin()->get_admin_page_url() )
+						);
+					}
+
+					esc_html_e( 'Consider running an email test after fixing it.', 'wp-mail-smtp' );
+					?>
+				</p>
+			</div>
+
+			<?php
+			return;
+		}
+		?>
+
+		<?php
+	}
+
+	/**
+	 * Check whether we are working with a new plugin install.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return bool
+	 */
+	protected function is_new_install() {
+		/*
+		 * No previously installed 0.*.
+		 * 'wp_mail_smtp_initial_version' option appeared in 1.3.0. So we make sure it exists.
+		 * No previous plugin upgrades.
+		 */
+		if (
+			! get_option( 'mailer', false ) &&
+			get_option( 'wp_mail_smtp_initial_version', false ) &&
+			version_compare( WPMS_PLUGIN_VER, get_option( 'wp_mail_smtp_initial_version' ), '=' )
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Detect if there are plugins activated that will cause a conflict.
+	 *
+	 * @since 1.3.0
+	 */
+	public function detect_conflicts() {
+
+		// Display only for those who can actually deactivate plugins.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$conflicts = array(
+			'swpsmtp_init_smtp'    => array(
+				'name' => 'Easy WP SMTP',
+			),
+			'postman_start'        => array(
+				'name' => 'Postman SMTP',
+			),
+			'post_start'           => array(
+				'name' => 'Post SMTP Mailer/Email Log',
+			),
+			'mail_bank'            => array(
+				'name' => 'WP Mail Bank',
+			),
+			'SMTP_MAILER'          => array(
+				'name'  => 'SMTP Mailer',
+				'class' => true,
+			),
+			'GMAIL_SMTP'           => array(
+				'name'  => 'Gmail SMTP',
+				'class' => true,
+			),
+			'WP_Email_Smtp'        => array(
+				'name'  => 'WP Email SMTP',
+				'class' => true,
+			),
+			'smtpmail_include'     => array(
+				'name' => 'SMTP Mail',
+			),
+			'bwssmtp_init'         => array(
+				'name' => 'SMTP by BestWebSoft',
+			),
+			'WPSendGrid_SMTP'      => array(
+				'name'  => 'WP SendGrid SMTP',
+				'class' => true,
+			),
+			'sar_friendly_smtp'    => array(
+				'name' => 'SAR Friendly SMTP',
+			),
+			'WPGmail_SMTP'         => array(
+				'name'  => 'WP Gmail SMTP',
+				'class' => true,
+			),
+			'st_smtp_check_config' => array(
+				'name' => 'Cimy Swift SMTP',
+			),
+			'WP_Easy_SMTP'         => array(
+				'name'  => 'WP Easy SMTP',
+				'class' => true,
+			),
+			'WPMailgun_SMTP'       => array(
+				'name'  => 'WP Mailgun SMTP',
+				'class' => true,
+			),
+			'my_smtp_wp'           => array(
+				'name' => 'MY SMTP WP',
+			),
+			'mail_booster'         => array(
+				'name' => 'WP Mail Booster',
+			),
+			'Sendgrid_Settings'    => array(
+				'name'  => 'SendGrid',
+				'class' => true,
+			),
+			'WPMS_php_mailer'      => array(
+				'name' => 'WP Mail Smtp Mailer',
+			),
+			'WPAmazonSES_SMTP'     => array(
+				'name'  => 'WP Amazon SES SMTP',
+				'class' => true,
+			),
+			'Postmark_Mail'        => array(
+				'name'  => 'Postmark for WordPress',
+				'class' => true,
+			),
+			'Mailgun'              => array(
+				'name'  => 'Mailgun',
+				'class' => true,
+			),
+			'SparkPost'            => array(
+				'name'  => 'SparkPost',
+				'class' => true,
+			),
+			'WPYahoo_SMTP'         => array(
+				'name'  => 'WP Yahoo SMTP',
+				'class' => true,
+			),
+			'wpses_init'           => array(
+				'name'  => 'WP SES',
+				'class' => true,
+			),
+			'TSPHPMailer'          => array(
+				'name' => 'turboSMTP',
+			),
+		);
+
+		foreach ( $conflicts as $id => $conflict ) {
+			if ( ! empty( $conflict['class'] ) ) {
+				$detected = class_exists( $id, false );
+			} else {
+				$detected = function_exists( $id );
+			}
+
+			if ( $detected ) {
+				WP::add_admin_notice(
+					sprintf(
+						/* translators: %1$s - Plugin name causing conflict; %2$s - Plugin name causing conflict. */
+						esc_html__( 'Heads up! WP Mail SMTP has detected %1$s is activated. Please deactivate %2$s to prevent conflicts.', 'wp-mail-smtp' ),
+						$conflict['name'],
+						$conflict['name']
+					),
+					WP::ADMIN_NOTICE_WARNING
+				);
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Init the \PHPMailer replacement.
 	 *
 	 * @since 1.0.0
@@ -220,20 +476,13 @@ class Core {
 	 */
 	public function activate() {
 
+		// Store the plugin version when initial install occurred.
+		add_option( 'wp_mail_smtp_initial_version', WPMS_PLUGIN_VER, '', false );
+
 		// Store the plugin version activated to reference with upgrades.
-		update_option( 'wp_mail_smtp_version', WPMS_PLUGIN_VER );
+		update_option( 'wp_mail_smtp_version', WPMS_PLUGIN_VER, false );
 
-		// Create and store initial plugin settings.
-		$options['mail'] = array(
-			'from_email'  => get_option( 'admin_email' ),
-			'from_name'   => get_bloginfo( 'name' ),
-			'mailer'      => 'mail',
-			'return_path' => false,
-			'smtp'        => array(
-				'autotls' => true,
-			),
-		);
-
-		Options::init()->set( $options );
+		// Save default options, only once.
+		Options::init()->set( Options::get_defaults(), true );
 	}
 }

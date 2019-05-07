@@ -1,31 +1,37 @@
 === Print, PDF, Email by PrintFriendly ===
-Contributors: printfriendly,joostdevalk, jrf
+Contributors: printfriendly, joostdevalk, jrf
 Tags: print, pdf, email, print button, wp-print, print recipe, print post, print page, print widget, print plugin, printable, wp-pdf, pdf post, pdf page, pdf button, pdf widget, pdf plugin, woocommerce print, woocommerce pdf
 Requires at least: 2.8
-Tested up to: 4.9
-Stable tag: 3.13.0
+Tested up to: 5.0.2
+Stable tag: 3.14.5
 
 
 The #1 Print, PDF, Email button. Stylish, full featured, customizable. Add custom header, footer, and more.
 
 == Description ==
 
+**GDPR (General Data Protection Regulation)**
+
+PrintFriendly Pro is GDPR compliant. [Privacy Policy](https://www.printfriendly.com/privacy). We are working on making the free version GDPR complaint, but as of today it is not because stringent cookie consent requirements. If you are an EU publisher, we recommend purchasing a [PrintFriendly Pro Subscription](https://www.printfriendly.com/button/pro) for your domain.
+
+**Features**
+
+PrintFriendly is used by millions of people everyday to help them save paper and ink when they print and generate PDFs (Good for the environment and peoples wallet!).
+
+
+* Print, PDF, and email.
+* Stylish, highly polished, intuitive UI/UX that end-users love.
+* Editable Preview - change text/image size, and delete to save even more paper and ink.
+* PDF - clickable links and custom paper sizes (A4 or Letter).
+* Reliable & Fast - We've developed this product over the past 9 years and it's fully optimized.
+
 **Benefits For Publishers**
-
+* Automatically detects page content so you don't have to create print.css.
 * Professional: highly polished, stable, and supported.
-* Stylish lightbox (no annoying new tabs or window).
-* Ultimate, Print, PDF, Email experience for your users.
 * Works on HTTP, HTTPS, and password protected sites.
-* Help people save money and the environment.
-* Full featured and free (ad supported) or [Pro Service](https://www.printfriendly.com/button/pro).
+* Customization features (see below)
+* Full featured free (ad supported) version and optional [Pro Upgrade](https://www.printfriendly.com/button/pro).
 
-**Benefits for End-Users**
-
-* Save paper and ink when you print
-* Change the text and image size
-* Edit the page by clicking to remove text or images before print or PDF. (Optional feature publishers can choose.)
-* PDF with clickable links
-* Custom paper sizes (A4 or Letter) for PDF
 
 **Customization**
 
@@ -35,8 +41,6 @@ The #1 Print, PDF, Email button. Stylish, full featured, customizable. Add custo
 * [Include a copyright](https://support.printfriendly.com/button/developer-questions/include-copyright/) on print and PDF.
 * [Use your own CSS](https://support.printfriendly.com/button/wordpress/create-custom-css-file/) for complete creative control or the print or PDF page.
 * Use the JavaScript or non-JavaScript option.
-
-
 
 
 = Free - Ad Supported =
@@ -139,6 +143,24 @@ You can [hide the Print, PDF, and Email button](https://support.printfriendly.co
 
 
 == Changelog ==
+
+= 3.14.5 =
+* New Feature: Password protected image option. Select this option if your images are password protected so they can be included in PDFs.
+
+= 3.14.4 =
+* Make save options work without Pro field(email, domain) validation check.
+
+= 3.14.3 =
+* Plugin copy and style changes. No functionality changes.
+
+= 3.14.2 =
+* GDPR Compliant notification for PrintFriendly Pro and links to Privacy Policy.
+
+= 3.14.1 =
+* Fix client side pro domain validation.
+
+= 3.14.0 =
+* Integrate instant free Pro Trial, and Pro status.
 
 = 3.13.0 =
 * Add Notification alerting websites using Password Protection or JavaScript to display content they need to upgrade to PrintFriendly Pro

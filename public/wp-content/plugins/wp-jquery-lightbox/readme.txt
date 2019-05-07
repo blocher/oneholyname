@@ -3,8 +3,9 @@ Contributors: ulfben
 Donate link: http://flattr.com/thing/367557/Support-my-WordPress-plugins
 Tags: lightbox, jquery, nodal, image, display, ulfben
 Requires at least: 3.9
-Tested up to: 4.4
-Stable tag: 1.4.8
+Tested up to: 5.1.1
+Stable tag: 1.4.8.1
+Requires PHP: 5.2
 License: GPLv2 or later
 
 A drop-in replacement for Lightbox 2 and similar plugins, shedding the bulk of Prototype and Scriptaculous. Improved for mobile devices.
@@ -21,20 +22,14 @@ This version is also [adjusted for mobile devices](http://wordpress.org/extend/p
 * Improved scaling *maximizes* use of screen space
 * Live adjustment to the browser window and orientation of your phone
 
-See the plugin in action here: [http://game.hgo.se/blog/motion-capture/](http://game.hgo.se/blog/motion-capture/)
+See the plugin in action here: [https://game.speldesign.uu.se/](https://game.speldesign.uu.se/)
 
 You can browse images with your keyboard: Arrows, P(revious)/N(ext) and X/C/ESC for close.
 
-If you value [my plugins](http://profiles.wordpress.org/users/ulfben/), there's several ways you can help me out; 
+*[//Ulf Benjaminsson](http://www.ulfbenjaminsson.com)*
 
-* Help me out by [Flattr-ing them](http://flattr.com/thing/367557/Support-my-WordPress-plugins)
-* or [sign up to Microsoft OneDrive using my referral link](https://onedrive.live.com?invref=b1f728851abada15&invsrc=90) - we both get 0.5GB extra for free!
-* or [sign up to RealPlayer Cloud using my referral link](https://cloud.real.com/r/UzKHSP) - we both get 1GB extra for free! 
-* get me anything from [my Amazon whislisth](http://www.amazon.com/gp/registry/wishlist/2QB6SQ5XX2U0N/105-3209188-5640446?reveal=unpurchased&filter=all&sort=priority&layout=standard&x=11&y=10) (used items are OK!)
-
-Any help is greatly appreciated. Thanks!
-
-*[//Ulf Benjaminsson](http://www.ulfben.com)*
+= 1.4.8.1 (2019-03-24) =
+* Tested for WordPress 5.x and PHP 7.x, no functional changes.
 
 = 1.4.8 (2015-12-31) =
 * Fixed translations not being loaded properly
@@ -121,6 +116,7 @@ Any help is greatly appreciated. Thanks!
 
 1. [Infinite-Scroll](http://wordpress.org/extend/plugins/infinite-scroll/) and similar "endless pages"-plugins should call `doLightbox();` whenever it loads new content. Check your plugin for a setting 
 	named "callbacks" - code that is called after each new page is loaded. Add this line;
+	
 	`if(typeof doLightBox !== 'undefined' && typeof jQuery !== 'undefined'){
 	   doLightBox();
 	}`
@@ -157,6 +153,8 @@ Lastly:
 Still have problems? Post a link and describe what issue you're having, and tell us what of these steps you've already tried.
 
 == Changelog ==
+= 1.4.8.1 (2019-03-24) =
+* Tested for WordPress 5.x and PHP 7.0
 
 = 1.4.8 (2015-12-31) =
 * Fixed translations not being loaded properly
@@ -400,8 +398,8 @@ Translations and help with implementing them would be nice. A read through and c
 
 And of course; [a book or two](http://www.amazon.com/gp/registry/wishlist/2QB6SQ5XX2U0N/105-3209188-5640446?reveal=unpurchased&filter=all&sort=priority&layout=standard&x) always brightens my day! (used ones are fine!) 
 
-== Other Notes ==
-Copyright (C) 2010-2016 Ulf Benjaminsson (my first name at ulfben dot com).
+== Additional Info ==
+Copyright (C) 2010-2019 Ulf Benjaminsson (hello at my full name dot com).
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

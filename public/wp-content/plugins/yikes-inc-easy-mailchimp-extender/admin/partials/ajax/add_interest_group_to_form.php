@@ -81,7 +81,6 @@ foreach( $interest_groups as $group ) {
 					<!-- Default Value -->
 					<?php switch( $group['field_type'] ) {
 
-						default:
 						case 'radio':
 						?>
 							<tr valign="top">
@@ -91,25 +90,28 @@ foreach( $interest_groups as $group ) {
 									</label>
 								</td>
 								<td>
-									<?php
-									foreach ( $field_data['items'] as $id => $interest_group ) {
-										$pre_selected = ! empty( $field_data['default_choice'] ) ? $field_data['default_choice'] : '0';
-										?>
-										<input type="radio" name="field[<?php echo $group['group_id']; ?>][default_choice][]" value="<?php echo esc_attr( $id ); ?>" <?php checked( $pre_selected, $id ); ?>><?php echo stripslashes( $interest_group['name'] ); ?>
-										<?php
 
-									}
-									?>
+									<?php $pre_selected = ! empty( $field_data['default_choice'] ) ? $field_data['default_choice'] : 'no-default'; ?>
+
+									<!-- No Default option for radio buttons -->
+									<input type="radio" name="field[<?php echo $group['group_id']; ?>][default_choice][]" value="no-default" <?php checked( $pre_selected, 'no-default' ); ?>>No Default
+
+									<?php foreach ( $field_data['items'] as $id => $interest_group ) { ?>
+										<input type="radio" name="field[<?php echo $group['group_id']; ?>][default_choice][]" value="<?php echo esc_attr( $id ); ?>" <?php checked( $pre_selected, $id ); ?>><?php echo stripslashes( $interest_group['name'] );
+									} ?>
+
 									<p class="description"><small><?php _e( "Select the option that should be selected by default.", 'yikes-inc-easy-mailchimp-extender' );?></small></p>
 								</td>
 							</tr>
 
-							<?php
-							break;
+						<?php
+						break;
 
+						case 'default':
+						case 'hidden':
 						case 'checkboxes':
 						?>
-							<tr valign="top">
+							<tr valign="top" class="yikes-checkbox-container">
 								<td scope="row">
 									<label for="placeholder">
 										<?php _e( 'Default Selection' , 'yikes-inc-easy-mailchimp-extender' ); ?>
@@ -128,8 +130,8 @@ foreach( $interest_groups as $group ) {
 								</td>
 							</tr>
 
-							<?php
-							break;
+						<?php
+						break;
 
 						case 'dropdown':
 							?>
@@ -141,13 +143,11 @@ foreach( $interest_groups as $group ) {
 								</td>
 								<td>
 									<select type="default" name="field[<?php echo $group['group_id']; ?>][default_choice]">
-										<?php
-										foreach ( $field_data['items'] as $id => $interest_group ) {
-											$pre_selected = ! empty( $field_data['default_choice'] ) ? $field_data['default_choice'] : '0';
-											?>
+										<?php $pre_selected = ! empty( $field_data['default_choice'] ) ? $field_data['default_choice'] : 'no-default'; ?>
+										<option value="no-default">No Default</option>
+										<?php foreach ( $field_data['items'] as $id => $interest_group ) { ?>
 											<option value="<?php echo $id; ?>" <?php selected( $pre_selected, $id ); ?>><?php echo $interest_group['name']; ?></option>
-											<?php
-										} ?>
+										<?php } ?>
 									</select>
 									<p class="description"><small><?php _e( "Which option should be selected by default?", 'yikes-inc-easy-mailchimp-extender' );?></small></p>
 								</td>
@@ -171,7 +171,7 @@ foreach( $interest_groups as $group ) {
 					</tr>
 
 					<!-- Description Above Field -->
-					<tr valign="top">
+					<tr valign="top" class="yikes-checkbox-container">
 						<td scope="row">
 							<label for="description_above_<?php echo esc_attr( $group['group_id'] ); ?>">
 								<?php _e( 'Description Above Field' , 'yikes-inc-easy-mailchimp-extender' ); ?>
@@ -179,7 +179,7 @@ foreach( $interest_groups as $group ) {
 						</td>
 						<td>
 							<input type="checkbox" id="description_above_<?php echo esc_attr( $group['group_id'] ); ?>" class="widefat field-description-input" name="field[<?php echo $group['group_id']; ?>][description_above]" value="1" />
-							<span class="description"><small><?php _e( "By default the description will appear undearneath the field. Check this box if you'd like the description to appear above the field.", 'yikes-inc-easy-mailchimp-extender' );?></small></span>
+							<p class="description"><small><?php _e( "By default the description will appear undearneath the field. Check this box if you'd like the description to appear above the field.", 'yikes-inc-easy-mailchimp-extender' );?></small></p>
 						</td>
 					</tr>
 
@@ -196,7 +196,7 @@ foreach( $interest_groups as $group ) {
 						</td>
 						</tr>
 						<!-- Required Toggle -->
-						<tr valign="top">
+						<tr valign="top" class="yikes-checkbox-container">
 							<td scope="row">
 								<label for="field-required">
 									<?php _e( 'Field Required?' , 'yikes-inc-easy-mailchimp-extender' ); ?>
@@ -208,7 +208,7 @@ foreach( $interest_groups as $group ) {
 							</td>
 						</tr>
 						<!-- Visible Toggle -->
-						<tr valign="top">
+						<tr valign="top" class="yikes-checkbox-container">
 							<td scope="row">
 								<label for="hide-field">
 									<?php _e( 'Hide Field' , 'yikes-inc-easy-mailchimp-extender' ); ?>
@@ -220,7 +220,7 @@ foreach( $interest_groups as $group ) {
 							</td>
 						</tr>
 						<!-- Toggle Field Label Visibility -->
-						<tr valign="top">
+						<tr valign="top" class="yikes-checkbox-container">
 							<td scope="row">
 								<label for="placeholder">
 									<?php _e( 'Hide Label' , 'yikes-inc-easy-mailchimp-extender' ); ?>

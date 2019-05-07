@@ -47,10 +47,10 @@ class Google_Http_MediaFileUpload
   private $size;
 
   /** @var string $resumeUri */
-  public $resumeUri;
+  private $resumeUri;
 
   /** @var int $progress */
-  public $progress;
+  private $progress;
 
   /** @var Google_Client */
   private $client;

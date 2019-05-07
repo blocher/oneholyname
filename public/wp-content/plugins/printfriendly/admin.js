@@ -175,12 +175,36 @@ jQuery(document).ready(function() {
   jQuery('#password_protected').bind('change', function() {
     if(jQuery(this).val() == 'yes') {
       jQuery('#javascript').val('yes').change();
+	  if((jQuery('.password_protected_yes').attr('data-sub-status') == 'none') || (jQuery('.password_protected_yes').attr('data-sub-status') == 'expired')) {
+		  jQuery('.password_protected_yes').show();
+	  } else {
+		  jQuery('.password_protected_yes').hide();
+	  }
       pf_on_javascript();
       jQuery('#javascript').attr('disabled', 'disabled');
       jQuery('#pf-javascript-container').hide('slow');
     } else {
       jQuery('#javascript').removeAttr('disabled');
       jQuery('#pf-javascript-container').show('slow');
+      jQuery('.password_protected_yes').hide();
+    }
+  }).change();
+
+  jQuery('#dynamic_content').bind('change', function() {
+    if(jQuery(this).val() == 'yes') {
+      jQuery('#javascript').val('yes').change();
+	  if((jQuery('.dynamic_content_yes').attr('data-sub-status') == 'none') || (jQuery('.dynamic_content_yes').attr('data-sub-status') == 'expired')) {
+		  jQuery('.dynamic_content_yes').show();
+	  } else {
+		  jQuery('.dynamic_content_yes').hide();
+	  }
+      pf_on_javascript();
+      jQuery('#javascript').attr('disabled', 'disabled');
+      jQuery('#pf-javascript-container').hide('slow');
+    } else {
+      jQuery('#javascript').removeAttr('disabled');
+      jQuery('#pf-javascript-container').show('slow');
+      jQuery('.dynamic_content_yes').hide();
     }
   }).change();
 

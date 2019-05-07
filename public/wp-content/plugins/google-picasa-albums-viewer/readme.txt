@@ -4,13 +4,16 @@ Contributors: nakunakifi
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZAZHU9ERY8W34
 Tags: album, gallery, slideshow, photo, google photos, google picasa, image, images gallery, lightbox, picasa, picasa web, photo, photos
 Requires at least: 3.0.1
-Tested up to: 4.7.5
-Stable tag: 3.0.13
+Tested up to: 5.1.1
+Stable tag: 3.2.2
 
 The best Google Photos Gallery plugin to display your Google Photo Albums on your WordPress blog. It is fully responsive and looks awesome. 
 
+
 == Description ==
 The best Google Photos Gallery plugin to display your Google Photo Albums on your WordPress blog. It is fully responsive and looks awesome. Google Photo Gallery is based on Google Picasa API. Use the plugin to display your Google Photo (Picasa) Albums on your WordPress blog. Using the shortcodes it is simple to embed a single album or all your albums. Display albums in grid view, list view or carousel. Image lightbox supports touch devices (Pro) and is fully responsive.
+
+https://www.youtube.com/watch?v=mOTFtKkt1nI
 
 * You get various display options for photo albums and the images with albums.
 * You can display Photo Albums in <a href="http://wordpress-plugin-google-photos.cheshirewebsolutions.com/display-albums-grid/">Grid View</a>
@@ -34,7 +37,6 @@ The best Google Photos Gallery plugin to display your Google Photo Albums on you
 * You can show Public / and or Private Albums
 
 
-
 If you have suggestions for a new add-on, feel free to email me at info@cheshirewebsolutions.com.
 Want regular updates? 
 follow me on Twitter!
@@ -44,7 +46,7 @@ https://twitter.com/CheshireWebSol
 
 == Prerequisites ==
 
-1. PHP5
+1. PHP5.4 or above
 2. cURL running on your web host
 
 
@@ -53,9 +55,9 @@ https://twitter.com/CheshireWebSol
 1. Unzip into your `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Make your settings, Admin->Settings->Google Picasa
-4. Use the 'Display Album' shortcode [cws_gpp_albums] on a page of your choice.
-5. To display the album's images place the shortcode, [cws_gpp_images_in_album] on a page
-6. Update the shortcode used in step 4 to include the result_page option. [cws_gpp_albums results_page='page-slug-here']
+4. Use the 'Display Album' shortcode [cws_gpp_albums_gphotos access=own] on a page of your choice.
+5. To display the album's images place the shortcode, [cws_gpp_images_in_album_gphotos] on a page
+6. Update the shortcode used in step 4 to include the result_page option. [cws_gpp_albums_gphotos access=own results_page='page-slug-here']
 
 
 == Frequently Asked Questions ==
@@ -82,49 +84,49 @@ Log in to you web host and check the cache/ folder is writable by the web server
 1. An example of Google Photos Album Grid View.
 2. An example of Google Photos Album List View.
 3. This is the default settings page. 
-4. This is an eaxmple of the Albums shortcode [cws_gpp_albums].
+4. This is an eaxmple of the Albums shortcode [cws_gpp_albums_gphotos access=own].
 5. This is an example of the lightbox displaying photo you clicked on.
 
 
 == Shortcodes ==
 
-* [cws_gpp_albums] Will display your albums.
+* [cws_gpp_albums_gphotos access=own] Will display your albums.
 
-* [cws_gpp_images_in_album] This is a place holder to display the results of an album that has been clicked on, on a separate page.
+* [cws_gpp_images_in_album_gphotos] This is a place holder to display the results of an album that has been clicked on, on a separate page.
 
-* [cws_gpp_images_by_albumid] Will display images in the album specified via the 'id' attribute
+* [cws_gpp_images_by_albumid_gp id='6625618881344302193'] Will display images in the album specified via the 'id' attribute. You must use album id from Album ID helper Page
 
 
 == Shortcode Usage ==
 
 * Display Albums Covers in a Carousel
-[cws_gpp_albums theme=carousel dots=1 slidestoshow=3 slidestoscroll=1 autoplay=1 arrows=1 results_page=results-carousel show_details=1 show_title=1 num_results=6 hide_albums='Profile Photos,Auto Backup']
+[cws_gpp_albums_gphotos access=own theme=carousel dots=1 slidestoshow=3 slidestoscroll=1 autoplay=1 arrows=1 results_page=results-carousel show_details=1 show_title=1 num_results=6 hide_albums='Profile Photos,Auto Backup']
 
 * Display Album Covers in a Grid View
-[cws_gpp_albums theme=grid results_page=results-grid show_title=1 show_details=1 num_results=6 hide_albums='Auto Backup,Profile Photos']
+[cws_gpp_albums_gphotos access=own theme=grid results_page=results-grid show_title=1 show_details=1 num_results=6 hide_albums='Auto Backup,Profile Photos']
 
 * Display Album Covers in a List View
-[cws_gpp_albums theme=list results_page=results-list show_title=1 show_details=1 thumb_size=185 num_results=3]
+[cws_gpp_albums_gphotos access=own theme=list results_page=results-list show_title=1 show_details=1 thumb_size=185 num_results=3]
 
 * Display Images from Clicked Album Cover in a Carousel View
-[cws_gpp_images_in_album theme=carousel show_title=0 thumbsize=150]
+[cws_gpp_images_in_album_gphotos theme=carousel show_title=0 thumbsize=150]
 
 * Display Images from Clicked Album Cover in a Grid View
-[cws_gpp_images_in_album theme=grid show_title=1 show_details=1]
+[cws_gpp_images_in_album_gphotos theme=grid show_title=1 show_details=1]
 
 * Display Images from Clicked Album Cover in a List View
-[cws_gpp_images_in_album theme=list show_title=1 show_details=1 num_results=13 thumb_size=250]
+[cws_gpp_images_in_album_gphotos theme=list show_title=1 show_details=1 num_results=13 thumb_size=250]
 
 * Display Images in a Specific Album, see 'Album Shortcodes' page for shortcodes complete with your Album IDs. Only one album per page.(PRO VERSION ONLY)
-[cws_gpp_images_by_albumid id=5218507736478682657 theme=grid show_title=0 show_details=0]
+[cws_gpp_images_by_albumid_gp id=5218507736478682657 theme=grid show_title=0 show_details=0]
 
 
 
 
 There are 2 main shortcodes:
 
-* [cws_gpp_albums]
-* [cws_gpp_images_album]
+* [cws_gpp_albums_gphotos access=own]
+* [cws_gpp_images_in_album_gphotos]
 
 
 Each shortcode will work as is by using the default values saved on the plugin settings page.
@@ -132,7 +134,7 @@ Each shortcode will work as is by using the default values saved on the plugin s
 The defaults can be overridden by placing attribites on the shortcode below are some examples.
 
 
-*[cws_gpp_albums]*
+*[cws_gpp_albums_gphotos access=own]*
 
 Attributes descriptions and examples
 
@@ -142,15 +144,14 @@ show_title='1|0'
 show_details='1|0'
 thumb_size='150'
 num_results='9'
-visibility='all|public|private'
 hide_albums='Auto Backup,name of album here'
 
 For example
-[cws_gpp_albums theme='grid' results_page='results-list' show_title=1 show_details=1 thumb_size='50' num_results='9' visibility='all']
+[cws_gpp_albums_gphotos access=own theme='grid' results_page='results-list' show_title=1 show_details=1 thumb_size='50' num_results='9']
 
 
 
-*[cws_gpp_images_in_album]*
+*[cws_gpp_images_in_album_gphotos]*
 
 theme='grid|list|carousel'
 album_title='1|0'
@@ -158,9 +159,10 @@ show_title='1|0'
 show_details='1|0'
 thumb_size='150'
 num_results='9'
+crop=1
 
 For example
-[cws_gpp_images_in_album theme='grid' album_title=1 show_title=1  show_details=1]
+[cws_gpp_images_in_album_gphotos theme='grid' album_title=1 show_title=1  show_details=1 crop=1]
 
 
 == Credits ==
@@ -176,6 +178,52 @@ For example
 * Photoswipe - Dmitry Semenov
 
 == Changelog ==
+
+= 3.2.2 =
+* Fixed image light box bug, dimensions was not honouring Lightbox image size in settings
+
+= 3.2.1 =
+* Updated incorrect shortcode examples
+* Fixed warnings in logs
+* Fixed bug where number larger than 50 return no results
+* Fixed 'Next' button css in Album ID Finder page
+* Trim client id / client secret of space characters
+* Improved Album ID finder, defaults to own
+
+= 3.2 =
+* Removed Picasa Shortcodes
+* Added API client id and client secret to fix Error 429
+* Fixed Download Original Link
+* Fixed fx=style* option from effecting 'click' in some browsers
+* Added default setting for Lighbox size
+* Various other fixes and improvements
+* Point old shortcodes to new Google Photos API functionality, so old shortcodes should still work
+* yada yada yada
+
+= 3.1.5 =
+* Fix broken link on album thumbnail in list view
+
+= 3.1.4 =
+* Fix remaining WP 5 related 'update failed' when update post / page
+
+= 3.1.3 =
+* Fix WP 5 related 'update failed' when update post / page
+
+= 3.1.2 =
+* Fix layout bugs
+* Fix num_results limit for new shortcode [cws_gpp_images_by_albumid_gp]
+
+= 3.1.1 =
+* Add configurable extension to allow access to Picasa API, available until 15 March 2019.
+
+= 3.1 =
+* Added three new shortcodes to consume Google Photos API feed
+* [cws_gpp_albums_gphotos] to list Albums from Google Photos API, use option access=own or access=shared, to specify albums returned
+* [cws_gpp_images_in_album_gphotos] to list images in selected album
+* [cws_gpp_images_by_albumid_gp id='6625618881344302193'] to display images withing a specified album
+
+= 3.0.13b =
+* Allow multiple album reults in same page
 
 = 3.0.13 =
 * Various improvements

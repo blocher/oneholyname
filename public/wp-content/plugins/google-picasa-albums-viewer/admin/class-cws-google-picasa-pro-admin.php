@@ -81,24 +81,15 @@ class CWS_Google_Picasa_Pro_Admin {
 	public function __construct( $plugin_name, $version, $isPro ) {
 
         $this->plugin_name = $plugin_name;
-		$this->version = $version;
+        $this->version = $version;
         $this->isPro = $isPro;
-/*        $this->client = new Google_Client();
-        $this->client->setApplicationName("Client_Library_Examples");
-        $this->client->setDeveloperKey("AIzaSyCP9XMYoQdxXfI-gK1bvZDW2RxyfvYENuM");  
-        $this->client->setClientId('806353319710-g782kn9ed0gm77ucl0meen5ohs84qgqm.apps.googleusercontent.com');
-        $this->client->setClientSecret('P6BMMEWLKUSoxB48X2Tzu8ds');
-        $this->client->setRedirectUri('urn:ietf:wg:oauth:2.0:oob');
-        $this->client->setScopes('https://picasaweb.google.com/data/');
-        $this->client->setAccessType('offline');
-  */      
+     
         // Include required files
-		$this->includes();
+        $this->includes();
 
         //$this->cws_gpp_admin_installed_notice();
         //$this->cws_gpp_admin_notices_styles();
-	}
-
+    }
 
 	/**
 	 * Register the stylesheets for the admin area.
@@ -110,24 +101,24 @@ class CWS_Google_Picasa_Pro_Admin {
 		if( $this->debug ) error_log( 'Inside: CWS_WPPicasaPro::includes()' );
 		
 		if ( is_admin() ) $this->admin_includes();
-            
+
         include_once( dirname(__FILE__) . '/../cws-gpp-functions.php' );				// TODO: split file out in admin and non-admin functions
 		include_once( dirname(__FILE__) . '/../shortcodes/shortcode-init.php' );		// Init the shortcodes
         include_once( dirname(__FILE__) . '/../widgets/widget-init.php' );				// Widget classes		
 
-        if( $this->isPro ==1 ) {
-            // TODO: change this into an include for Pro shortcodes...
-            add_shortcode( 'cws_gpp_images_by_albumid', 'cws_gpp_shortcode_images_in_album' );  // new one, shortcode provides album id
+        if( $this->isPro == 1 ) {
+            add_shortcode( 'cws_gpp_images_by_albumid', 'cws_gpp_shortcode_images_in_album_google_photos' );  // new one, shortcode provides album id
+            add_shortcode( 'cws_gpp_images_by_albumid_gp', 'cws_gpp_shortcode_images_in_album_google_photos' );  // Google Photos API, shortcode provides album id
         }
-	}
+    }
 
-	public function admin_includes() {
-	
-		if( $this->debug ) error_log( 'Inside: CWS_WPPicasaPro::admin_includes()' );
+    public function admin_includes() {
+
+      if( $this->debug ) error_log( 'Inside: CWS_WPPicasaPro::admin_includes()' );
 
 		include_once( dirname(__FILE__) . '/../cws-gpp-functions.php' );				// TODO: split file out in admin and non-admin functions
 	}    
-    
+
 
 	/**
 	 * Register the stylesheets for the admin area.
@@ -173,7 +164,7 @@ class CWS_Google_Picasa_Pro_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/cws-google-picasa-pro-admin.js', array( 'jquery' ), $this->version, false );
 	}
-    
+
 
     /**
      * Check if the plugin is a Pro version.
@@ -187,20 +178,6 @@ class CWS_Google_Picasa_Pro_Admin {
     }
 
 
-	/**
-	 * Register the Options for the admin area.
-	 *
-	 * @since    2.0.0
-	 */    
-    /*
-    public function add_options_page() {
-       
-        $strIsPro = $this->get_Pro( $this->isPro );
-
-        // add_options_page( $page_title, $menu_title, $capability, $menu_slug, $function);
-        add_options_page( 'Google Picasa ' . $strIsPro, 'Google Picasa '. $strIsPro, 'manage_options', 'cws_gpp', array( $this, 'options_page') );  
-    } */
-
     /**
      * Register the Top Level Menu Page for the admin area.
      *
@@ -209,11 +186,22 @@ class CWS_Google_Picasa_Pro_Admin {
     public function add_menu_page() {
 
         $strIsPro = $this->get_Pro( $this->isPro );
-        // add_menu_page('Page Title', 'Google Photos', 10, 'cws_gpp', 'section');
+
         add_menu_page( 'Page Title', 'Google Photos', 'manage_options', 'cws_gpp', array( $this, 'options_page') );
         add_submenu_page( 'cws_gpp', 'Google Photos Settings', 'Settings', 'manage_options', 'cws_gpp', array( $this, 'options_page') );
-        //add_submenu_page( 'cws_gpp', 'Google Photos Getting Started', 'Get Started', 'manage_options', 'cws_gpp', array( $this, 'getting_started_page') );
     }    
+
+
+    /**
+     * Register the API credentials for the admin area.
+     *
+     * @since    3.2
+     */    
+    public function add_options_gapi_page() {
+        add_submenu_page( 'cws_gpp', 'Google Photos API Settings', 'API Settings', 'manage_options', 'cws_gapi', array( $this, 'options_page_gapi') );
+
+    }
+
 
     /**
      * Register the Options for the admin area.
@@ -222,11 +210,9 @@ class CWS_Google_Picasa_Pro_Admin {
      */    
     public function add_options_sc_page() {
 
-        //$strIsPro = $this->get_Pro( $this->isPro );
-        // add_submenu_page( 'cws_gpp', 'Google Photos Album Shortcodes', 'Album Shortcodes', 'manage_options', 'cws_sc', array( $this, 'options_page_sc') );
         add_submenu_page( 'cws_gpp', 'Google Photos Album Shortcodes', 'Shortcode Examples', 'manage_options', 'cws_sc', array( $this, 'options_page_sc') );
     }
- 
+
 
     /**
      * Register the Getting Started Options for the admin area.
@@ -235,8 +221,375 @@ class CWS_Google_Picasa_Pro_Admin {
      */    
     public function add_options_gs_page() {
 
-        //$strIsPro = $this->get_Pro( $this->isPro );
         add_submenu_page( 'cws_gpp', 'Google Photos Getting Started', 'Getting Started', 'manage_options', 'cws_gs', array( $this, 'options_page_gs') );
+    }
+
+
+    /**
+     * Register the Google Photos API Album Id Helper for the admin area.
+     *
+     * @since    3.0.9
+     */    
+    public function add_options_gp_albumIdHelper_page() {
+
+        add_submenu_page( 'cws_gpp', 'AlbumID Helper', 'Album ID Finder', 'manage_options', 'cws_gpaidh', array( $this, 'options_page_gpaidh') );
+    }
+
+    /**
+     * Draw the Options page for the options_page_gpaidh admin area. This contains Google Photos API album id helper
+     *
+     * @since    2.3.0
+     */
+    public function options_page_gpaidh() {
+        $adminUrl = admin_url();
+        $url = admin_url( "admin.php?page=".$_GET["page"] );
+
+            if( empty( $_GET['access'] ) ){
+                $access = 'own';
+            } else {
+                $access = $_GET['access'];
+            }
+
+        // hidden placeholder to get access the admin url via data attr baseurl in JavaScript later
+        echo "<a id='baseLink' style='display:none;' href='' data-baseurl='$url'></a>";
+        ?>
+        <script type="text/javascript">
+
+            (function($) {
+
+                $(document).ready(function(){
+
+                    // When one of the radio buttons is clicked
+                    $("input[name='access']").click(function(){
+                        var radioValue = $("input[name='access']:checked").val();
+
+                        // Build new link using the selected radio value and base URL
+                        var newUrl = $("#baseLink").data('baseurl') + '&access=' + $("input[name='access']:checked").val();
+
+                        // reload window with new href and radio value
+                        window.location.href = newUrl;
+                    });               
+                    
+                });
+
+            })(jQuery);
+
+        </script>
+
+        <?php
+        $googlePhotos = new CWS_Google_Photos_Pro();
+        
+        $AccessToken    = get_option( 'cws_gpp_access_token' );
+        $num_results    = 50;
+        $nextPageToken  = '';
+        // $access         = '';
+
+        if( isset( $_GET['nextToken'] ) ) {
+            $nextPageToken = $_GET['nextToken'];
+        }
+
+        if( isset( $_GET['access'] ) ) {
+            $access = $_GET['access'];
+        }
+
+        // this fixed the unauthorized shizzle - do I require the next 2 lines or are they defined already?!
+        $plugin         = new CWS_Google_Picasa_Pro();
+        $plugin_admin   = new CWS_Google_Picasa_Pro_Admin( $plugin->get_plugin_name(), $plugin->get_version(), $plugin->get_isPro() );
+
+        if( $plugin_admin->isAuthenticated() == true  ) {
+
+            $response = $googlePhotos->getAlbumListGooglePhotos( $AccessToken, $results_page = null, $num_results , $nextPageToken , $access );
+            
+            if(isset($response[0])){
+                $albums = isset( $response[0]['albums'] ) ? $response[0]['albums'] : $response[0]['sharedAlbums'];
+            }
+            
+// echo '<pre>';
+// print_r($albums);
+// echo '</pre>';
+
+
+
+        ?>
+       <div class="wrap">
+
+
+            <form action="options.php" method="post">
+
+            <div style="width: 95%;" class="postbox-container">
+                <h2>Google Photo Album ID Helper</h2>
+                <!-- <h4> Only for use with the new Google Photos shortcodes [cws_gpp_albums_gphotos] or [cws_gpp_images_in_album_gphotos]. The existing shortcodes use different IDs, see <a href="<?php echo $adminUrl;?>admin.php?page=cws_sc">Shortcode Examples page</a></h4> -->
+                <p>Is it a shared album or you own album you are looking for?</p>
+
+            <p>
+                <label for="access"><?php _e('Choose Access: ', 'cws-weather-pro'); ?></label> &nbsp;
+                <input name="access" value="own" type="radio" <?php if( $access === "own") echo ' checked="checked"'; ?> /> Own &nbsp;&nbsp;&nbsp;
+                <input name="access" value="shared" type="radio" <?php if( $access === "shared") echo ' checked="checked"'; ?> /> Shared
+            </p>
+
+                    <div class="metabox-holder">
+
+                        <div class="postbox" id="settings">
+
+                            <table class="wp-list-table widefat fixed posts">
+                                <thead>
+                                   <tr valign="top">
+                                      <th scope="row" width="10">Album Name </th>
+                                      <th scope="row" width="100">Album ID </th>
+                                      <th scope="row" width="10">View in Google Photos</th>
+                                  </tr>
+                              </thead>
+                              <?php
+                            // loop over the albums
+                              if( !empty( $albums ) ){
+                                for( $i = 0; $i < count( $albums ); $i++ ) {
+
+
+                                ?>
+                                <tbody data-wp-lists="list:post" id="the-list">
+
+                                    <tr>
+                                        <td class="title column-title"><strong><?php echo $albums[$i]['title'];?></strong></td>
+                                        <td class="shortcode column-deescription"><?php echo $albums[$i]['id'];?></td>
+                                        <td class="shortcode column-deescription"><a target="_blank" href="<?php echo $albums[$i]['productUrl'];?>">Open</a></td>
+                                    </tr>
+
+                                    </tbody>
+                                    <?php
+                            } // end foreach
+                        }
+                            ?>
+                            <tfoot>
+                               <tr valign="top">
+                                  <th scope="row">Album Name </th>
+                                  <th scope="row">Album ID </th>
+                                  <th scope="row" width="10">View in Google Photos</th>
+                                </tr>
+                            </tfoot>                                  
+                        </table>                        
+                          <?php
+                        ?>
+                    </div> <!-- / . postbox -->
+
+                </div> <!-- / .postbox-container -->
+
+              </form>
+
+            </div><!-- / .wrap -->
+
+<?php
+//
+/*
+echo '<pre>';
+print_r($response);
+echo '</pre>';
+*/
+            // Pagination - why is there no previousPageToken!?
+            if( !empty( $response[0]['nextPageToken'] ) ){
+                // $url = admin_url();
+                $url = admin_url( "admin.php?page=".$_GET["page"] );
+
+                $next = '&nextToken=' . $response[0]['nextPageToken'];
+
+                // if( isset( $_GET['access'] ) ) {
+                if( isset( $access ) ) {
+                    $access = '&access=' . $access;
+                }
+
+                echo "<a  class='cws-next-button' href='$url$next$access' data-baseurl='$url$next'>Next</a>";
+            }
+
+        } //is authenticated check - this refreshes tokenn if need be!
+    }
+
+
+    /**
+     * Draw the Options page for the admin area. This contains simple shortcode snippets
+     *
+     * @since    2.3.0
+     */
+    public function options_page_gs() {
+       ?>
+       <div class="wrap">
+        <?php // screen_icon(); ?>
+        <h2>Getting Started</h2>
+
+        <!-- <div class="widget-liquid-left"> -->
+        <div>
+
+            <form action="options.php" method="post">
+
+                <?php 
+                // Step 1:  The user has not authenticated we give them a link to login    
+                if( $this->isAuthenticated() !== true ) {
+                    // settings_fields( $option_group )
+                    // Output nonce, action, and option_page fields for a settings page. Please note that this function must be called inside of the form tag for the options page.
+                    // $option_group - A settings group name. This should match the group name used in register_setting(). 
+                    ////settings_fields( 'cws_gpp_code' );
+
+                    // do_settings_sections( $page );
+                    // Prints out all settings sections added to a particular settings page.
+                    // The slug name of the page whose settings sections you want to output. This should match the page name used in add_settings_section().
+                    ////do_settings_sections( 'cws_gpp' ); 
+                    ?>
+
+                    Not authenticated...
+                    <!-- <input name="Submit" type="submit" value="Save Changes" />  -->
+                </form> 
+                <?php
+            } else {
+                ?>
+                <style>
+                span.sc-highlight{
+                    background-color:#f7f7f7;padding:6px;border:1px solid #c2c2c2; border-radius:4px;
+                }
+                </style>
+                <div style="width: 95%;" class="postbox-container">
+                    <h2>1. Basic Setup</h2>
+                    <p>To have your albums covers on one page and display the your images from within the selected album on another page.</p>
+                    <p>See example on <a href="http://wordpress-plugin-google-photos.cheshirewebsolutions.com/display-albums-grid/" target="_blank">demo site</a><!--  or <a href="https://youtu.be/grHI9sTCtZI" target="_blank">watch video</a> --> of what we are trying to achieve.</p>
+                    
+                    <p>First, it's important to realise that 2 shortcodes are needed for this. One shortcode (a) to display the album covers and and the second shortcode (b) to display the results of the clicked album.</p>
+                    <p>Second, it's also important to realise that you must put the slug of the page from the second shortcode (b) into the first shortcode (a).</p>
+
+                    <p>Stick with it, it's not nearly as complicated as it sounds.</p>
+                    <br/>                 
+                    <h3>Display Album Covers</h3>
+
+                    <p><strong>(a) Shortcode to display album covers</strong></p>
+                    <p> This is the basic shortcode <strong>[cws_gpp_albums_gphotos access=own theme='grid' results_page='']</strong> to display your album covers.</p>
+                    <p>Below is an example of the shortcode to display the album covers. Place the shortcode on a page and update the <span class="sc-highlight"><i>results_page='results-grid'</i></span> to the slug of the page where you place shortcode (b)</p>
+                    <p><strong>[cws_gpp_albums_gphotos access=own theme='grid' results_page='results-grid' show_title=1 show_details=1 num_results=6 hide_albums='Auto Backup,Profile Photos']</strong></p>
+                    <p>The option <i>results_page='results-grid'</i> is set to the slug of the page where you place shortcode (b). So if you placed shortcode (b) on a page called 'images' then 
+                        you would use <span class="sc-highlight"><i>results-page='images'</i></span></p>
+
+                        <h4>Shortcode (a) Options</h4>
+                        <p>The album title and details (Date created and number of images in album) can be hidden using options <span class="sc-highlight"><i>show_title=0</i></span> and <span class="sc-highlight"><i>show_details=0</i></span> respectively.</p>
+                        <p>Control the number of albums covers per page using <span class="sc-highlight"><i>num_results=6</i></span>
+                            <p>Hide unwanted albums using <span class="sc-highlight"><i>hide_albums='Auto Backup,Profile Photos'</i></span>, obviously replacing with the names of the albums you want to hide</p>
+
+                            <br/> 
+                            <h3>Display Images in Clicked Album</h3>
+
+
+                            <p><strong>(b) Shortcode to display images in clicked album</strong></p>
+                            <p>This is the basic shortcode to display images with the clicked album cover from (a) <strong>[cws_gpp_images_in_album_gphotos]</strong><!-- theme=grid show_title=1 show_details=1 album_title=1 --></p>
+                            <h4>Shortcode (b) Options</h4>
+                            <p>The album title can be hidden using option <span class="sc-highlight"><i>album_title=0</i></span></p>
+                            <p>The image titles and details can be hidden using options <span class="sc-highlight"><i>show_title=0</i></span> and <span class="sc-highlight"><i>show_details=0</i></span> respectively.</p>
+
+                            <br/> 
+                            <h3>What is the <i>theme</i> option all about?</h3>
+                            <p>This option controls the display of the Albums and Images, it has 3 options (grid, list, carousel)</p>
+                            <p>To display albums / images in a <strong>grid</strong> format use <span class="sc-highlight"><i>theme=grid</i></span>
+                                <p>To display albums / images in a <strong>list</strong> format use <span class="sc-highlight"><i>theme=list</i></span>
+                                    <p>To display albums / images in a <strong>carousel</strong> format use <span class="sc-highlight"><i>theme=carousel</i></span>
+                                        <p>This option is supported in both shortcode (a) and shortcode (b)</p>
+
+                                        <div class="metabox-holder">
+
+                                            <div class="postbo" id="settings">
+                                                <?php
+
+                                                $plugin = new CWS_Google_Picasa_Pro();
+                                                $plugin_admin = new CWS_Google_Picasa_Pro_Admin( $plugin->get_plugin_name(), $plugin->get_version(), $plugin->get_isPro() );
+
+                                                // Only display shortcode snippets to Pro users...
+                                                if( $plugin->isPro == 1 ) {
+
+                                                    ?>
+                                                    <!-- <h2>Pro Features Setup</h2> -->
+                                                    <?php
+
+                                                    // Grab options stored in db
+                                                    $options = get_option( 'cws_gpp_options' );
+
+                                                    // set some defaults...
+                                                    $options['results_page'] = isset($options['results_page']) ? $options['results_page'] : "";
+                                                    $options['hide_albums'] = isset($options['hide_albums']) ? $options['hide_albums'] : "";
+                                                    $options['theme'] = isset($options['theme']) ? $options['theme'] : "";
+
+                                                    // Extract the options from db and overwrite with any set in the shortcode
+                                                    // extract( shortcode_atts( array(
+                                                    extract( array(
+                                                        'thumb_size'   => $options['thumb_size'],
+                                                        'album_thumb_size'   => $options['album_thumb_size'], 
+                                                        'show_title'         => $options['show_album_title'],
+                                                        'show_details' => $options['show_album_details'],
+                                                        'num_results'  => $options['num_album_results'],
+                                                        'visibility'         => $options['private_albums'],                                        
+                                                        'results_page'       => $options['results_page'],
+                                                        'hide_albums'        => $options['hide_albums'],
+                                                        'theme'              => $options['theme'],
+                                                        'imgmax'            => $options['lightbox_image_size'],            
+                                                        ) );
+
+                                    // TODO: cast other vars to int if required
+                                    $thumb_size = ( int ) $thumb_size;
+
+                                    if ( $show_title === 'false' ) $show_title = false; // just to be sure...
+                                    if ( $show_title === 'true' ) $show_title = true; // just to be sure...
+                                    if ( $show_title === '0' ) $show_title = false; // just to be sure...
+                                    if ( $show_title === '1' ) $show_title = true; // just to be sure...
+                                    $show_title = ( bool ) $show_title;  
+
+                                    if ( $show_details === 'false' ) $show_details = false; // just to be sure...
+                                    if ( $show_details === 'true' ) $show_details = true; // just to be sure...
+                                    if ( $show_details === '0' ) $show_details = false; // just to be sure...
+                                    if ( $show_details === '1' ) $show_details = true; // just to be sure...
+                                    $show_details = ( bool ) $show_details;  
+
+                                    // Grab page from url
+                                    if( isset($_GET['cws_page'])){
+                                        $cws_page = $_GET[ 'cws_page' ]; // $cws_page = get_query_var( 'cws_page' );
+                                    }
+
+                                    // Grab the access token
+                                    $AccessToken = get_option( 'cws_gpp_access_token' );
+
+                                    // Get Albums
+                                    // $response = $plugin_admin->getAlbumList( $AccessToken, $album_thumb_size, $show_title, 0, 0, $visibility );  
+
+                                    ?>
+                                </div> <!-- / . postbox -->
+
+                            </div> <!-- / meta holder -->
+                        </div> <!-- / .postbox-container -->
+                        <?php   } else { ?>
+            <?php       // Display upgrade content if not Pro
+                        // echo $plugin_admin->cws_gpp_upgrade_content(); 
+        }
+
+    } 
+
+    ?>
+
+</div><!-- / left -->
+</div>
+<?php
+    } // end function options_page_gs()
+
+
+    /**
+     * Draw the API credentials page for the admin area. client id and client secret
+     *
+     * @since    3.2
+     */
+    public function options_page_gapi() {
+       ?>
+       <div class="wrap">
+        <?php // screen_icon(); ?>
+        <h2>Google API Credentials</h2>
+    
+          <form action="options.php" method="post">
+<?php
+            settings_fields( 'cws_gpp_gapi' );
+            do_settings_sections( 'cws_gpp_gapi' );
+?>
+            <input name="Submit" type="submit" value="Save Changes" />  
+          </form> 
+      </div>
+<?php
     }
 
 
@@ -245,198 +598,16 @@ class CWS_Google_Picasa_Pro_Admin {
      *
      * @since    2.3.0
      */
-    public function options_page_gs() {
- ?>
-        <div class="wrap">
-        <?php screen_icon(); ?>
-            <h2>Getting Started</h2>
-
-            <!-- <div class="widget-liquid-left"> -->
-            <div>
-
-                <form action="options.php" method="post">
-
-                <?php 
-                // Step 1:  The user has not authenticated we give them a link to login    
-                if( $this->isAuthenticated() !== true ) {
-                    // settings_fields( $option_group )
-                    // Output nonce, action, and option_page fields for a settings page. Please note that this function must be called inside of the form tag for the options page.
-                    // $option_group - A settings group name. This should match the group name used in register_setting(). 
-                    ////settings_fields( 'cws_gpp_code' );
-
-                    // do_settings_sections( $page );
-                    // Prints out all settings sections added to a particular settings page.
-                    // The slug name of the page whose settings sections you want to output. This should match the page name used in add_settings_section().
-                    ////do_settings_sections( 'cws_gpp' ); 
-                    ?>
-
-                    Not authenticated...
-                    <!-- <input name="Submit" type="submit" value="Save Changes" />  -->
-                    </form> 
-                    <?php
-                } else {
-                ?>
-                <style>
-                span.sc-highlight{
-                background-color:#f7f7f7;padding:6px;border:1px solid #c2c2c2; border-radius:4px;
-                }
-                </style>
-                <div style="width: 95%;" class="postbox-container">
-                    <h2>1. Basic Setup</h2>
-                    <p>To have your albums covers on one page and display the your images from within the selected album on another page.</p>
-                    <p>See example on <a href="http://wordpress-plugin-google-photos.cheshirewebsolutions.com/display-albums-grid/" target="_blank">demo site</a> or <a href="https://www.youtube.com/watch?v=cx-2PcRcbao" target="_blank">watch video</a> of what we are trying to achieve.</p>
-                    
-                    <p>First, it's important to realise that 2 shortcodes are needed for this. One shortcode (a) to display the album covers and and the second shortcode (b) to display the results of the clicked album.</p>
-                    <p>Second, it's also important to realise that you must put the slug of the page from the second shortcode (b) into the first shortcode (a).</p>
-
-                    <p>Stick with it, it's not nearly as complicated as it sounds.</p>
-  <br/>                 
-<h3>Display Album Covers</h3>
-
-                    <p><strong>(a) Shortcode to display album covers</strong></p>
-                    <p>Below is an example of the shortcode to display the album covers. Place the shortcode on a page and update the <span class="sc-highlight"><i>results_page='results-grid'</i></span> to the slug of the page where you place shortcode (b)</p>
-                    <p><strong>[cws_gpp_albums theme='grid' results_page='results-grid' show_title=1 show_details=1 num_results=6 hide_albums='Auto Backup,Profile Photos']</strong></p>
-                    <p>The option <i>results-page='results-grid'</i> is set to the slug of the page where you place shortcode (b). So if you placed shortcode (b) on a page called 'images' then 
-                        you would use <span class="sc-highlight"><i>results-page='images'</i></span>.</p>
-
-<h4>Shortcode (a) Options</h4>
-<p>The album title and details (Date created and number of images in album) can be hidden using options <span class="sc-highlight"><i>show_title=0</i></span> and <span class="sc-highlight"><i>show_details=0</i></span> respectively.</p>
-<p>Control the number of albums covers per page using <span class="sc-highlight"><i>num_results=6</i></span>
-<p>Hide unwanted albums using <span class="sc-highlight"><i>hide_albums='Auto Backup,Profile Photos'</i></span>, obviously replacing with the names of the albums you want to hide</p>
-
-  <br/> 
-<h3>Display Images in Clicked Album</h3>
-
-
-                    <p><strong>(b) Shortcode to display images in clicked album</strong></p>
-                    <p>[cws_gpp_images_in_album theme=grid show_title=1 show_details=1 album_title=1]</p>
-<h4>Shortcode (b) Options</h4>
-<p>The album title can be hidden using option <span class="sc-highlight"><i>album_title=0</i></span></p>
-<p>The image titles and details can be hidden using options <span class="sc-highlight"><i>show_title=0</i></span> and <span class="sc-highlight"><i>show_details=0</i></span> respectively.</p>
-
-  <br/> 
-<h3>What is the <i>theme</i> option all about?</h3>
-<p>This option controls the display of the Albums and Images, it has 3 options (grid, list, carousel)</p>
-<p>To display albums / images in a <strong>grid</strong> format use <span class="sc-highlight"><i>theme=grid</i></span>
-<p>To display albums / images in a <strong>list</strong> format use <span class="sc-highlight"><i>theme=list</i></span>
-<p>To display albums / images in a <strong>carousel</strong> format use <span class="sc-highlight"><i>theme=carousel</i></span>
-<p>This option is supported in both shortcode (a) and shortcode (b)</p>
-
-                        <div class="metabox-holder">
-              
-                            <div class="postboxxxx" id="settingsxxx">
-                                <?php
-                                // $plugin = new CWS_Google_Picasa_Pro( $plugin_name, $version, $isPro );
-                                $plugin = new CWS_Google_Picasa_Pro();
-                                $plugin_admin = new CWS_Google_Picasa_Pro_Admin( $plugin->get_plugin_name(), $plugin->get_version(), $plugin->get_isPro() );
-
-                                // Only display shortcode snippets to Pro users...
-                                if( $plugin->isPro == 1 ) {
-
-                                    ?>
-                                        <!-- <h2>Pro Features Setup</h2> -->
-                                    <?php
-
-                                    // Grab options stored in db
-                                    $options = get_option( 'cws_gpp_options' );
-
-                                    // set some defaults...
-                                    $options['results_page'] = isset($options['results_page']) ? $options['results_page'] : "";
-                                    $options['hide_albums'] = isset($options['hide_albums']) ? $options['hide_albums'] : "";
-                                    $options['theme'] = isset($options['theme']) ? $options['theme'] : "";
-
-                                    // Extract the options from db and overwrite with any set in the shortcode
-                                   // extract( shortcode_atts( array(
-                                    extract( array(
-                                        'thumb_size'   => $options['thumb_size'],
-                                        'album_thumb_size'   => $options['album_thumb_size'], 
-                                        'show_title'         => $options['show_album_title'],
-                                        'show_details' => $options['show_album_details'],
-                                        'num_results'  => $options['num_album_results'],
-                                        'visibility'         => $options['private_albums'],                                        
-                                        'results_page'       => $options['results_page'],
-                                        'hide_albums'        => $options['hide_albums'],
-                                        'theme'              => $options['theme'],
-                                        'imgmax'            => $options['lightbox_image_size'],            
-                                    ) );
-                                    // ), $atts ) );
-                                    // Map albums names to hide to array and trim white space
-                                    //$hide_albums = array_map( 'trim', explode( ',', $hide_albums ) );
-                            /*
-                                        if( isset( $hide_albums ) ) {
-                                            $hide_albums[] = 'Auto Backup';
-                                        }
-                                        else {
-                                            $hide_albums = 'Auto Backup';
-                                        }
-                            */
-                                    // TODO: cast other vars to int if required
-                                    $thumb_size = ( int ) $thumb_size;
-
-                                    if ( $show_title === 'false' ) $show_title = false; // just to be sure...
-                                    if ( $show_title === 'true' ) $show_title = true; // just to be sure...
-                                    if ( $show_title === '0' ) $show_title = false; // just to be sure...
-                                    if ( $show_title === '1' ) $show_title = true; // just to be sure...
-                                    $show_title = ( bool ) $show_title;  
-
-                                    if ( $show_details === 'false' ) $show_details = false; // just to be sure...
-                                    if ( $show_details === 'true' ) $show_details = true; // just to be sure...
-                                    if ( $show_details === '0' ) $show_details = false; // just to be sure...
-                                    if ( $show_details === '1' ) $show_details = true; // just to be sure...
-                                    $show_details = ( bool ) $show_details;  
-                        
-                                    // Grab page from url
-                                    $cws_page = $_GET[ 'cws_page' ]; // $cws_page = get_query_var( 'cws_page' );
-
-                                    // Grab the access token
-                                    $AccessToken = get_option( 'cws_gpp_access_token' );
-
-                                    // Get Albums
-                                    $response = $plugin_admin->getAlbumList( $AccessToken, $album_thumb_size, $show_title, 0, 0, $visibility );  
-                              
-                                    ?>
-                            </div> <!-- / . postbox -->
-
-                        </div> <!-- / meta holder -->
-                    </div> <!-- / .postbox-container -->
-            <?php   } else { ?>
-            <?php       // Display upgrade content if not Pro
-                        // echo $plugin_admin->cws_gpp_upgrade_content(); 
-                    }
-
-               } 
-
-                ?>
-
-            </div><!-- / left -->
-        </div>
-        <?php
-        } // end function options_page_gs()
-
-
-
-
-
-
-
-
-
-    
-    /**
-     * Draw the Options page for the admin area. This contains simple shortcode snippets for *** PRO ONLY ***
-     *
-     * @since    2.3.0
-     */
     public function options_page_sc() {
- ?>
-        <div class="wrap">
-        <?php screen_icon(); ?>
-            <h2>Google Picasa <?php echo $this->get_Pro( $this->isPro );?> Settings</h2>
+       ?>
+       <div class="wrap">
+        <?php // screen_icon(); ?>
+        <h2>Google Photos <?php echo $this->get_Pro( $this->isPro );?> Settings</h2>
 
-            <!-- <div class="widget-liquid-left"> -->
-            <div>
+        <!-- <div class="widget-liquid-left"> -->
+        <div>
 
-                <form action="options.php" method="post">
+            <form action="options.php" method="post">
 
                 <?php 
                 // Step 1:  The user has not authenticated we give them a link to login    
@@ -454,215 +625,53 @@ class CWS_Google_Picasa_Pro_Admin {
 
                     Not authenticated...
                     <!-- <input name="Submit" type="submit" value="Save Changes" />  -->
-                    </form> 
-                    <?php
-                } else {
+                </form> 
+                <?php
+            } else {
                 ?>
                 <div style="width: 95%;" class="postbox-container">
-                    <h2>Google Photo Album Details</h2>
-                    <p>Use this shortcode to display photos in a album specified by the ID.</p>
-                        <div class="metabox-holder">
-              
-                            <div class="postbox" id="settings">
-                                <?php
+<!--                     <h2>Google Photo Album Details</h2>
+ -->                    <div class="metabox-holder">
+
+                        <div>
+
+                           <?php
                                 // $plugin = new CWS_Google_Picasa_Pro( $plugin_name, $version, $isPro );
-                                $plugin = new CWS_Google_Picasa_Pro();
-                                $plugin_admin = new CWS_Google_Picasa_Pro_Admin( $plugin->get_plugin_name(), $plugin->get_version(), $plugin->get_isPro() );
+                            // $plugin = new CWS_Google_Picasa_Pro();
+                            // $plugin_admin = new CWS_Google_Picasa_Pro_Admin( $plugin->get_plugin_name(), $plugin->get_version(), $plugin->get_isPro() );
 
-                                // Only display shortcode snippets to Pro users...
-                                if( $plugin->isPro == 1 ) {
-
-                                    // Grab options stored in db
-                                    $options = get_option( 'cws_gpp_options' );
-
-                                    // set some defaults...
-                                    $options['results_page'] = isset($options['results_page']) ? $options['results_page'] : "";
-                                    $options['hide_albums'] = isset($options['hide_albums']) ? $options['hide_albums'] : "";
-                                    $options['theme'] = isset($options['theme']) ? $options['theme'] : "";
-
-                                    // Extract the options from db and overwrite with any set in the shortcode
-                                   // extract( shortcode_atts( array(
-                                    extract( array(
-                                        'thumb_size'   => $options['thumb_size'],
-                                        'album_thumb_size'   => $options['album_thumb_size'], 
-                                        'show_title'         => $options['show_album_title'],
-                                        'show_details' => $options['show_album_details'],
-                                        'num_results'  => $options['num_album_results'],
-                                        'visibility'         => $options['private_albums'],                                        
-                                        'results_page'       => $options['results_page'],
-                                        'hide_albums'        => $options['hide_albums'],
-                                        'theme'              => $options['theme'],
-                                        'imgmax'            => $options['lightbox_image_size'],            
-                                    ) );
-                                    // ), $atts ) );
-                                    // Map albums names to hide to array and trim white space
-                                    //$hide_albums = array_map( 'trim', explode( ',', $hide_albums ) );
-                            /*
-                                        if( isset( $hide_albums ) ) {
-                                            $hide_albums[] = 'Auto Backup';
-                                        }
-                                        else {
-                                            $hide_albums = 'Auto Backup';
-                                        }
-                            */
-                                    // TODO: cast other vars to int if required
-                                    $thumb_size = ( int ) $thumb_size;
-
-                                    if ( $show_title === 'false' ) $show_title = false; // just to be sure...
-                                    if ( $show_title === 'true' ) $show_title = true; // just to be sure...
-                                    if ( $show_title === '0' ) $show_title = false; // just to be sure...
-                                    if ( $show_title === '1' ) $show_title = true; // just to be sure...
-                                    $show_title = ( bool ) $show_title;  
-
-                                    if ( $show_details === 'false' ) $show_details = false; // just to be sure...
-                                    if ( $show_details === 'true' ) $show_details = true; // just to be sure...
-                                    if ( $show_details === '0' ) $show_details = false; // just to be sure...
-                                    if ( $show_details === '1' ) $show_details = true; // just to be sure...
-                                    $show_details = ( bool ) $show_details;  
-                        
-                                    // Grab page from url
-                                    if( isset($_GET[ 'cws_page' ]) ){
-                                      $cws_page = $_GET[ 'cws_page' ]; // $cws_page = get_query_var( 'cws_page' );
-                                    }
-
-                                    // Grab the access token
-                                    $AccessToken = get_option( 'cws_gpp_access_token' );
-
-                                    // Get Albums
-                                    $response = $plugin_admin->getAlbumList( $AccessToken, $album_thumb_size, $show_title, 0, 0, $visibility );  
-                                    // $response = $plugin_admin->getAlbumList( $AccessToken, $album_thumb_size, $show_title, 0, 0 );             
-                              
-                                    // var_dump($response);
-
-                                    #----------------------------------------------------------------------------
-                                    # Convert the XML response into SimpleXML Object
-                                    #----------------------------------------------------------------------------
-                                    if (!function_exists('produce_XML_object_tree')) {
-
-                                        function produce_XML_object_tree( $response ) {
-                                            libxml_use_internal_errors( true );
-                                            try {
-                                                // Create simplexml object from feed
-                                                $xml = new SimpleXMLElement( $response );
-                                            }  catch ( Exception $e ) {
-                                                // Something went wrong.
-                                                $error_message = 'SimpleXMLElement threw an exception.';
-                                                foreach( libxml_get_errors() as $error_line ) {
-                                                    $error_message .= "\t" . $error_line->message;
-                                                }
-                                                trigger_error( $error_message );
-                                                return false;
-                                            }
-                                            return $xml;
-                                        } // end function produce
-
-                                    }
-
-                                    // Create SimpleXML Object
-                                    $xml = produce_XML_object_tree ( $response );
-
-                                    if( $xml === false ) {
-                                        echo 'Sorry there has been a problem with your feed.';
-                                    } else {
-
-                                        // TODO: create a helper function
-                                        if( isset($_GET[ 'cws_debug' ]) ){
-                                            $cws_debug = $_GET[ 'cws_debug' ]; // $cws_debug = get_query_var( 'cws_debug' );
-                                            if( $_GET["cws_debug"] == "1" ) { 
-                                                echo "<pre>" . print_r( $xml, true ) . "</pre>";
-                                            }
-                                        }
-                                        
-                                        $xml->registerXPathNamespace('gphoto', 'http://schemas.google.com/photos/2007');
-                                        $xml->registerXPathNamespace('media', 'http://search.yahoo.com/mrss/');
-
-                                        // register namespace to get access to total number of albums found
-                                        $xml->registerXPathNamespace('opensearch', 'http://a9.com/-/spec/opensearch/1.1/');
-                                        $totalResults = $xml->xpath( "opensearch:totalResults" );
-                                        $total_num_albums = $totalResults[0]; 
+                            // Only display shortcode snippets to Pro users...
+                            // if( $plugin->isPro == 1 )
+                            if( 1 ) 
+                            {
                                     ?>
-                                        <table class="wp-list-table widefat fixed posts">
-                                            <thead>
-                                             <tr valign="top">
-                                                  <th scope="row" width="100">Album Name </th>
-                                                  <!--<th scope="row" width="70">Published</th>
-                                                  <th scope="row" width="50">Num Photos </th> -->
-                                                  <th scope="row" width="100">Album ID </th>
-                                                  <th scope="row">Example shortcode</th>
-                                             </tr>
-                                            </thead>
-                                    <?php
-                                        // loop over the albums
-                                        foreach( $xml->entry as $feed ) {
+                                </div> <!-- / . postbox -->
 
-                                            // get the data we need
-                                            $title = $feed->title;
-                                            
-                                            $gphoto = $feed->children( 'http://schemas.google.com/photos/2007' );
-                                            $num_photos = $gphoto->numphotos; 
-                                            $published = $feed->published; 
-                                            $published = trim( $published );
-                                            $published = substr( $published, 0, 10 );      
+                                <h3>Shortcode Usage Examples</h3>
 
-                                            $group = $feed->xpath( './media:group/media:thumbnail' );
-                                            $a = $group[0]->attributes(); // we need thumbnail path
-                                            $id = $feed->xpath( './gphoto:id' ); // and album id for our thumbnail
-                                            ?>
-                                                <tbody data-wp-lists="list:post" id="the-list">
-
-                                                    <tr>
-                                                        <td class="title column-title">
-                                                            <strong><?php echo $title;?></strong>
-                                                        </td>
-                                                        <td class="shortcode column-deescription"><?php echo $id[0];?></td>
-                                                        <td class="shortcode column-shortcode">
-                                                            <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_by_albumid theme=grid id=&quot;<?php echo $id[0];?>&quot;]" readonly="readonly" onfocus="this.select();">                                     
-                                                    </tr>
-
-                                                 </tbody>
-                                            <?php
-                                        } // end foreach
-                                    ?>
-                                            <foot>
-                                             <tr valign="top">
-                                                  <th scope="row">Album Name </th>
-                                                  <!-- <th scope="row">Published</th>
-                                                  <th scope="row">Num Photos </th> -->                               
-                                                  <th scope="row">Album ID </th>
-                                                  <th scope="row">Example shortcode </th>
-                                             </tr>
-                                            </foot>                                  
-                                        </table>                        
-                                    <?php
-                                    } // end else
-                                    ?>
-                            </div> <!-- / . postbox -->
-
-                            <h3>Shortcode Usage Examples</h3>
-
-                            <h4>Display Albums Covers in a Carousel</h4>
-                            <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums theme='carousel' results_page='page-slug-here' show_titles=1]" readonly="readonly" onfocus="this.select();">       
+                                <h4>Display Albums Covers in a Carousel</h4>
+                                <input size="100%" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums_gphotos access=own theme='carousel' results_page='page-slug-here']" readonly="readonly" onfocus="this.select();">       
                                 
-                            <h4>Display Album Covers in a Grid View</h4>
-                            <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums theme='grid' results_page='page-slug-here' show_details='1' num_results=5]" readonly="readonly" onfocus="this.select();">  
+                                <h4>Display Album Covers in a Grid View</h4>
+                                <input size="100%" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums_gphotos access=own theme='grid' results_page='page-slug-here']" readonly="readonly" onfocus="this.select();">  
 
-                            <h4>Display Album Covers in a List View</h4>
-                            <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums theme='list' results_page='page-slug-here' show_title='1' show_details='1' thumb_size='250' num_results='3' visibility='all']" readonly="readonly" onfocus="this.select();">  
+                                <h4>Display Album Covers in a List View</h4>
+                                <input size="100%" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums_gphotos access=own theme='list' results_page='page-slug-here']" readonly="readonly" onfocus="this.select();">  
 
-                            <h4>Display Images from Clicked Album Cover in a Carousel View</h4>
-                            <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_in_album theme='carousel' show_title=0 thumbsize='150']" readonly="readonly" onfocus="this.select();">  
+                                <h4>Display Images from Clicked Album Cover in a Carousel View</h4>
+                                <input size="100%" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_in_album_gphotos theme='carousel' ]" readonly="readonly" onfocus="this.select();">  
 
-                            <h4>Display Images from Clicked Album Cover in a Grid View</h4>
-                            <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_in_album theme='grid' show_title=1 show_details='1']" readonly="readonly" onfocus="this.select();">  
+                                <h4>Display Images from Clicked Album Cover in a Grid View</h4>
+                                <input size="100%" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_in_album_gphotos theme='grid']" readonly="readonly" onfocus="this.select();">  
 
-                            <h4>Display Images from Clicked Album Cover in a List View</h4>
-                            <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_in_album theme='list' show_title=1 show_details=1 num_results='13' thumb_size='250']" readonly="readonly" onfocus="this.select();">  
+                                <h4>Display Images from Clicked Album Cover in a List View</h4>
+                                <input size="100%" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_in_album_gphotos theme='list']" readonly="readonly" onfocus="this.select();">  
                             <!--
                             <h4>Display Images from Clicked Album Cover in a Expander View, great for when there are long Captions.</h4>
                             <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_in_album theme='expander' show_title=0]" readonly="readonly" onfocus="this.select();">  
-                            -->
-                            <h4>Display Images in a Specific Album. Only one album per page.</h4>
-                            <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_by_albumid id='05218507736478682657' theme='grid' show_title='0' show_details='0']" readonly="readonly" onfocus="this.select();">  
+                        -->
+                        <h4>Display Images in a Specific Album. Only one album per page.</h4>
+                        <input size="100%" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_by_albumid_gp id='ADqpsRYnwb6YNID6kjOcl-u_026dpZGi2v-fB6vVZKvlRzob5DlikXP_mCURqFGJlYzybgdirggU' theme='grid']" readonly="readonly" onfocus="this.select();">  
 
                             <!-- <h4>Display Album Images in Photo Booth Strips</h4>
                             <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums theme='propbs' show_details='1' num_results='4']" readonly="readonly" onfocus="this.select();">  
@@ -671,19 +680,32 @@ class CWS_Google_Picasa_Pro_Admin {
                             <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums theme='propsg' results_page='results-grid' show_details='1']" readonly="readonly" onfocus="this.select();">  
                             <p>Theme options supported by the results page for this are 'grid', 'list', 'carousel' </p> -->
                         </div> <!-- / meta holder -->
+
+                        <!--<h3>Google Photos API Shortcodes</h3>
+                        <p>Use these when wanting to take advantage of Google Photos features like shared albums, new cover images, re-ordering of imgaes in album etc.</p>
+
+                        <h4>Display Albums Covers</h4>
+                        <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_albums_gphotos results_page='google-photos-results' show_title=1 show_details=1 theme=grid album_thumb_size=150 access=shared]" readonly="readonly" onfocus="this.select();">       
+                                
+                        <h4>Display Images from Clicked Album</h4>
+                        <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_in_album_gphotos show_title=1 show_details=1 thumb_size=150 theme=grid crop=1" readonly="readonly" onfocus="this.select();">  
+                        
+                        <h4>Display Images in a Specific Album. Only one album per page.</h4>
+                        <input size="80" type="text" class="shortcode-in-list-table wp-ui-text-highlight code" value="[cws_gpp_images_by_albumid_gp id='6625618881344302193' crop=1 row_height=200 theme='grid' show_title=1]" readonly="readonly" onfocus="this.select();">  
+                        -->
                     </div> <!-- / .postbox-container -->
-            <?php   } else { ?>
+                    <?php   } else { ?>
             <?php       // Display upgrade content if not Pro
-                        echo $plugin_admin->cws_gpp_upgrade_content(); 
-                    }
+            echo $plugin_admin->cws_gpp_upgrade_content(); 
+        }
 
-               } 
+    } 
 
-                ?>
+    ?>
 
-            </div><!-- / left -->
-        </div>
-        <?php
+</div><!-- / left -->
+</div>
+<?php
         } // end function options_page_sc()
 
 
@@ -695,122 +717,124 @@ class CWS_Google_Picasa_Pro_Admin {
     public function options_page() {
 
         if( $this->deauthorizeGoogleAccount() ) {
-            // TODO: finsish this delete_option unset()
+            // Tidy up database if de-authourizing plugin
             delete_option( 'cws_gpp_reset' );
             delete_option( 'cws_gpp_token_expires' );
             delete_option( 'cws_gpp_code' );
             delete_option( 'cws_gpp_access_token' );
+            delete_option( 'cws_gpp_gapi' );
         } ?>
 
         <div class="wrap">
-        <?php screen_icon(); ?>
-            <h2>Google Picasa <?php echo $this->get_Pro( $this->isPro );?> Settings</h2>
+            <?php // screen_icon(); ?>
+            <h2>Google Photos <?php echo $this->get_Pro( $this->isPro );?> Settings</h2>
 
             <div class="widget-liquid-left">
 
                 <form action="options.php" method="post">
 
-            <?php 
-                // Step 1:  The user has not authenticated we give them a link to login    
-                if( $this->isAuthenticated() !== true ) {
-                    // settings_fields( $option_group )
-                    // Output nonce, action, and option_page fields for a settings page. Please note that this function must be called inside of the form tag for the options page.
-                    // $option_group - A settings group name. This should match the group name used in register_setting(). 
-                    settings_fields( 'cws_gpp_code' );
+                <?php 
+                    // Step 1:  Missing client id / client secret so cannot start authorization process
+                    if( $this->haveGapiSettings() === false ) {
+                        echo "<strong>Missing Google API Credentials (client id / client secret).</strong><br>";      
+                ?>
+                        <p>You must create Google Photo API credentials before authorising plugin.</p>
+                        <a href="<?php echo admin_url('admin.php?page=cws_gapi'); ?>" class="button-primary"><?php _e( 'Google Photos API Settings', 'cws_gpp_' ); ?></a><?php          
+                    }
+                    // We have client id / client secret but are not authorised
+                    elseif ( $this->haveGapiSettings() === true && $this->isAuthenticated() === false ) {
+                        settings_fields( 'cws_gpp_code' );
+                        do_settings_sections( 'cws_gpp' ); 
+                ?>
+                        <input name="Submit" type="submit" value="Save Changes" />  
 
-                    // do_settings_sections( $page );
-                    // Prints out all settings sections added to a particular settings page.
-                    // The slug name of the page whose settings sections you want to output. This should match the page name used in add_settings_section().
-                    do_settings_sections( 'cws_gpp' ); 
-                    ?>
-                    <input name="Submit" type="submit" value="Save Changes" />  
+                        </form> 
+                <?php
 
-                </form> 
-            <?php
-                } 
-                else {
-                    /**
-                     * User is authenticated so display plugin config settings
-                     * 
-                     */
+                    }
 
-                    // Get Access Token
-                    $token = $this->getAccessToken();
-                    
-                    settings_fields( 'cws_gpp_options' );
-                    do_settings_sections( 'cws_gpp_defaults' );
-                    ?>
-                    <input name="Submit" type="submit" value="Save Changes" />  
-                </form> 
+                    // we have client ide / client secret and have authorised plugin 
+                    elseif ( $this->haveGapiSettings() === true && $this->isAuthenticated() == true ) {
+                        /**
+                         * User is authenticated so display plugin config settings
+                         * 
+                         */
 
-                <form action="options.php" method="post">
+                        // Get Access Token
+                        $token = $this->getAccessToken();
+                        
+                        settings_fields( 'cws_gpp_options' );
+                        do_settings_sections( 'cws_gpp_defaults' );
+                ?>
+                        <input name="Submit" type="submit" value="Save Changes" />  
+                        </form> 
 
-            <?php   settings_fields( 'cws_gpp_reset' );
-                    do_settings_sections( 'cws_gpp_reset' );  
-            ?>
-                    <input name="Submit" type="submit" value="Deauthorise" onclick="if(!this.form.reset.checked){alert('You must click the checkbox to confirm you want to deauthorize current Google account.');return false}" />
+                        <form action="options.php" method="post">
 
-                </form>                             
-            <?php                      
-                }
-            ?>
+                            <?php   settings_fields( 'cws_gpp_reset' );
+                            do_settings_sections( 'cws_gpp_reset' );  
+                            ?>
+                            <input name="Submit" type="submit" value="Deauthorise" onclick="if(!this.form.reset.checked){alert('You must click the checkbox to confirm you want to deauthorize current Google account.');return false}" />
 
-            </div><!-- / left -->
-                <?php // $this->cws_gpp_meta_box_feedback(); ?>
-
-            <?php
-                if( !$this->isPro == 1 ) {
-                    // Only call for the upgrade meta box if this is not a Pro install
-                    $this->cws_gpp_meta_box_pro(); 
-                }
+                        </form>                             
+                <?php                      
+                    }
             ?>
 
-        </div>
+        </div><!-- / left -->
+        <?php $this->cws_gpp_meta_box_feedback(); ?>
+
         <?php
-    }
-    
+        if( !$this->isPro == 1 ) {
+            // Only call for the upgrade meta box if this is not a Pro install
+            $this->cws_gpp_meta_box_pro(); 
+        }
+        ?>
+
+    </div>
+    <?php
+}
+
 
     // Display a feedback links
-    public function cws_gpp_meta_box_feedback() {
+public function cws_gpp_meta_box_feedback() {
     ?>
 
-        <div class="widget-liquid-right">
-            <div id="widgets-right">    
-                <div style="width:20%;" class="postbox-container side">
-                    <div class="metabox-holder">
-                        <div class="postbox" id="feedback">
-                            <h3><span>Please rate the plugin!</span></h3>
-                            <div class="inside">                            
-                                <p>If you have found this useful please leave us a <a href="http://wordpress.org/extend/plugins/google-picasa-albums-viewer/">good rating</a></p>
-                                <p>&raquo; Share it with your friends <a href="<?php echo "http://twitter.com/share?url=http://bit.ly/q4nqNA&text=Check out this awesome WordPress Plugin I'm using - Google Picasa Viewer" ?>">Tweet It</a></p>
-                                <p>If you have found a bug please email me <a href="mailto:info@cheshirewebsolutions.com?subject=Feedback%20Google%20Picasa%20Viewer">info@cheshirewebsolutions.com</a></p>                               
+    <div class="widget-liquid-right">
+        <div id="widgets-right">    
+            <div style="width:20%;" class="postbox-container side">
+                <div class="metabox-holder">
+                    <div class="postbox" id="feedback">
+                        <h3><span>Please rate the plugin!</span></h3>
+                        <div class="inside">                            
+                            <p>If you have found this useful please leave us a <a href="http://wordpress.org/extend/plugins/google-picasa-albums-viewer/">good rating</a></p>
+                            <p>If you have found a bug please email me <a href="mailto:info@cheshirewebsolutions.com?subject=Feedback%20Google%20Picasa%20Viewer">info@cheshirewebsolutions.com</a></p>                               
                         </div>
                     </div>
                 </div>
             </div>  
         </div>
     </div>  
-        
+
     <?php
-        
-    }
+
+}
 
 
     // Display a Picasa Pro Promo Box
-    function cws_gpp_meta_box_pro() {
+function cws_gpp_meta_box_pro() {
     ?>
-    <div class="widget-liquid-right">
+    <!--<div class="widget-liquid-right">
         <div id="widgets-right">
-            <!-- <div style="width:20%;" class="postbox-container side"> -->
             <div class="postbox-container side">
                 <div class="metabox-holder">
-                    <div class="postbox" id="donate">
-                        <?php echo $this->cws_gpp_upgrade_content(); ?>
-                    </div>
+                    <div class="postbox" id="donate"> -->
+                        <?php // echo $this->cws_gpp_upgrade_content(); ?>
+                    <!--</div>
                 </div>
             </div>
         </div>
-    </div><?php   
+        </div>--><?php   
     }
 
 
@@ -818,29 +842,29 @@ class CWS_Google_Picasa_Pro_Admin {
     function cws_gpp_upgrade_content() {
 
         $strOutput = "<h3><span>Get Google Picasa Pro!</span></h3>
-                    <div class=\"inside\">
-                        <p>Grab yourself the <a href=\"http://www.cheshirewebsolutions.com/?utm_source=cws_gpp_config&utm_medium=text-link&utm_content=meta_box_pro&utm_campaign=cws_gpp_plugin\">Pro</a> version of the plugin.                        
-                        <a href=\"http://www.cheshirewebsolutions.com/?utm_source=wp_gp_viewer&utm_medium=wp_plugin&utm_content=meta_box_download_it_here&utm_campaign=plugin_upgrade\">Download it here</a> <span><strong>GET 20% OFF!</strong> – use discount code <strong>WPMEGA20</strong> on checkout</span></p>
-                        <h3>
-                            Reasons to UPGRADE!
-                        </h3>
-                        <ol>
-                            <li>Priority Email Support!</li>
-                            <li>It’s much faster! We cache the Google Feed</li>
-                            <li>Justified Image Grid Layout</li>
-                            <li>Touch enabled lightbox, flick to the next or previous image, spread to zoom in etc</li>
-                            <li>Native HTML5 full screen lightbox</li>
-                            <li>Display image description as caption in lightbox</li>
-                            <li>Social sharing</li>
-                            <li>Customisable Lightbox Dimensions! have it as big as you like</li>
-                            <li>Fantastic hover style effects</li>
-                            <li>Display images in a specific album! just supply the album id</li>
-                            <li>Helpful Shortcode Snippets Admin page!</li>
-                            <li>Powered by link has been removed!</li>
-                            <li>Included Download Original Image link</li>
-                        </ol>
+        <div class=\"inside\">
+        <p>Grab yourself the <a href=\"http://www.cheshirewebsolutions.com/?utm_source=cws_gpp_config&utm_medium=text-link&utm_content=meta_box_pro&utm_campaign=cws_gpp_plugin\">Pro</a> version of the plugin.                        
+        <a href=\"http://www.cheshirewebsolutions.com/?utm_source=wp_gp_viewer&utm_medium=wp_plugin&utm_content=meta_box_download_it_here&utm_campaign=plugin_upgrade\">Download it here</a> <span><strong>GET 20% OFF!</strong> – use discount code <strong>WPMEGA20</strong> on checkout</span></p>
+        <h3>
+        Reasons to UPGRADE!
+        </h3>
+        <ol>
+        <li>Priority Email Support!</li>
+        <li>It’s much faster! We cache the Google Feed</li>
+        <li>Justified Image Grid Layout</li>
+        <li>Touch enabled lightbox, flick to the next or previous image, spread to zoom in etc</li>
+        <li>Native HTML5 full screen lightbox</li>
+        <li>Display image description as caption in lightbox</li>
+        <li>Social sharing</li>
+        <li>Customisable Lightbox Dimensions! have it as big as you like</li>
+        <li>Fantastic hover style effects</li>
+        <li>Display images in a specific album! just supply the album id</li>
+        <li>Helpful Shortcode Snippets Admin page!</li>
+        <li>Powered by link has been removed!</li>
+        <li>Included Download Original Image link</li>
+        </ol>
 
-                    </div>";
+        </div>";
 
         return $strOutput;
     }
@@ -860,9 +884,11 @@ class CWS_Google_Picasa_Pro_Admin {
         // $option_group - A settings group name. Must exist prior to the register_setting call. This must match the group name in settings_fields().
         // $option_name - The name of an option to sanitize and save.
         // $sanitize_callback - A callback function that sanitizes the option's value.
+
+        register_setting( 'cws_gpp_gapi', 'cws_gpp_gapi', array( $this, 'validate_gapi_options' ) );
+
         register_setting( 'cws_gpp_code', 'cws_gpp_code', array( $this, 'validate_options' ) );
         register_setting( 'cws_gpp_options', 'cws_gpp_options', array( $this, 'validate_main_options' ) );
-
         register_setting( 'cws_gpp_reset', 'cws_gpp_reset', array( $this, 'validate_reset_options' ) );
 
         // add_settings_section( $id, $title, $callback, $page )
@@ -870,6 +896,9 @@ class CWS_Google_Picasa_Pro_Admin {
         // $title - Title of the section
         // $callback - Function that fills the section with the desired content. The function should echo its output.
         // $page - The menu page on which to display this section. Should match $menu_slug in add_options_page();
+
+        add_settings_section( 'cws_gpp_add_gapi', 'Client ID and Client Secret', array( $this, 'section_text_gapi' ), 'cws_gpp_gapi' );
+
         add_settings_section( 'cws_gpp_add_code', 'Authenticate with Google', array( $this, 'section_text' ), 'cws_gpp' );
         add_settings_section( 'cws_gpp_add_options', 'Default Settings', array( $this, 'section_main_text' ), 'cws_gpp_defaults' );
 
@@ -885,6 +914,12 @@ class CWS_Google_Picasa_Pro_Admin {
         // $args - (optional) Additional arguments that are passed to the $callback function
         add_settings_field( 'cws_myplugin_oauth2_code', 'Enter Google Access Code here', array( $this, 'setting_input' ), 'cws_gpp', 'cws_gpp_add_code' );
         
+        // v3.2 add new fields to store client id and client secret to get around Google Quota limit
+
+        // Add default option field - Client Id
+        add_settings_field( 'cws_gpp_client_id', 'Client Id', array( $this, 'options_client_id' ), 'cws_gpp_gapi', 'cws_gpp_add_gapi' );
+        add_settings_field( 'cws_gpp_client_secret', 'Client Secret', array( $this, 'options_client_secret' ), 'cws_gpp_gapi', 'cws_gpp_add_gapi' );
+        //        
 
         // Add default option field - Thumbnail Size 
         add_settings_field( 'cws_gpp_thumbnail_size', 'Thumbnail Size (px)', array( $this, 'options_thumbnail_size' ), 'cws_gpp_defaults', 'cws_gpp_add_options' );
@@ -904,7 +939,7 @@ class CWS_Google_Picasa_Pro_Admin {
         add_settings_field( 'cws_gpp_num_album_results', 'Number of albums per page', array( $this, 'options_num_album_results' ), 'cws_gpp_defaults', 'cws_gpp_add_options' );
         
         // Add default option checkbox - Show private albums checkbox
-        add_settings_field( 'cws_gpp_show_private_albums', 'Show which albums', array( $this, 'options_show_private_albums' ), 'cws_gpp_defaults', 'cws_gpp_add_options' );        
+        //add_settings_field( 'cws_gpp_show_private_albums', 'Show which albums', array( $this, 'options_show_private_albums' ), 'cws_gpp_defaults', 'cws_gpp_add_options' );        
 
         // Add default option checkbox - Show album title
         add_settings_field( 'cws_gpp_show_album_title', 'Show Album Title', array( $this, 'options_show_album_title' ), 'cws_gpp_defaults', 'cws_gpp_add_options' );   
@@ -921,7 +956,7 @@ class CWS_Google_Picasa_Pro_Admin {
         if( $this->isPro ) {
             // PRO ONLY
             // Add default option checkbox - Enable Cache
-            add_settings_field( 'cws_gpp_enable_cache', 'Enable Cache', array( $this, 'options_enable_cache' ), 'cws_gpp_defaults', 'cws_gpp_add_options' );
+            // add_settings_field( 'cws_gpp_enable_cache', 'Enable Cache', array( $this, 'options_enable_cache' ), 'cws_gpp_defaults', 'cws_gpp_add_options' );
             // Add default option checkbox - Expose Original file
             add_settings_field( 'cws_gpp_enable_download', 'Download Original Image Link', array( $this, 'options_enable_download' ), 'cws_gpp_defaults', 'cws_gpp_add_options' );
         }
@@ -930,6 +965,18 @@ class CWS_Google_Picasa_Pro_Admin {
         add_settings_field( 'cws_gpp_reset', 'Click here to confirm you want to deauthorise plugin from your google account', array( $this, 'options_reset' ), 'cws_gpp_reset', 'cws_gpp_add_reset' );   
     }
     
+
+  /**
+   * Draw the Section Header for the admin area.
+   *
+   * @since    3.2
+   */
+    function section_text_gapi() {
+        echo "You must store these credentials before authorizing the plugin.<br>";
+        echo "Click here for <a href='https://www.cheshirewebsolutions.com/create-google-photos-api-credentials/' target='_blank'>instructions on how to create credentials</a><br>";
+    }
+
+
     
 	/**
 	 * Draw the Section Header for the admin area.
@@ -938,12 +985,8 @@ class CWS_Google_Picasa_Pro_Admin {
 	 */
     function section_text() {
         echo 'You need to click here to authorize access and paste the Access Code provided by Google in the field below.';
-		
-		// get the google authorisation url
-        //$authUrl = $this->client->createAuthUrl();
-        $authUrl = $this->authentication_process();
 
-//var_dump($authUrl);
+        $authUrl = $this->authentication_process();
 
         // display the google authorisation url
         echo $this->createAuthLink( $authUrl );
@@ -953,62 +996,98 @@ class CWS_Google_Picasa_Pro_Admin {
         
         $token = get_option( 'cws_gpp_access_token' );
         $token = $token['access_token'];
-  
-//var_dump($code['oauth2_code'] );
 
         if ( isset( $code['oauth2_code'] ) ) {
-            
-$client = cws_gpp_google_class();
-$client->setApplicationName("Client_Library_Examples");
-$client->setDeveloperKey("AIzaSyCP9XMYoQdxXfI-gK1bvZDW2RxyfvYENuM");  
-$client->setClientId('806353319710-g782kn9ed0gm77ucl0meen5ohs84qgqm.apps.googleusercontent.com');
-$client->setClientSecret('P6BMMEWLKUSoxB48X2Tzu8ds');
-$client->setRedirectUri('urn:ietf:wg:oauth:2.0:oob');
-$client->setScopes('https://picasaweb.google.com/data/');
-$client->setAccessType('offline');
+
+            $client = cws_gpp_google_class();
+            $client->setApplicationName("My Funky API Project");
+            $client->setDeveloperKey("AIzaSyCP9XMYoQdxXfI-gK1bvZDW2RxyfvYENuM");  
+
+            // since 3.2
+            $client_options = get_option( 'cws_gpp_gapi' );
+            $client_id = $client_options['client_id'];
+            $client_secret = $client_options['client_secret'];         
+            $client->setClientId( $client_id );
+            $client->setClientSecret( $client_secret );
+            //
+            $client->setRedirectUri('urn:ietf:wg:oauth:2.0:oob');
+            //$client->setScopes('https://www.googleapis.com/auth/photoslibrary.readonly https://www.googleapis.com/auth/photoslibrary.sharing https://picasaweb.google.com/data/');
+            $client->setScopes('https://www.googleapis.com/auth/photoslibrary.readonly https://www.googleapis.com/auth/photoslibrary.sharing');
+            $client->setAccessType('offline');
 
 
-            // $this->client->authenticate( $code['oauth2_code'] );  
-            $client->authenticate( $code['oauth2_code'] );
+            // check for successfull authentication here
+            // if not successful delete offending row in db so we stop ending up 1/2 way through authentication process
+
+           // $client->authenticate( $code['oauth2_code'] );
+            try{
+                 $client->authenticate( $code['oauth2_code'] ) ;
+            }
+
+            catch (Exception $e) {
+                error_log('FUNK NOOOOOOOOOOO' . $e);
+                /*
+                delete_option( 'cws_gpp_token_expires' );
+                delete_option( 'cws_gpp_code' );
+                delete_option( 'cws_gpp_access_token' );
+
+                $url = admin_url( "options.php?page=".$_GET["page"] );
+                
+                wp_redirect( "$url" );          
+*/
+            }
+
+//error_log($client->authenticate( $code['oauth2_code'] ));
+
             //$AccessToken = $this->client->getAccessToken();
             $AccessToken = $client->getAccessToken();
             $AccessToken = json_decode( $AccessToken, TRUE );
             
             // delete code
-           	$code = get_option( 'cws_gpp_code' );
+            $code = get_option( 'cws_gpp_code' );
             
             if ( $code ) {
                 unset($code['oauth2_code']);
                 update_option( 'cws_gpp_code', $code );
             }
-                        
+
             // store access token
             if( update_option( 'cws_gpp_access_token', $AccessToken ) )
             {
                 if( $this->debug ) error_log( 'Update option: cws_gpp_access_token' );
-               
+
                 // store token expires
                 $now = date("U");
                 $token_expires = $now + $AccessToken['expires_in'];
                 add_option( 'cws_gpp_token_expires', $token_expires );      
                 
-                $url = admin_url( "options-general.php?page=".$_GET["page"] );
-                // error_log($url);
+                // $url = admin_url( "options-general.php?page=".$_GET["page"] );
+                $url = admin_url( "options.php?page=".$_GET["page"] );
+                //error_log($url);
                 
                 wp_redirect( "$url" );
                 exit;               
             }
+
+
+
+
+
+
+
+
+
         }        
     }
     
 
     function section_main_text() {
-        
+
     }
 
     //
     function section_reset_text() {
-        
+
     }   
 
     function section() {
@@ -1025,12 +1104,19 @@ $client->setAccessType('offline');
         $client = cws_gpp_google_class();
 
         // $this->client = new Google_Client();
-        $client->setApplicationName("Client_Library_Examples");
+        $client->setApplicationName("My Funky API Project");
         $client->setDeveloperKey("AIzaSyCP9XMYoQdxXfI-gK1bvZDW2RxyfvYENuM");  
-        $client->setClientId('806353319710-g782kn9ed0gm77ucl0meen5ohs84qgqm.apps.googleusercontent.com');
-        $client->setClientSecret('P6BMMEWLKUSoxB48X2Tzu8ds');
+
+        // since 3.2
+        $client_options = get_option( 'cws_gpp_gapi' );
+        $client_id = $client_options['client_id'];
+        $client_secret = $client_options['client_secret'];               
+        $client->setClientId( $client_id );
+        $client->setClientSecret( $client_secret );
+        //
         $client->setRedirectUri('urn:ietf:wg:oauth:2.0:oob');
-        $client->setScopes('https://picasaweb.google.com/data/');
+        // $client->setScopes('https://www.googleapis.com/auth/photoslibrary.readonly https://www.googleapis.com/auth/photoslibrary.sharing https://picasaweb.google.com/data/');
+        $client->setScopes('https://www.googleapis.com/auth/photoslibrary.readonly https://www.googleapis.com/auth/photoslibrary.sharing');
         $client->setAccessType('offline');
 
         if ( ! isset($_GET['code']) ) 
@@ -1040,7 +1126,7 @@ $client->setAccessType('offline');
 
         return $loginUrl;
     }
-   
+
     
 	/**
 	 * Get the Access Token stored in db.
@@ -1062,7 +1148,6 @@ $client->setAccessType('offline');
     public function createAuthLink( $authUrl ) {
 
         if ( isset( $authUrl ) ) {
-
             $output = "<br><br><a class='login' href='$authUrl' target='_blank'>Connect My Google Account</a>"; 
         } else {
             $output = "There was a problem generating the Google Autherisation link";
@@ -1090,7 +1175,7 @@ $client->setAccessType('offline');
 
 
     public function isAuthenticated(){
-        
+
         // get options from db
         $code = get_option( 'cws_gpp_code' );
         $token = get_option( 'cws_gpp_access_token' );
@@ -1111,8 +1196,30 @@ $client->setAccessType('offline');
                 $this->refreshToken(); 
                 return;
             }   
-			
-			return true;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    // sinces v3.2
+    // Do we have client id and client secret
+    // return true
+    public function haveGapiSettings(){
+
+        // get options from db
+        $gapi = get_option( 'cws_gpp_gapi' );
+        
+        if ( !empty( $gapi['client_id'] ) && !empty( $gapi['client_secret'] ) ) {
+            //echo "we have gapi settings<br>";
+            // show authorization code
+
+            return true;
+        } else {
+            //echo "MISSING gapi settings!<br>";
+            // show link to GAPI page and website instructions how to get client secret / client id
+            return false;
         }
 
         return false;
@@ -1120,39 +1227,51 @@ $client->setAccessType('offline');
 
     
     public function refreshToken(){
-        
+
         if($this->debug){ error_log('Inside refreshToken()'); }
 
         $GOOGLE_OAUTH2_REFERER = "";
 
         // get access token and refresh it      
         $now = date( "U" );
-        $clientId = '806353319710-g782kn9ed0gm77ucl0meen5ohs84qgqm.apps.googleusercontent.com';
-        $clientSecret = 'P6BMMEWLKUSoxB48X2Tzu8ds';
+
+        $client = cws_gpp_google_class();
+        $client->setApplicationName("My Funky API Project");
+        $client->setDeveloperKey("AIzaSyCP9XMYoQdxXfI-gK1bvZDW2RxyfvYENuM");  
+
+        // since 3.2
+        $client_options = get_option( 'cws_gpp_gapi' );
+        $client_id = $client_options['client_id'];
+        $client_secret = $client_options['client_secret'];         
+        
+        $client->setClientId( $client_id );
+        $client->setClientSecret( $client_secret );
+        //
+
         $token = get_option( 'cws_gpp_access_token' );
         $refreshToken = $token['refresh_token'];
 
-        $postBody = 'client_id='.urlencode($clientId)
-                  .'&client_secret='.urlencode($clientSecret)
-                  .'&refresh_token='.urlencode($refreshToken)
-                  .'&grant_type=refresh_token';
-          
+        $postBody = 'client_id='.urlencode($client_id)
+        .'&client_secret='.urlencode($client_secret)
+        .'&refresh_token='.urlencode($refreshToken)
+        .'&grant_type=refresh_token';
+
         $curl = curl_init();
         curl_setopt_array( $curl,
-                         array( CURLOPT_CUSTOMREQUEST => 'POST'
-                               , CURLOPT_URL => 'https://www.googleapis.com/oauth2/v3/token'
-                               , CURLOPT_HTTPHEADER => array( 'Content-Type: application/x-www-form-urlencoded'
-                                                             , 'Content-Length: '.strlen($postBody)
-                                                             )
-                               , CURLOPT_POSTFIELDS => $postBody                              
-                               , CURLOPT_REFERER => $GOOGLE_OAUTH2_REFERER
+           array( CURLOPT_CUSTOMREQUEST => 'POST'
+             , CURLOPT_URL => 'https://www.googleapis.com/oauth2/v3/token'
+             , CURLOPT_HTTPHEADER => array( 'Content-Type: application/x-www-form-urlencoded'
+               , 'Content-Length: '.strlen($postBody)
+               )
+             , CURLOPT_POSTFIELDS => $postBody                              
+             , CURLOPT_REFERER => $GOOGLE_OAUTH2_REFERER
                                , CURLOPT_RETURNTRANSFER => 1    // means output will be a return value from curl_exec() instead of simply echoed
                                , CURLOPT_TIMEOUT => 12          // max seconds to wait
                                , CURLOPT_FOLLOWLOCATION => 0    // don't follow any Location headers, use only the CURLOPT_URL, this is for security
                                , CURLOPT_FAILONERROR => 0       // do not fail verbosely fi the http_code is an error, this is for security
                                , CURLOPT_SSL_VERIFYPEER => 0    // do verify the SSL of CURLOPT_URL, this is for security
                                , CURLOPT_VERBOSE => 0           // don't output verbosely to stderr, this is for security
-                         ) );
+                               ) );
 
         $orig_response = curl_exec( $curl );
         $response = json_decode( $orig_response, true );        // convert returned objects into associative arrays
@@ -1195,14 +1314,15 @@ $client->setAccessType('offline');
         return $url;
     }
 
-    
+
 	/**
 	 * Get list of Albums for authenticated user.
 	 *
 	 * @since    2.0.0
-	 */     
+	 */    
+   /* 
     public function getAlbumList( $AccessToken, $album_thumb_size, $show_title, $cws_page, $num_image_results, $visibility) {    
-        
+
         if( $this->debug ){ error_log( 'Inside getAlbumList()' ); }
 
         // Work out pagination variables
@@ -1219,18 +1339,12 @@ $client->setAccessType('offline');
 
         // https://developers.google.com/accounts/docs/OAuth2WebServer#callinganapi
         $curl = curl_init();
-        // https://developers.google.com/picasa-web/docs/2.0/reference#Visibility
-        // http://picasaweb.google.com/data/feed/api/user/userID?kind=photo&q=penguin
 
         // limit results or not
         if( $num_image_results > 0 ) {
-            $url = "https://picasaweb.google.com/data/feed/api/user/default?kind=album&thumbsize=" . $album_thumb_size . "c&max-results=" . $num_image_results . "&start-index=" . $start_index . "&access=" . $visibility;
-            //$url = "https://picasaweb.google.com/data/feed/api/user/default?kind=album&thumbsize=" . $album_thumb_size . "c&max-results=" . $num_image_results . "&start-index=" . $start_index ;            
-            //$url = "https://picasaweb.google.com/data/feed/api/user/default?kind=album&thumbsize=" . $album_thumb_size . "c&max-results=" . $num_image_results . "&start-index=" . $start_index . "&access=all";                  
+            $url = "https://picasaweb.google.com/data/feed/api/user/default?kind=album&thumbsize=" . $album_thumb_size . "c&max-results=" . $num_image_results . "&start-index=" . $start_index . "&access=" . $visibility . "&deprecation-extension=true";
         } else {
-            $url = "https://picasaweb.google.com/data/feed/api/user/default?kind=album&thumbsize=" . $album_thumb_size . "c&access=" . $visibility;
-            // $url = "https://picasaweb.google.com/data/feed/api/user/default?kind=album&thumbsize=" . $album_thumb_size . "c";
-            //$url = "https://picasaweb.google.com/data/feed/api/user/default?kind=album&thumbsize=" . $album_thumb_size . "c&access=visible";
+            $url = "https://picasaweb.google.com/data/feed/api/user/default?kind=album&thumbsize=" . $album_thumb_size . "c&access=" . $visibility . "&deprecation-extension=true";;
         }
 
         if ( isset( $_GET['cws_debug'] ) ) {
@@ -1245,13 +1359,13 @@ $client->setAccessType('offline');
         }
 
         curl_setopt_array( $curl, 
-                         array( CURLOPT_CUSTOMREQUEST => 'GET'
-                               , CURLOPT_URL => $url
-                               , CURLOPT_HTTPHEADER => array( 'GData-Version: 2'
-                                                             , 'Authorization: Bearer '.$AccessToken['access_token'] )
-                               , CURLOPT_REFERER => 'http://wp-picasa-pro.wordpress.dev/wp-admin/options-general.php?page=cws_gpp'
+           array( CURLOPT_CUSTOMREQUEST => 'GET'
+             , CURLOPT_URL => $url
+             , CURLOPT_HTTPHEADER => array( 'GData-Version: 2'
+               , 'Authorization: Bearer '.$AccessToken['access_token'] )
+             , CURLOPT_REFERER => 'http://wp-picasa-pro.wordpress.dev/wp-admin/options-general.php?page=cws_gpp'
                                , CURLOPT_RETURNTRANSFER => 1 // means output will be a return value from curl_exec() instead of simply echoed
-                         ) );
+                               ) );
         $response = curl_exec($curl);
         $http_code = curl_getinfo($curl,CURLINFO_HTTP_CODE);
         curl_close($curl);
@@ -1261,14 +1375,14 @@ $client->setAccessType('offline');
         // TODO: Add in some error handling better reporting of http code
         return false;
     }
-
+*/
 
     /**
      * Get list of Images in a specific Album for authenticated user.
      *
      * @since    2.0.0
      */
-    // public function getAlbumImages( $AccessToken, $album_thumb_size, $show_album_ttl, $cws_page, $num_image_results, $cws_album, $imgmax='450' ) {
+    /*
     public function getAlbumImages( $AccessToken, $album_thumb_size, $show_album_ttl, $cws_page, $num_image_results, $cws_album, $imgmax='800', $theme ) {
 
         // Crop the image or not, projig wants not cropped...
@@ -1291,11 +1405,9 @@ $client->setAccessType('offline');
         $curl = curl_init();
 
         if( $num_image_results > 0 ) {
-            // $url = "https://picasaweb.google.com/data/feed/api/user/default/albumid/" . $cws_album . "?thumbsize=" . $album_thumb_size . "c&max-results=" . $num_image_results . "&start-index=" . $start_index . "&imgmax=" . $imgmax;                    
-            $url = "https://picasaweb.google.com/data/feed/api/user/default/albumid/" . $cws_album . "?thumbsize=" . $album_thumb_size . $crop . "&max-results=" . $num_image_results . "&start-index=" . $start_index . "&imgmax=" . $imgmax;            
+            $url = "https://picasaweb.google.com/data/feed/api/user/default/albumid/" . $cws_album . "?thumbsize=" . $album_thumb_size . $crop . "&max-results=" . $num_image_results . "&start-index=" . $start_index . "&imgmax=" . $imgmax . "&deprecation-extension=true";
         } else {
-            // $url = "https://picasaweb.google.com/data/feed/api/user/default/albumid/" . $cws_album . "?thumbsize=" . $album_thumb_size . "c&imgmax=" . $imgmax;
-            $url = "https://picasaweb.google.com/data/feed/api/user/default/albumid/" . $cws_album . "?thumbsize=" . $album_thumb_size . $crop . "&imgmax=" . $imgmax;            
+            $url = "https://picasaweb.google.com/data/feed/api/user/default/albumid/" . $cws_album . "?thumbsize=" . $album_thumb_size . $crop . "&imgmax=" . $imgmax . "&deprecation-extension=true";            
         }
 
         // TODO: create a helper function
@@ -1306,12 +1418,12 @@ $client->setAccessType('offline');
 //, CURLOPT_REFERER => 'http://wp-picasa-pro.wordpress.dev/wp-admin/options-general.php?page=cws_gpp'
         
         curl_setopt_array( $curl, 
-                         array( CURLOPT_CUSTOMREQUEST => 'GET'
-                               , CURLOPT_URL => $url
-                               , CURLOPT_HTTPHEADER => array( 'GData-Version: 2'
-                                                             , 'Authorization: Bearer '.$AccessToken['access_token'] )
+           array( CURLOPT_CUSTOMREQUEST => 'GET'
+             , CURLOPT_URL => $url
+             , CURLOPT_HTTPHEADER => array( 'GData-Version: 2'
+               , 'Authorization: Bearer '.$AccessToken['access_token'] )
                                , CURLOPT_RETURNTRANSFER => 1 // means output will be a return value from curl_exec() instead of simply echoed
-                         ) );
+                               ) );
         $response = curl_exec( $curl );
         $http_code = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
         curl_close( $curl );
@@ -1330,7 +1442,7 @@ $client->setAccessType('offline');
         // Return $response to shortcode if http_code is 200
         if( $http_code == 200 ) { return $response; }
     }
-
+*/
 
     /*
      *
@@ -1342,12 +1454,13 @@ $client->setAccessType('offline');
      *
      * return string
      */     
+    /*
     public function get_pagination( $total_num_albums, $num_image_results, $cws_page, $album_id=NULL ) {
-    
+
 // global $post;
 
 // echo $post->post_name;
-    
+
         if( $this->debug ) error_log( 'Inside: CWS_Google_Picasa_Pro_Admin::get_pagination()' ); 
 
         // Calcualte how many pages we need, total number of albums / number of images to display per page as set in settings of shortcode
@@ -1387,7 +1500,7 @@ $client->setAccessType('offline');
         }
         
         for( $i=1; $i <= $num_pages; $i++ ) {
-        
+
             $class = "";
 
             // Add class to current page
@@ -1425,10 +1538,10 @@ $client->setAccessType('offline');
             $html[] = "</ul></div>\n";
         }
         return implode( "\n", $html );
-        }
-        return;
     }
-
+    return;
+}
+*/
 
 	/**
 	 * Display and fill the form field.
@@ -1436,7 +1549,7 @@ $client->setAccessType('offline');
 	 * @since    2.0.0
 	 */    
     function setting_input() {
-		
+
 		// get option 'oauth2_code' value from the database
         $code = get_option( 'cws_gpp_code' );
         $oauth2_code = $code['oauth2_code'];
@@ -1444,6 +1557,39 @@ $client->setAccessType('offline');
         echo "<input id='oauth2_code' name='cws_gpp_code[oauth2_code]' type='text' value='$oauth2_code' >";
     }
     
+
+  /**
+   * Display and fill the form fields for storing defaults.
+     *
+     * Client Id
+   *
+   * @since    3.1.6
+   */    
+    function options_client_id() {
+
+        // get option 'client_id' value from the database
+        $options = get_option( 'cws_gpp_gapi' );
+        $client_id = $options['client_id'];
+
+        echo "<input id='client_id' name='cws_gpp_gapi[client_id]' type='text' value='$client_id' size='100%'>";
+    } 
+
+  /**
+   * Display and fill the form fields for storing defaults.
+     *
+     * Client Secret
+   *
+   * @since    3.1.6
+   */    
+    function options_client_secret() {
+
+        // get option 'client_secret' value from the database
+        $options = get_option( 'cws_gpp_gapi' );
+        $client_secret = $options['client_secret'];
+
+        echo "<input id='client_secret' name='cws_gpp_gapi[client_secret]' type='text' value='$client_secret' size='100%'>";
+    } 
+
     
 	/**
 	 * Display and fill the form fields for storing defaults.
@@ -1461,7 +1607,7 @@ $client->setAccessType('offline');
         echo "<input id='thumb_size' name='cws_gpp_options[thumb_size]' type='text' value='$thumb_size' >";
     }    
     
- 
+
     /**
      * Display and fill the form fields for storing defaults.
      *
@@ -1503,7 +1649,9 @@ $client->setAccessType('offline');
      * Pro Only
      *
      * @since    2.3.0
-     */    
+     */
+    // Consider including transients here...
+     /*  
     function options_enable_cache() {
 
         // set some defaults...
@@ -1516,7 +1664,7 @@ $client->setAccessType('offline');
         if($options['enable_cache']) { $checked = ' checked="checked" '; }
         echo "<input ".$checked." id='enable_cache' name='cws_gpp_options[enable_cache]' type='checkbox' /><small>Only check this once you are happy with other settings.</small>";
     }  
-
+    */
 
     /**
      * Enable Download
@@ -1536,7 +1684,7 @@ $client->setAccessType('offline');
 
         $options['enable_download'] = isset($options['enable_download']) ? $options['enable_download'] : "";
 
-        $enable_cache = $options['enable_download'];
+        //$enable_cache = $options['enable_download'];
 
         if($options['enable_download']) { $checked = ' checked="checked" '; }
         echo "<input ".$checked." id='enable_download' name='cws_gpp_options[enable_download]' type='checkbox' /><small>Allow user to download original image file.</small>";
@@ -1705,13 +1853,31 @@ $client->setAccessType('offline');
     } 
 
 
+  /**
+   * Validate user input (we want text only).
+   *
+   * @since    3.1.6
+   */        
+    /*function validate_options_gapi( $input ) {
+
+        // $valid['oauth2_code'] = esc_attr ( $input['oauth2_code'] );
+
+        $valid = $input; //TODO
+
+        return $valid;
+    }*/
+
+
+
+
+
 	/**
 	 * Validate user input (we want text only).
 	 *
 	 * @since    2.0.0
 	 */        
     function validate_options( $input ) {
-        
+
         $valid['oauth2_code'] = esc_attr ( $input['oauth2_code'] );
 
         return $valid;
@@ -1737,9 +1903,23 @@ $client->setAccessType('offline');
         $valid['show_album_details'] = ( isset( $input['show_album_details'] ) && true == $input['show_album_details'] ? true : false );
 
         $valid['show_image_title'] = ( isset( $input['show_image_title'] ) && true == $input['show_image_title'] ? true : false );
-        $valid['enable_cache'] = ( isset( $input['enable_cache'] ) && true == $input['enable_cache'] ? true : false );
+        //$valid['enable_cache'] = ( isset( $input['enable_cache'] ) && true == $input['enable_cache'] ? true : false );
         $valid['show_image_details'] = ( isset( $input['show_image_details'] ) && true == $input['show_image_details'] ? true : false );
         $valid['enable_download'] = ( isset( $input['enable_download'] ) && true == $input['enable_download'] ? true : false );
+
+        return $valid;
+    } 
+
+
+    /**
+     * Validate user input.
+     *
+     * @since    3.2
+     */         
+    function validate_gapi_options( $input ) {    
+
+        $valid['client_id']            = esc_attr( trim( $input['client_id'] ) );
+        $valid['client_secret']        = esc_attr( trim( $input['client_secret'] ) );
 
         return $valid;
     } 
@@ -1765,14 +1945,14 @@ $client->setAccessType('offline');
         // var_dump($userObj->ID);
 
             // check if already Pro
-            if( !$this->isPro ) {
+        if( !$this->isPro ) {
 
                 // Check if user has dismissed notice previously
                 // if ( ! get_user_meta( $current_user->getID(), 'cws_gpp_ignore_upgrade' ) ) 
-                if ( ! get_user_meta( $userObj->ID, 'cws_gpp_ignore_upgrade' ) ) {
-                    global $pagenow;
+            if ( ! get_user_meta( $userObj->ID, 'cws_gpp_ignore_upgrade' ) ) {
+                global $pagenow;
                     // Only show upgrade notice if on this page
-                    if ( $pagenow == 'options-general.php' || $pagenow == 'admin.php' ) {
+                if ( $pagenow == 'options-general.php' || $pagenow == 'admin.php' ) {
                     ?>
                     <div id="message" class="updated cws-gpp-message">
                         <div class="squeezer">
@@ -1786,172 +1966,64 @@ $client->setAccessType('offline');
                         </div>
                     </div>
                     <?php
-                    }                
+                }                
                 } // end check if already dismissed
 
             } // end isPro check
 
             // Set installed option
             //update_option( 'cws_gpp_installed', 0);
-    }
+        }
 
-  
+
     // If installed display upgrade notice
-    function cws_gpp_admin_notices_styles() {
-    
+        function cws_gpp_admin_notices_styles() {
+
         // Installed notices
-        if ( get_option( 'cws_gpp_installed' ) == 1 ) {
+            if ( get_option( 'cws_gpp_installed' ) == 1 ) {
             // error_log("****** ADDING ACTION ADMIN NOTICES ********");
             //add_action( 'admin_notices', 'cws_gpp_admin_installed_notice' );     
-            add_action( 'admin_notices', $this->cws_gpp_admin_installed_notice() );  
+                add_action( 'admin_notices', $this->cws_gpp_admin_installed_notice() );  
+            }
         }
-    }
         
     // Allow user to dismiss upgrade notice :)
-    function cws_gpp_ignore_upgrade( $userObj2 ) {   
+        function cws_gpp_ignore_upgrade( $userObj2 ) {   
 
-        /* If user clicks to ignore the notice, add that to their user meta */
-        if ( isset( $_GET['cws_gpp_ignore_upgrade'] ) && '0' == $_GET['cws_gpp_ignore_upgrade'] ) {
+            /* If user clicks to ignore the notice, add that to their user meta */
+            if ( isset( $_GET['cws_gpp_ignore_upgrade'] ) && '0' == $_GET['cws_gpp_ignore_upgrade'] ) {
             // add_user_meta($current_user->ID, 'cws_gpp_ignore_upgrade', 'true', true);
-            add_user_meta($userObj2->ID, 'cws_gpp_ignore_upgrade', 'true', true);
+                add_user_meta($userObj2->ID, 'cws_gpp_ignore_upgrade', 'true', true);
 
             // Redirect to plugin settings page
-            wp_redirect( admin_url( 'admin.php?page=cws_gpp' ) );
-        }
-    }   
+                wp_redirect( admin_url( 'admin.php?page=cws_gpp' ) );
+            }
+        }   
 
 //
 
-}
+    }
 
 
-class WP_PM_User extends WP_User {
+    class WP_PM_User extends WP_User {
 
-    function getID() {
-        return $this->ID;
+        function getID() {
+            return $this->ID;
+        }
+
+    }
+
+
+    class WP_PM {
+
+      protected $user;
+
+      function __construct ( WP_PM_User $user = NULL) {
+        if ( ! is_null( $user ) && $user->exists() ) $this->user = $user;
+    }
+
+    function getUser() {
+        return $this->user;
     }
 
 }
-
-
-class WP_PM {
-
-  protected $user;
-
-  function __construct ( WP_PM_User $user = NULL) {
-    if ( ! is_null( $user ) && $user->exists() ) $this->user = $user;
-  }
-
-  function getUser() {
-    return $this->user;
-  }
-
-}
-
-
-/*
-    For explanation and usage, see:
-    
-    http://www.jongales.com/blog/2009/02/18/simple-file-based-php-cache-class/
-*/  
-class JG_Cache {
-
-    function __construct($dir)
-    {
-        $this->dir = $dir;
-        // error_log("JG CACHE: dir: $dir");
-    }
-
-    private function _name($key)
-    {
-        return sprintf("%s/%s", $this->dir, sha1($key));
-    }
-
-    public function get($key, $expiration = 3600)
-    {
-
-        if ( !is_dir($this->dir) OR !is_writable($this->dir))
-        {
-            return FALSE;
-        }
-
-        $cache_path = $this->_name($key);
-
-        if (!@file_exists($cache_path))
-        {
-            return FALSE;
-        }
-
-        if (filemtime($cache_path) < (time() - $expiration))
-        {
-            $this->clear($key);
-            return FALSE;
-        }
-
-        if (!$fp = @fopen($cache_path, 'rb'))
-        {
-            return FALSE;
-        }
-
-        flock($fp, LOCK_SH);
-
-        $cache = '';
-
-        if (filesize($cache_path) > 0)
-        {
-            $cache = unserialize(fread($fp, filesize($cache_path)));
-        }
-        else
-        {
-            $cache = NULL;
-        }
-
-        flock($fp, LOCK_UN);
-        fclose($fp);
-
-        return $cache;
-    }
-
-    public function set($key, $data)
-    {
-
-        if ( !is_dir($this->dir) OR !is_writable($this->dir))
-        {
-            return FALSE;
-        }
-
-        $cache_path = $this->_name($key);
-
-        if ( ! $fp = fopen($cache_path, 'wb'))
-        {
-            return FALSE;
-        }
-
-        if (flock($fp, LOCK_EX))
-        {
-            fwrite($fp, serialize($data));
-            flock($fp, LOCK_UN);
-        }
-        else
-        {
-            return FALSE;
-        }
-        fclose($fp);
-        @chmod($cache_path, 0777);
-        return TRUE;
-    }
-
-    public function clear($key)
-    {
-        $cache_path = $this->_name($key);
-
-        if (file_exists($cache_path))
-        {
-            unlink($cache_path);
-            return TRUE;
-        }
-
-        return FALSE;
-    }
-}
-

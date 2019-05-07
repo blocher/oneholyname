@@ -9,18 +9,30 @@
         wp_enqueue_style( 'cws_gpp_cws_gpp_slick_lb_css' );
     } 
 
+    // moved this here to fix WP 5 'update failed' bug
+    if( $plugin->get_isPro() == 1 ){
+        $pathPhotoswipe = plugin_dir_path( __FILE__ ) . '../partials_pro/photoswipe.html';
+        $strPhotoswipe = file_get_contents($pathPhotoswipe);
+        //var_dump($pathPhotoswipe);
+        $strOutput .= $strPhotoswipe;
+    }
+
+
     // Some naughty inline styles
     //$strOutput .=  "<style>.grid-item { width: " . $thumb_size . "px; height: " . $thumb_size . "px;  padding:1px;}</style>\n";
 
-    $strOutput .=  "<div id=\"mygallery\" class='carousel grid'>\n";
+    // $strOutput .=  "<div id=\"mygallery\" class='carousel grid'>\n";
+    $strOutput .=  "<div class='mygallery carousel grid'>\n";
 
-    $cws_album_title = $_GET[ 'cws_album_title' ]; // $cws_album_title = get_query_var('cws_album_title');
+    if(isset($_GET[ 'cws_album_title' ])){
+        $cws_album_title = $_GET[ 'cws_album_title' ]; // $cws_album_title = get_query_var('cws_album_title');
+        $strOutput .= "<div id='album_title'><h2>$cws_album_title</h2></div>\n";                        
+    }
 
-    $strOutput .= "<div id='album_title'><h2>$cws_album_title</h2></div>\n";                        
     $strOutput .= "<div class=\"multiple-items-sc\">\n";
 
     if( $xml === false ) {
-        echo 'Sorry there has been a problem with your feed.';
+        //echo 'Sorry there has been a problem with your feed.';
     } else {
         // Define NamesSpaces
         $xml->registerXPathNamespace('media', 'http://search.yahoo.com/mrss/');
@@ -92,11 +104,11 @@
             $strOutput .= "<img src='" . $a['url'] . "' alt='' />\n";
 
 $desc = '';
-
+/*
 if( $show_details || $show_title ){
 
     if ( $show_title ) {
-        $desc = $title;
+        $desc .= "Title: ".$title;
     }
 
     if ( $show_title && $show_details ) {
@@ -104,10 +116,19 @@ if( $show_details || $show_title ){
     }
 
     if ( $show_details ) {
-        $desc .= "$description[0]";
+        // $desc .= "$description[0]";
+        $desc = $description[0];
     }
 
 }
+*/
+            if( $show_details ){
+                $desc = '';
+
+                if ( $show_details ) {
+                    $desc .= "$description[0]";
+                }
+            }
 
             // if fx value has been set in shortcode...
             if( $fx ) {
@@ -138,6 +159,7 @@ if( $show_details || $show_title ){
             // if NO fx value has been set in shortcode...
             if( $fx === NULL ) {                        
                 if ( $show_title ) { $strOutput .=  "<div id='album_title'><span>$title</span></div>\n"; }
+                if ( $show_details ) { $strOutput .=  "<div id='album_details'><span>$desc</span></div>\n"; }
             }
 
                 $strOutput .= "</div>\n"; // End .item

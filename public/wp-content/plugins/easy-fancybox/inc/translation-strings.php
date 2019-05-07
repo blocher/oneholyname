@@ -1,9 +1,7 @@
 <?php return;
 /**
- * This file exists solely to store the plugin
- * translation strings.
- *
- * It is never included anywhere, used only for parsing.
+ * This file exists solely to store the plugin translation strings.
+ * It is never included anywhere, used only for PO parsing.
  */
 
 //
@@ -14,13 +12,14 @@ __('Get support here.','easy-fancybox');
 __('Set a border radius to create rounded corners. Higher is rounder.','easy-fancybox');
 
 // autopopup
+__('Link with ID matching URL hash','easy-fancybox');
 __('First Image link','easy-fancybox');
 __('First PDF link','easy-fancybox');
 __('First SWF link','easy-fancybox');
 __('First SVG link','easy-fancybox');
-__('First YouTube link ','easy-fancybox');
-__('First Vimeo link ','easy-fancybox');
-__('First Dailymotion link ','easy-fancybox');
+__('First YouTube link','easy-fancybox');
+__('First Vimeo link','easy-fancybox');
+__('First Dailymotion link','easy-fancybox');
 __('First iFrame link','easy-fancybox');
 __('First of any link','easy-fancybox');
 
@@ -62,10 +61,18 @@ __('easeInOutBounce','easy-fancybox');
 // advanced
 __('Galleries per Section (below)','easy-fancybox');
 __('This applies when <em>Apply to</em> is set to <em>Limited to Sections</em> and/or <em>Autogallery</em> is set to <em>Galleries per Section</em>. Adapt it to conform with your theme.','easy-fancybox');
-__('Examples: If your theme wraps post content in a div with class post, change this value to "div.post". If you only want to group images in a WordPress gallery together, use "div.gallery". If you want to include images in a sidebar with ID primary, add ", #primary".','easy-fancybox');
+__('Examples: If your theme wraps post content in a div with class post, change this value to "div.post". If you want to group images in a WordPress gallery together, use ".gallery,.wp-block-gallery,.tiled-gallery". If you want to include images in a sidebar with ID primary, add ", #primary".','easy-fancybox');
 __('Hide/show title on mouse hover action works best with Overlay title position.','easy-fancybox');
 __('Auto-rotation uses a fixed 3, 6, 9 or 12 second pause per image.','easy-fancybox');
 __('(3 seconds)','easy-fancybox');
 __('(6 seconds)','easy-fancybox');
 __('(9 seconds)','easy-fancybox');
 __('(12 seconds)','easy-fancybox');
+
+/* Translators: %s is replaced by Easy FancyBox plugin title plus installation link */
+__('To use the Easy Fancybox Pro advanced options, please install %s.','easy-fancybox');
+__('Or disable the Easy Fancybox Pro plugin.','easy-fancybox');
+
+__( 'Notice: The current Easy FancyBox plugin version is not fully compatible with your version of the Pro extension. Some advanced options may not be functional.', 'easy-fancybox' );
+/* Translators: %s is replaced by a version number */
+__( 'Please upgrade %s to verion %s or later.', 'easy-fancybox' );

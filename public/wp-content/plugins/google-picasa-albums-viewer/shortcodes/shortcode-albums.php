@@ -18,6 +18,7 @@
 */
 function cws_gpp_shortcode_albums( $atts ) {
 
+    $cws_debug = '';
     $cws_page = '';
 
     if ( isset( $_GET['cws_debug'] ) ) {

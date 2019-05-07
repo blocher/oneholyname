@@ -1,3 +1,8 @@
+
+#ngg_page_content #nextgen_pro_upgrade_page .ngg_page_content_main {
+	padding: 20px 40px 200px;
+}
+
 .gallery_page_ngg_pro_upgrade #update-nag, 
 .gallery_page_ngg_pro_upgrade .update-nag {
 	display:none;
@@ -5,6 +10,15 @@
 
 #nextgen_pro_upgrade_page {
 	max-width: none;
+}
+
+#nextgen_pro_upgrade_page .about-wrap .about-text {
+    min-height: auto;
+}
+
+#nextgen_pro_upgrade_page img {
+    width: 600px;
+    max-width: 100%;
 }
 
 #nextgen_pro_upgrade_page h1 {
@@ -15,12 +29,13 @@
     min-height: auto;
     margin: 30px 0;
     max-width: none;
-    color: #999;
+    color: black;
     width: 35%;
     float: left;
     max-width: 400px;
     box-sizing: border-box;
     font-size: 22px;
+    font-weight: 300;
 }
 
 #nextgen_pro_upgrade_page p span {
@@ -31,6 +46,7 @@
     width: 100%;
     display: block;
     margin-top: 60px;
+    display:none;
 }
 
 #nextgen_pro_upgrade_page.nextgen_plus p span {
@@ -45,28 +61,23 @@
     margin-left: 30px;
     padding: 0;
     border: 1px solid #eee;
+    box-shadow: 0 0 4px 2px rgba(0,0,0,.05);
 }
 
 #nextgen_pro_upgrade_page iframe {
-	height: 450px;
-	width: 800px;
+	height: 370px;
+    width: 650px;
 	max-width: 100%;
 }
 
 #nextgen_pro_upgrade_page a.button-primary {
+    font-size: 15px;
+    line-height: 50px;
+    height: 50px !important;
+    padding: 0 30px !important;
     font-size: 14px;
-    background-color: #76a934;
-    border: none;
-    box-shadow: none;
-    text-transform: uppercase;
-    height: 50px;
-    width: 300px;
     max-width: 100%;
-    padding: 12px 22px;
-    text-shadow: none;
-    text-align: center;
-    margin: 40px 0 60px;
-    font-weight: bold;
+    margin: 40px 0;
 }
 
 @media (max-width: 1150px) {

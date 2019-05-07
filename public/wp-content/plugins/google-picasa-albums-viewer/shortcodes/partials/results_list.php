@@ -5,6 +5,14 @@
     $strFXStyle = '';
     $cws_album_title = '';
 
+    // moved this here to fix WP 5 'update failed' bug
+    if( $plugin->get_isPro() == 1 ){
+        $pathPhotoswipe = plugin_dir_path( __FILE__ ) . '../partials_pro/photoswipe.html';
+        $strPhotoswipe = file_get_contents($pathPhotoswipe);
+        //var_dump($pathPhotoswipe);
+        $strOutput .= $strPhotoswipe;
+    }
+
     if( isset( $_GET['cws_album_title'] ) ){
         $cws_album_title =  stripslashes( $_GET[ 'cws_album_title' ] );
     }
@@ -17,10 +25,11 @@
     // Add 20% extra to thumbsize...
     $my_thumb_size = $thumb_size * 1.2;
 
-    $strOutput .= "<div id=\"mygallery\" class=\"grid\">";
+    // $strOutput .= "<div id=\"mygallery\" class=\"grid\">";
+    $strOutput .= "<div class=\"mygallery grid\">";
 
     if( $xml === false ) {
-        echo 'Sorry there has been a problem with your feed.';
+        //echo 'Sorry there has been a problem with your feed.';
     } else {
         // Define NamesSpaces
         $xml->registerXPathNamespace('media', 'http://search.yahoo.com/mrss/'); // define namespace media

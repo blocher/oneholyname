@@ -24,5 +24,11 @@ include_once( 'widget-display-albums.php' );
 //include_once( 'widget-display-albums-carousel.php' );
 
 // Use widgets_init action hook to execute custom function and register widget
-add_action( 'widgets_init', create_function( '', 'return register_widget( "Widget_DisplayAlbums" );' ) );
+// add_action( 'widgets_init', create_function( '', 'return register_widget( "Widget_DisplayAlbums" );' ) );
+
+function cws_register_widgets() {
+	register_widget( 'Widget_DisplayAlbums' );
+}
+//add_action( 'widgets_init', 'cws_register_widgets' );
+
 //add_action( 'widgets_init', create_function( '', 'return register_widget( "Widget_DisplayAlbums_Carousel" );' ) );

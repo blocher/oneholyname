@@ -8,11 +8,8 @@ return array (
   'yikes_inc_easy_mailchimp_extender_helper' => 'admin/partials/helpers/init.php',
   'yikes_inc_easy_mailchimp_api_account' => 'includes/api/class-yikes-inc-eacy-mailchimp-api-account.php',
   'yikes_inc_easy_mailchimp_api_abstract_items' => 'includes/api/class-yikes-inc-easy-mailchimp-api-abstract-items.php',
-  'yikes_inc_easy_mailchimp_api_account_details' => 'includes/api/class-yikes-inc-easy-mailchimp-api-account-details.php',
-  'yikes_inc_easy_mailchimp_api_chimp_chatter' => 'includes/api/class-yikes-inc-easy-mailchimp-api-chimp-chatter.php',
   'yikes_inc_easy_mailchimp_api_lists' => 'includes/api/class-yikes-inc-easy-mailchimp-api-lists.php',
   'yikes_inc_easy_mailchimp_api_manager' => 'includes/api/class-yikes-inc-easy-mailchimp-api-manager.php',
-  'yikes_inc_easy_mailchimp_api_profile' => 'includes/api/class-yikes-inc-easy-mailchimp-api-profile.php',
   'yikes_inc_easy_mailchimp_api' => 'includes/api/class-yikes-inc-easy-mailchimp-api.php',
   'yikes_inc_easy_mailchimp_extender_activator' => 'includes/class-yikes-inc-easy-mailchimp-extender-activator.php',
   'yikes_inc_easy_mailchimp_extender_form_interface' => 'includes/class-yikes-inc-easy-mailchimp-extender-form-interface.php',
@@ -38,4 +35,5 @@ return array (
   'yikes_easy_mc_checkbox_integration_class' => 'public/classes/checkbox-integrations.php',
   'yikes_inc_easy_mailchimp_public_ajax' => 'public/partials/ajax/class.public_ajax.php',
   'yikes_inc_easy_mailchimp_extender_process_submission_handler' => 'public/classes/process/class.process_form_submission_handler.php',
+  'yikes_mailchimp_process_unsubscribe' => 'public/partials/shortcodes/unsubscribe/process-unsubscribe.php',
 );

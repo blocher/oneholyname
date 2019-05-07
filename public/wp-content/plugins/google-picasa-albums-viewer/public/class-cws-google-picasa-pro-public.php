@@ -55,6 +55,7 @@ class CWS_Google_Picasa_Pro_Public {
 
 	}
 
+	
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
@@ -84,6 +85,7 @@ class CWS_Google_Picasa_Pro_Public {
 		//wp_enqueue_style( 'cws_gpp_thumbnail_grid_css', plugin_dir_url( __FILE__ ) . 'css/default.css', array(), $this->version, 'all' );
 		//wp_enqueue_style( 'cws_gpp_thumbnail_grid_css1', plugin_dir_url( __FILE__ ) . 'css/component.css', array(), $this->version, 'all' );
 	}
+
 
 	/**
 	 * Register the stylesheets for the public-facing side of the site.

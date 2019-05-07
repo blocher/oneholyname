@@ -187,14 +187,14 @@ var $imageMagickBefore;
      *
      * @param string $cmd an ImageMagick command (eg. "convert")
      * @param string $args the arguments which should be passed
-     * @param bool �passthru(optional) output the result to the webserver instead
-     * @return void | if passthru return the image
+     * @param bool $passthru (optional) Output the result to the webserver instead
+	 * @return array|string
      */
 	function execute( $cmd, $args, $passthru = false) {
 		
 		// in error case we do not continue
 		if($this->error == true)
-			return;
+			return '';
 
 		//if path is not empty
 		if ($this->imageMagickDir != '') {
@@ -218,7 +218,7 @@ var $imageMagickBefore;
 		// for single pic we need the direct output
 		header('Content-type: image/jpeg');
 		$this->errmsg = "{$this->imageMagickDir}{$cmd} {$args}";
-		passthru( "{$this->imageMagickDir}{$cmd} {$args}" );
+		return passthru( "{$this->imageMagickDir}{$cmd} {$args}" );
 	}
 
 
@@ -368,10 +368,10 @@ var $imageMagickBefore;
 	/**
      * Rotates image either 90 degrees clockwise or counter-clockwise
      *
-     * @param string $direction
+     * @param string $dir
      */
-	function rotateImage($dir = 'CW') {
-		
+	function rotateImage($dir = 'CW')
+    {
 		$angle = ($dir == 'CW') ? 90 : -90;
 
   		$this->imageMagickExec .= " -rotate $angle ";

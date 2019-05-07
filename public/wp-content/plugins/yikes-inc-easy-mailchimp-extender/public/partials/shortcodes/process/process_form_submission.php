@@ -8,7 +8,7 @@
 global $form_submitted, $process_submission_response;
 
 // Instantiate our submission handler class
-$submission_handler = new Yikes_Inc_Easy_MailChimp_Extender_Process_Submission_Handler( $is_ajax = false );
+$submission_handler = new Yikes_Inc_Easy_Mailchimp_Extender_Process_Submission_Handler( $is_ajax = false );
 
 // Capture our form data
 $data = $_POST;
@@ -86,7 +86,7 @@ if ( $submission_handler->handle_empty_list_handler( $list_handler ) === false )
 	return;
 }
 
-// Get and sanitize the email
+// Get, sanitize, and lowercasify the email
 $submitted_email = isset( $data['EMAIL'] ) ? $data['EMAIL'] : '';
 $sanitized_email = $submission_handler->get_sanitized_email( $submitted_email ); 
 $submission_handler->set_email( $sanitized_email );
@@ -150,7 +150,7 @@ if ( isset( $merge_variables['error'] ) ) {
 	}
 }
 
-// This is the array we're going to pass through to the MailChimp API
+// This is the array we're going to pass through to the Mailchimp API
 $member_data = array(
 	'email_address' => $sanitized_email,
 	'merge_fields'  => $merge_variables,
@@ -163,7 +163,7 @@ if ( ! empty( $groups ) ) {
 }
 
 // Check if this member already exists
-$member_exists = $list_handler->get_member( $list_id, md5( strtolower( $sanitized_email ) ), $use_transient = false );
+$member_exists = $list_handler->get_member( $list_id, md5( $sanitized_email ), $use_transient = false );
 
 // If this member does not exist, then we need to add the status_if_new flag and set our $new_subscriber variable
 // Likewise, if this member exists but their status is 'pending' it means we're dealing with a double opt-in list and they never confirmed
@@ -199,7 +199,7 @@ if ( is_wp_error( $member_exists ) || $double_optin_resubscribe === true ) {
 
 	// If this member already exists, then we need to go through our optin settings and run some more logic
 
-	// But first let's set our flag, and set the MailChimp status flag
+	// But first let's set our flag, and set the Mailchimp status flag
 	$new_subscriber = false;
 	$member_data['status'] = 'subscribed';
 
@@ -235,14 +235,14 @@ if ( is_wp_error( $member_exists ) || $double_optin_resubscribe === true ) {
  *
  * @since 6.3.0
  *
- * @param array  | $member_data | Array of all the variables sent to the MailChimp API
+ * @param array  | $member_data | Array of all the variables sent to the Mailchimp API
  * @param string | $form_id		| The form ID
  */
 $member_data = apply_filters( 'yikes-mailchimp-filter-subscribe-request', $member_data, $form_id );
 $member_data = apply_filters( "yikes-mailchimp-filter-subscribe-request-{$form_id}", $member_data, $form_id );
 
 // Send the API request to create a new subscriber! (Or update an existing one)
-$subscribe_response = $list_handler->member_subscribe( $list_id, md5( strtolower( $sanitized_email ) ), $member_data );
+$subscribe_response = $list_handler->member_subscribe( $list_id, md5( $sanitized_email ), $member_data );
 
 // Handle the response 
 
@@ -250,6 +250,10 @@ $subscribe_response = $list_handler->member_subscribe( $list_id, md5( strtolower
 if ( is_wp_error( $subscribe_response ) ) {
 	$success_array = $submission_handler->handle_submission_response_error( $subscribe_response, $form_fields );
 } else {
+
+	// Check if we have any tags to add.
+	$tags_response = $submission_handler->maybe_add_tags( $form_data, $data );
+
 	$submission_handler->handle_submission_response_success( $submission_settings, array(), $merge_variables, $notifications, $optin_settings, $new_subscriber );
 }
 

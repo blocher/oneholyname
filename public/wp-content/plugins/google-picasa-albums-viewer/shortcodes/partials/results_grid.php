@@ -1,7 +1,16 @@
 <?php
     $desc = '';
-
+    $strOutput = '';
     $cws_album_title = '';
+
+    // moved this here to fix WP 5 'update failed' bug
+    if( $plugin->get_isPro() == 1 ){
+        $pathPhotoswipe = plugin_dir_path( __FILE__ ) . '../partials_pro/photoswipe.html';
+        $strPhotoswipe = file_get_contents($pathPhotoswipe);
+        //var_dump($pathPhotoswipe);
+        $strOutput .= $strPhotoswipe;
+    }
+
     if( isset( $_GET['cws_album_title'] ) ){
         $cws_album_title =  stripslashes( $_GET[ 'cws_album_title' ] );
     }
@@ -14,15 +23,18 @@
     // $lala = $thumb_size + 35;
     $lala = $thumb_size * 1.3;
 
-    $strOutput .= "<div id=\"mygallery\" class=\"grid\">";
+    // $strOutput .= "<div id=\"mygallery\" class=\"grid\">";
+    $strOutput .= "<div class=\"mygallery grid\">";
 
         //$strOutput .= "<div class='grid js-masonry' data-masonry-options='{ \"itemSelector\": \"figure\", \"columnWidth\": " . $lala . ", \"isFitWidth\": true }'>\n";
         //$strOutput .= "<div class='grid js-masonry' data-masonry-options='{ \"itemSelector\": \"figure\", \"columnWidth\": figure, \"isFitWidth\": true }'>\n";
         $strOutput .= "<div class='grid js-masonry' data-masonry-options='{ \"itemSelector\": \"figure\", \"isFitWidth\": true }'>\n";
 
     if( $xml === false ) {
-        echo 'Sorry there has been a problem with your feed.';
-    } else {
+        //echo 'Sorry there has been a problem with your feed.';
+    } 
+    else 
+    {
         // Define NamesSpaces
         $xml->registerXPathNamespace('media', 'http://search.yahoo.com/mrss/');
         $xml->registerXPathNamespace('gphoto', 'http://schemas.google.com/photos/2007');
@@ -92,10 +104,11 @@
             $strOutput .= "<a itemprop=\"contentUrl\" data-size=\"". $content[0]['width'] ."x".$content[0]['height']."\" data-index=\"".$intCounter."\" class='result-image-link' href='" . $b['src'] . "' data-lightbox='result-set' data-title='$title'>\n";
 
             $strOutput .="<img data-index=\"".$intCounter."\" class='result-image' src='" . $a['url'] . "' alt='$title'/>";
-
+//var_dump($description);
+//die();
 
                 if( $show_details || $show_title ){
-                    //$desc = '';
+                    $desc = '';
 
                     if ( $show_title ) {
                         $desc = $title;
