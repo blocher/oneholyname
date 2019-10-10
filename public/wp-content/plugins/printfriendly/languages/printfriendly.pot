@@ -120,6 +120,10 @@ msgstr ""
 msgid "Left Align"
 msgstr ""
 
+#: ../pf.php:1718
+msgid "Do not use CSS for button styles"
+msgstr ""
+
 #: ../pf.php:1207
 msgid "Right Align"
 msgstr ""
@@ -352,4 +356,9 @@ msgstr ""
 
 #: ../pf.php:1385
 msgid "Need help or have suggestions?"
+msgstr ""
+
+#: ../pf.php:1385
+msgid "PrintFriendly & PDF button for your website. Optimizes your pages and brand for print, pdf, and email."
+"Name and URL are included to ensure repeat visitors and new visitors when printed versions are shared."
 msgstr ""

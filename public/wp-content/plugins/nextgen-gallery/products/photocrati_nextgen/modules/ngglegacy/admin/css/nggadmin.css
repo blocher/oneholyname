@@ -132,6 +132,9 @@
 
 .toplevel_page_nextgen-gallery .feature-video iframe {
     box-shadow: 0 0 8px 4px rgba(0,0,0,.03);
+    width: 800px;
+    height: 450px;
+    max-width: 100%;
 }
 
 div[data-id="welcome-link"] .about-text {

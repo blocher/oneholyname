@@ -3,8 +3,8 @@ Contributors: mattsay
 Donate link: https://metinsaylan.com/donate/
 Tags: countdown, count-up, multi-widget, widget, jquery, shortcode, timer, clock, animated
 Requires at least: 4.7
-Tested up to: 4.9.8
-Stable tag: 3.1.2
+Tested up to: 5.2.2
+Stable tag: 3.1.4
 License: GPLv2 or later
 
 Countdown/Countup Timer Widget + Shortcode. Supports multiple instances, easy translation & customizations.
@@ -52,6 +52,14 @@ You can ask your questions [here](https://github.com/metinsaylan/wordpress-count
 Please back up your precious data before upgrading plugins.
 
 == Changelog ==
+
+= 3.1.4 = 
+* Updated options page styling
+* Added Donate button
+* Added Settings link to widget
+
+= 3.1.3 = 
+* Updated tested WordPress version.
 
 = 3.1.2 =
 * Fixed options page capabilities issue.

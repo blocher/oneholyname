@@ -11,3 +11,17 @@ div.options-page{ max-width: 740px }
 }
 .ms-options-paragraph { margin-bottom: 20px; }
 .submit-wrap{ text-align: right; padding-top: 8px }
+
+
+/* Navigation */
+.nav {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: #ccc 0 0 2px;
+    line-height: 40px;
+    margin-top: 10px;
+  }
+  
+  .nav a{ text-decoration: none; }
+  .nav a.nav-link{ display: inline-block; padding: 0 15px }
+  .nav a.nav-link:hover{ background-color: #eee }

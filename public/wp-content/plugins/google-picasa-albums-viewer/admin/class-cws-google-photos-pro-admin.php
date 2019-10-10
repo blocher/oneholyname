@@ -21,36 +21,41 @@ class CWS_Google_Photos_Pro extends CWS_Google_Picasa_Pro_Admin {
      * @param array $query_urls, array $AccessToken, $options, str $results_page
      * @return array
      */
-    private function getRequest( $query_urls, $AccessToken, $options, $results_page ) {
-// var_dump($options);       
+    private function getRequest( $query_urls, $AccessToken, $options, $results_page, $flag ) {
+
         $out = array(); // array to hold results of processResponse()
 
         foreach ( $query_urls as $query_url => $options ) {
 
             // if we have album id, i.e we are getting images within an album
-            if( isset( $options['albumId'] ) ) {
+            // if( isset( $options['albumId'] ) ) {
+            if( !empty( $options['albumId'] ) && $flag == 'images' ) {
                 
                 $myArray = array();
                 $myArray['access_token']    = $AccessToken['access_token'];
                 $myArray['albumId']         = $options['albumId'];
                 $myArray['pageToken']       = $options['pageToken'];
                 $myArray['pageSize']        = $options['pageSize'];
-                //echo '<pre>';
-                //print_r($myArray);
-                //echo '</pre>';
-                //die();
+                // echo '<pre>';
+                // print_r($myArray);
+                // echo '</pre>';
+                // die();
                 $query_url = add_query_arg( $myArray, $query_url );
                 //var_dump($query_url);die();
             }
-            else {
+            
+            // else {
+            if( $flag == 'albums' ) {
                 $myArray = array();
                 $myArray['access_token']    = $AccessToken['access_token'];
                 $myArray['pageToken']       = $options['pageToken'];
                 $myArray['pageSize']        = $options['pageSize'];
                 //var_dump($myArray);//die();
                 $query_url = add_query_arg( $myArray, $query_url );
-            }
 
+                //var_dump($query_url); die();
+            }
+            
             // $response = wp_remote_request( $query_urlx, $options ); // use this to check $this->error();
             $response = wp_remote_request( $query_url, $options );
             
@@ -199,7 +204,8 @@ $options['access'] = $access;
         }
 
         // moved above block of code to function getRequest($query_urls, $AccessToken, $options)
-        $out = $this->getRequest( $query_urls, $AccessToken, $options, $results_page );
+        //$out = $this->getRequest( $query_urls, $AccessToken, $options, $results_page );
+        $out = $this->getRequest( $query_urls, $AccessToken, $options, $results_page, $flag='albums' ); // add flag to stop GAPI from returning images if album id not present or not recognised.
 
         return $out; // deal with errors later fuckwit
     }
@@ -224,7 +230,9 @@ $options['access'] = $access;
         // https://developers.google.com/photos/library/reference/rest/v1/mediaItems/search?apix_params=%7B%22resource%22%3A%7B%22albumId%22%3A%22AF1QipMfKFlmjufoKJkzZJl5k4guIlUj_hJ5S8c3YOkU%22%7D%7D
         // https://photoslibrary.googleapis.com/v1/albums/{albumId}
 
-        $out = $this->getRequest( $query_urls, $AccessToken, $options, $results_page = null ); // don't need a results page when showing album images!
+        // $out = $this->getRequest( $query_urls, $AccessToken, $options, $results_page = null ); // don't need a results page when showing album images!
+        $out = $this->getRequest( $query_urls, $AccessToken, $options, $results_page = null, $flag = 'images' ); // add flag to stop GAPI from returning images if album id not present or not recognised.
+
         // var_dump($options);
         return $out;
     }

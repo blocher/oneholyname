@@ -1,7 +1,61 @@
 NextGEN Gallery
 by Imagely
 
-= V3.1.19 - 05.07.2019 =
+= V3.2.18 - 09.18.2019 =
+* Fixed:   Ability to sort images by random
+* Fixed:   Large images failed to upload on WP Engine
+* Fixed:   Plupload translations not working
+
+= V3.2.15 - 09.10.2019 =
+* NEW:     Automatically retry loading dynamic thumbnail generation urls
+* NEW:     Use NGG_DISABLE_DYNAMIC_IMG_URLS constant to generate images in-process
+* Changed: Dynamic thumbnails are generated in their own PHP processes/url
+* Fixed:   Distorted images and thumbnails
+* Fixed:   Timeout when viewing large galleries
+* Fixed:   Memory optimizations when generating images
+
+= V3.2.11 - 08.27.2019 =
+* Secured: IGW queries (reported by Tin Duong of Fortinet's FortiGuard Labs)
+
+= V3.2.10 - 07.23.2019 =
+* Changed: Updated branding for Freemius opt-in
+* Fixed:   IGW queries
+
+= V3.2.8 - 07.16.2019 =
+* NEW:     Added support for the shortcode_atts_ngg filter
+* NEW:     Importing images from a folder now works recursively
+* Fixed:   'Scan folder for new images' did not assign a gallery preview image
+* Fixed:   AJAX actions like image uploads were failing if the default request to '/' went to an index.html instead of index.php
+* Fixed:   Admin page controllers / templates were running twice
+* Fixed:   Compatibility with Delightful Downloads
+* Fixed:   Compatibility with Elementor
+* Fixed:   Copying images to the Media Library was broken if the server lacked the fileinfo extension
+* Fixed:   Disable Manage Gallery's move/copy images submit button to prevent multiple submissions
+* Fixed:   Made 'Recover image from backup' reset thumbnail crop settings
+* Fixed:   Minor error emitted from common.js
+* Fixed:   Move Images / Copy Images now also moves/copies dynamically generated versions
+* Fixed:   The uninstall routine handler was generating a PHP warning accessing an undeclared variable
+* Fixed:   Zip uploads from some macOS users was failing
+
+= V3.2.4 - 06.04.2019 =
+* NEW:     Added some methods to the window.galleries object prototype for retrieving display settings
+* Secured: Zip extraction process (thanks to Slavco Mihajloski / @mslavco)
+* Changed: Removed the now-deprecated 'publish' link from the Manage Gallery image actions row
+* Fixed:   A PHP warning emitted on Gallery > Other Options if the current gallery path cannot be written to
+* Fixed:   Added compatibility check for the official FontAwesome plugin
+* Fixed:   Clicking a checkbox in the Insert Gallery Window's "Sort or exclude images" tab was not functioning
+* Fixed:   Resized images were becoming larger than the original in some circumstances
+* Fixed:   URL to static assets like JS and CSS files was incorrect when NextGen Gallery was a symlink
+
+= V3.2.2 - 05.09.2019 =
+* Changed: Updated video Links
+* Changed: Branding updates in Readme.txt file
+
+= V3.2.1 - 05.08.2019 =
+* Fixed:   Missing settings after Reset with NextGEN Plus
+* Fixed:   Small styling issues with WordPress 5.2
+
+= V3.2.0 - 05.07.2019 =
 * NEW:     Branding update
 * NEW:     API methods for detecting NextGEN provided pages and custom post types
 * Fixed:   Missing menus after Reset

@@ -3,7 +3,7 @@
 * Plugin Name: Countdown Widget
 * Plugin URI: https://metinsaylan.com/wordpress/plugins/countdown
 * Description: Countdown/Countup Timer Widget + Shortcode. Supports multiple instances, easy translation & customizations.
-* Version: 3.1.2
+* Version: 3.1.4
 * Author: Metin Saylan
 * Author URI: https://metinsaylan.com/
 * Text Domain: countdown-widget
@@ -284,6 +284,8 @@ class shailan_CountdownWidget extends WP_Widget {
 		<p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('link'); ?>" name="<?php echo $this->get_field_name('link'); ?>"<?php checked( $link ); ?> />
 		<label for="<?php echo $this->get_field_id('link'); ?>"><?php _e( 'Remove link' , 'countdown-widget'); ?></label> <small><a href="https://metinsaylan.com/wordpress/plugins/countdown/help/#remove-link" target="_blank" rel="external">(?)</a></small></p>
 
+		<p><a href="options-general.php?page=wp-countdown-widget" target="_blank">Edit Settings..</a></p>
+
 <div class="clear"></div>
         <?php
 
@@ -441,10 +443,6 @@ class shailan_CountdownWidget extends WP_Widget {
   		"1" => __("Settings are saved.", "countdown-widget"),
   		"2" => __("Settings are reset.", "countdown-widget")
   	);
-
-  	$navigation = '<div id="stf_nav"><a href="https://metinsaylan.com/wordpress/plugins/countdown/" target="_blank">Plugin page</a> | <a href="https://metinsaylan.com/wordpress/plugins/countdown/help/" target="_blank">Usage</a> | <a href="https://metinsaylan.com/donate/" target="_blank">Donate</a> | <a href="https://metinsaylan.com/wordpress/" target="_blank">Get more plugins..</a></div>';
-
-  	$footer_text = '';
 
   	include_once( "countdown-options-page.php" );
 

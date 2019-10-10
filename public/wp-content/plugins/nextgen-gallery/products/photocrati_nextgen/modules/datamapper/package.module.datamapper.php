@@ -1060,6 +1060,10 @@ class C_CustomTable_DataMapper_Driver_Mixin extends Mixin
         $this->object->update_columns_cache();
         return $return;
     }
+    function get_column_names()
+    {
+        return array_keys($this->object->_columns);
+    }
     /**
      * Migrates the schema of the database
      */
@@ -1792,6 +1796,10 @@ class C_DataMapper_Model extends C_Component
             $this->set_defaults();
             $this->_stdObject->__defaults_set = TRUE;
         }
+    }
+    function jsonSerialize()
+    {
+        return $this->get_entity();
     }
     function has_default_values()
     {

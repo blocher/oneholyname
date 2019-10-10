@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravan
 Tags: fancybox, lightbox, gallery, image, photo, video, flash, overlay, youtube, vimeo, dailymotion, pdf, svg, iframe, swf, jquery, webp
 Requires at least: 3.3
 Tested up to: 5.2
-Stable tag: 1.8.16
+Stable tag: 1.8.18
 
 Easily enable the FancyBox jQuery extension on just about all media links. Multi-Site compatible. Supports iFrame and Flash movies.
 
@@ -47,7 +47,7 @@ Additional features:
 - Fade or Elastic popup effects
 - Styling options for light box overlay (color and opacity) and window (border size and color)
 
-For **advanced options** and **priority support**, there is a **[Pro extension](https://premium.status301.net/downloads/easy-fancybox-pro/)** available. See Pro features below.
+For **advanced options** and **priority support**, there is a **[Pro extension](https://premium.status301.com/downloads/easy-fancybox-pro/)** available. See Pro features below.
 
 See [FAQ's](https://wordpress.org/plugins/easy-fancybox/#faq) for instructions to manage YouTube, Dailymotion and Vimeo movies (and similar services) and tips to make inline content display in a FancyBox overlay.
 
@@ -68,7 +68,7 @@ Visit [FancyBox](http://fancybox.net/) for more information and examples.
 - Show/hide image title on mouse hover
 - Fine-tune media link and gallery autodetection to match your theme source markup to allow galleries per post for example
 
-For these additional features, you need to install the **[Pro extension](https://premium.status301.net/downloads/easy-fancybox-pro/)** alongside this free plugin.
+For these additional features, you need to install the **[Pro extension](https://premium.status301.com/downloads/easy-fancybox-pro/)** alongside this free plugin.
 
 
 = Contribute =
@@ -81,7 +81,7 @@ If you wish to help build this plugin, you're very welcome to [translate Easy Fa
 
 = General =
 
-- **Outbound links or Downloads tracking** in some of the stats plugins can interfere with FancyBox. Disable such option or exclude links manually with a class (see instructions for SlimStat below)
+- **Outbound click or Download tracking** in some of the stats plugins can interfere with FancyBox. Disable such options or exclude links manually with a class if possible (see instructions for SlimStat below)
 - Most plugins and themes that already include a light box script. Continue reading to see if you are using one of the know ones or follow the troubleshooting steps to find out what is conflicting on your site.
 - Any theme that is missing the obligatory `<?php wp_footer(); ?>` call in the footer.php template.
 - When showing an iframe as inline content in FancyBox -- not advised, use fancybox-iframe instead! -- the iframe will become blank after opening and closing it. The solution is to link directly to the iframe source and use `class="fancybox-iframe"` instead.
@@ -90,8 +90,7 @@ If you wish to help build this plugin, you're very welcome to [translate Easy Fa
 = Plugin conflicts =
 
 - **jQuery Updater** moves jQuery to version 2+ which is incompatible.
-- **All in One SEO Pack** and **Analytics for WordPress** with outbound link tracking enabled. Disable that feature.
-- **WP Slimstat** with Track Outbound Clicks enabled, will break the light box effect on some browsers. Adding `fancybox` (or any of the other classes like `fancybox-youtube,fancybox-iframe,fancybox-inline` depending on which media should be displayed in FancyBox) to the Do Not Track field is reported to solve the issue. Slimstat also might interfere with the YouTube url conversion. When clicking a Youtube link, the movie opens in an overlay as it is supposed to but immediately after that, the complete page gets redirected to the original YouTube page. Adding a `class="noslimstat"` to the link is reported to work around the issue.
+- **WP Slimstat** and **Matomo/Piwik** with Track Outbound Clicks enabled, will break the light box effect on some browsers. Adding `fancybox` (or any of the other classes like `fancybox-youtube,fancybox-iframe,fancybox-inline` depending on which media should be displayed in FancyBox) to the Do Not Track field is reported to solve the issue. Slimstat also might interfere with the YouTube url conversion. When clicking a Youtube link, the movie opens in an overlay as it is supposed to but immediately after that, the complete page gets redirected to the original YouTube page. Adding a `class="noslimstat"` to the link is reported to work around the issue.
 - **Google Analytics for WordPress** converts links like `href="#anyID"` to `href="http://yoursite.url/page/#anyID"`, disabling inline content shown in FancyBox.
 - Both the **uBillBoard** and **Camera slideshow** have their own easing script hard-coded which conflicts with the one in Easy FancyBox. The only way around the conflict is to set both the Easing In and Easing Out options on your Settings > Media page to **Swing**.
 - **Wordpress Firewall 2** blocks access to image files needed for proper display of the FancyBox overlay in older IE and other non-css3 browsers.
@@ -181,7 +180,7 @@ The original FancyBox 1.3.4 script was not developed with mobile devices in mind
 
 = Can I make a slideshow from my gallery? =
 
-In the [Pro extension](https://premium.status301.net/downloads/easy-fancybox-pro/), there is an Advanced option called "Gallery Auto-rotation" for that.
+In the [Pro extension](https://premium.status301.com/downloads/easy-fancybox-pro/), there is an Advanced option called "Gallery Auto-rotation" for that.
 
 
 = Can I exclude images or other links from auto-attribution? =
@@ -336,7 +335,7 @@ If you don't have *Auto-detect* checked under **SWF** on Settings > Media admin 
 
 FancyBox tries to detect the size of the content automatically but if it can not find a size, it will default to the settings for that particular content type as set on the Settings > Media page.
 
-The **[Pro extension](https://premium.status301.net/downloads/easy-fancybox-pro/)** provides an extra option to allow you to manually override this by defining the width and height wrapped in curly braces in the class attribute of the link itself. Make sure the option "Include the Metadata jQuery extension script..." under FancyBox | Miscellaneous | Advanced on Settings > Media is enabled.
+The **[Pro extension](https://premium.status301.com/downloads/easy-fancybox-pro/)** provides an extra option to allow you to manually override this by defining the width and height wrapped in curly braces in the class attribute of the link itself. Make sure the option "Include the Metadata jQuery extension script..." under FancyBox | Miscellaneous | Advanced on Settings > Media is enabled.
 
 For example, a Flash movie with different size:
 
@@ -494,11 +493,21 @@ If you still do not get to see your images in FancyBox, ask on the [Easy FancyBo
 
 == Upgrade Notice ==
 
-= 1.8.16 =
-Fix Trying to get property 'ID' of non-object
+= 1.8.18 =
+Fix Jetpack Tiled Gallery compat + security issue reported by Jakob Hagl sba-research.org
 
 
 == Changelog ==
+
+= 1.8.18 =
+* FIX: Jetpack Tiled Gallery block compatibility
+* Don't include mousewheel script by default
+* SECURITY FIX: failing color value sanitization, issue reported by Jakob Hagl sba-research.org, CVE-2019-16524
+* NEW: inline styles output filter
+
+= 1.8.17 =
+* Pro compatibility messages
+* Support forum link
 
 = 1.8.16 =
 * FIX: Trying to get property 'ID' of non-object

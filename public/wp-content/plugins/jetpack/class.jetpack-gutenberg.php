@@ -6,6 +6,8 @@
  * @package Jetpack
  */
 
+use Automattic\Jetpack\Constants;
+
 /**
  * Wrapper function to safely register a gutenberg block type
  *
@@ -183,9 +185,31 @@ class Jetpack_Gutenberg {
 	 *
 	 * @param string $slug Slug of the extension.
 	 * @param string $reason A string representation of why the extension is unavailable.
+	 * @param array  $details A free-form array containing more information on why the extension is unavailable.
 	 */
-	public static function set_extension_unavailable( $slug, $reason ) {
-		self::$availability[ self::remove_extension_prefix( $slug ) ] = $reason;
+	public static function set_extension_unavailable( $slug, $reason, $details = array() ) {
+		if (
+			// Extensions that require a plan may be eligible for upgrades.
+			'missing_plan' === $reason
+			/**
+			 * Filter 'jetpack_block_editor_enable_upgrade_nudge' with `true` to enable or `false`
+			 * to disable paid feature upgrade nudges in the block editor.
+			 *
+			 * @since 7.7.0
+			 *
+			 * @param boolean
+			 */
+			&& ! apply_filters( 'jetpack_block_editor_enable_upgrade_nudge', false )
+		) {
+			// The block editor may apply an upgrade nudge if `missing_plan` is the reason.
+			// Add a descriptive suffix to disable behavior but provide informative reason.
+			$reason .= '__nudge_disabled';
+		}
+
+		self::$availability[ self::remove_extension_prefix( $slug ) ] = array(
+			'reason'  => $reason,
+			'details' => $details,
+		);
 	}
 
 	/**
@@ -220,7 +244,7 @@ class Jetpack_Gutenberg {
 		 * @param boolean
 		 */
 		if ( apply_filters( 'jetpack_load_beta_blocks', false ) ) {
-			Jetpack_Constants::set_constant( 'JETPACK_BETA_BLOCKS', true );
+			Constants::set_constant( 'JETPACK_BETA_BLOCKS', true );
 		}
 
 		/**
@@ -230,7 +254,7 @@ class Jetpack_Gutenberg {
 		 *
 		 * @param array
 		 */
-		self::$extensions = apply_filters( 'jetpack_set_available_extensions', self::get_jetpack_gutenberg_extensions_whitelist() );
+		self::$extensions = apply_filters( 'jetpack_set_available_extensions', self::get_available_extensions() );
 
 		/**
 		 * Filter the whitelist of block editor plugins that are available through Jetpack.
@@ -318,12 +342,26 @@ class Jetpack_Gutenberg {
 
 		$preset_extensions = isset( $preset_extensions_manifest->production ) ? (array) $preset_extensions_manifest->production : array();
 
-		if ( Jetpack_Constants::is_true( 'JETPACK_BETA_BLOCKS' ) ) {
+		if ( Constants::is_true( 'JETPACK_BETA_BLOCKS' ) ) {
 			$beta_extensions = isset( $preset_extensions_manifest->beta ) ? (array) $preset_extensions_manifest->beta : array();
 			return array_unique( array_merge( $preset_extensions, $beta_extensions ) );
 		}
 
 		return $preset_extensions;
+	}
+
+	/**
+	 * Returns a diff from a combined list of whitelisted extensions and extensions determined to be excluded
+	 *
+	 * @param  array $whitelisted_extensions An array of whitelisted extensions.
+	 *
+	 * @return array A list of blocks: eg array( 'publicize', 'markdown' )
+	 */
+	public static function get_available_extensions( $whitelisted_extensions = null ) {
+		$exclusions             = get_option( 'jetpack_excluded_extensions', array() );
+		$whitelisted_extensions = is_null( $whitelisted_extensions ) ? self::get_jetpack_gutenberg_extensions_whitelist() : $whitelisted_extensions;
+
+		return array_diff( $whitelisted_extensions, $exclusions );
 	}
 
 	/**
@@ -355,39 +393,14 @@ class Jetpack_Gutenberg {
 			);
 
 			if ( ! $is_available ) {
-				$reason = isset( self::$availability[ $extension ] ) ? self::$availability[ $extension ] : 'missing_module';
+				$reason  = isset( self::$availability[ $extension ] ) ? self::$availability[ $extension ]['reason'] : 'missing_module';
+				$details = isset( self::$availability[ $extension ] ) ? self::$availability[ $extension ]['details'] : array();
 				$available_extensions[ $extension ]['unavailable_reason'] = $reason;
+				$available_extensions[ $extension ]['details']            = $details;
 			}
 		}
 
-		$unwhitelisted_blocks  = array();
-		$all_registered_blocks = WP_Block_Type_Registry::get_instance()->get_all_registered();
-		foreach ( $all_registered_blocks as $block_name => $block_type ) {
-			if ( ! wp_startswith( $block_name, 'jetpack/' ) || isset( $block_type->parent ) ) {
-				continue;
-			}
-
-			$unprefixed_block_name = self::remove_extension_prefix( $block_name );
-
-			if ( in_array( $unprefixed_block_name, self::$extensions, true ) ) {
-				continue;
-			}
-
-			$unwhitelisted_blocks[ $unprefixed_block_name ] = array(
-				'available'          => false,
-				'unavailable_reason' => 'not_whitelisted',
-			);
-		}
-
-		// Finally: Unwhitelisted non-block extensions. These are in $availability.
-		$unwhitelisted_extensions = array_fill_keys(
-			array_diff( array_keys( self::$availability ), self::$extensions ),
-			array(
-				'available'          => false,
-				'unavailable_reason' => 'not_whitelisted',
-			)
-		);
-		return array_merge( $available_extensions, $unwhitelisted_blocks, $unwhitelisted_extensions );
+		return $available_extensions;
 	}
 
 	/**
@@ -443,7 +456,8 @@ class Jetpack_Gutenberg {
 	 * Only enqueue block assets when needed.
 	 *
 	 * @param string $type Slug of the block.
-	 * @param array  $script_dependencies An array of view-side Javascript dependencies to be enqueued.
+	 * @param array  $script_dependencies Script dependencies. Will be merged with automatically
+	 *                                    detected script dependencies from the webpack build.
 	 *
 	 * @return void
 	 */
@@ -482,17 +496,19 @@ class Jetpack_Gutenberg {
 		}
 
 	}
+
 	/**
 	 * Only enqueue block scripts when needed.
 	 *
 	 * @param string $type Slug of the block.
-	 * @param array  $script_dependencies An array of view-side Javascript dependencies to be enqueued.
+	 * @param array  $dependencies Script dependencies. Will be merged with automatically
+	 *                             detected script dependencies from the webpack build.
 	 *
 	 * @since 7.2.0
 	 *
 	 * @return void
 	 */
-	public static function load_scripts_as_required( $type, $script_dependencies = array() ) {
+	public static function load_scripts_as_required( $type, $dependencies = array() ) {
 		if ( is_admin() ) {
 			// A block's view assets will not be required in wp-admin.
 			return;
@@ -500,7 +516,15 @@ class Jetpack_Gutenberg {
 
 		// Enqueue script.
 		$script_relative_path = self::get_blocks_directory() . $type . '/view.js';
-		if ( self::block_has_asset( $script_relative_path ) ) {
+		$script_deps_path     = JETPACK__PLUGIN_DIR . self::get_blocks_directory() . $type . '/view.deps.json';
+
+		$script_dependencies = file_exists( $script_deps_path )
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			? json_decode( file_get_contents( $script_deps_path ) )
+			: array();
+		$script_dependencies = array_merge( $script_dependencies, $dependencies, array( 'wp-polyfill' ) );
+
+		if ( ( ! class_exists( 'Jetpack_AMP_Support' ) || ! Jetpack_AMP_Support::is_amp_request() ) && self::block_has_asset( $script_relative_path ) ) {
 			$script_version = self::get_asset_version( $script_relative_path );
 			$view_script    = plugins_url( $script_relative_path, JETPACK__PLUGIN_FILE );
 			wp_enqueue_script( 'jetpack-block-' . $type, $view_script, $script_dependencies, $script_version, false );
@@ -549,12 +573,24 @@ class Jetpack_Gutenberg {
 			return;
 		}
 
+		// Required for Analytics. See _inc/lib/admin-pages/class.jetpack-admin-page.php.
+		if ( ! Jetpack::is_development_mode() && Jetpack::is_active() ) {
+			wp_enqueue_script( 'jp-tracks', '//stats.wp.com/w.js', array(), gmdate( 'YW' ), true );
+		}
+
 		$rtl        = is_rtl() ? '.rtl' : '';
-		$beta       = Jetpack_Constants::is_true( 'JETPACK_BETA_BLOCKS' ) ? '-beta' : '';
+		$beta       = Constants::is_true( 'JETPACK_BETA_BLOCKS' ) ? '-beta' : '';
 		$blocks_dir = self::get_blocks_directory();
 
 		$editor_script = plugins_url( "{$blocks_dir}editor{$beta}.js", JETPACK__PLUGIN_FILE );
 		$editor_style  = plugins_url( "{$blocks_dir}editor{$beta}{$rtl}.css", JETPACK__PLUGIN_FILE );
+
+		$editor_deps_path = JETPACK__PLUGIN_DIR . $blocks_dir . "editor{$beta}.deps.json";
+		$editor_deps      = file_exists( $editor_deps_path )
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			? json_decode( file_get_contents( $editor_deps_path ) )
+			: array();
+		$editor_deps[] = 'wp-polyfill';
 
 		$version = Jetpack::is_development_version() && file_exists( JETPACK__PLUGIN_DIR . $blocks_dir . 'editor.js' )
 			? filemtime( JETPACK__PLUGIN_DIR . $blocks_dir . 'editor.js' )
@@ -571,27 +607,7 @@ class Jetpack_Gutenberg {
 		wp_enqueue_script(
 			'jetpack-blocks-editor',
 			$editor_script,
-			array(
-				'lodash',
-				'wp-api-fetch',
-				'wp-blob',
-				'wp-blocks',
-				'wp-components',
-				'wp-compose',
-				'wp-data',
-				'wp-date',
-				'wp-edit-post',
-				'wp-editor',
-				'wp-element',
-				'wp-hooks',
-				'wp-i18n',
-				'wp-keycodes',
-				'wp-plugins',
-				'wp-polyfill',
-				'wp-rich-text',
-				'wp-token-list',
-				'wp-url',
-			),
+			$editor_deps,
 			$version,
 			false
 		);
@@ -602,6 +618,18 @@ class Jetpack_Gutenberg {
 			plugins_url( $blocks_dir . '/', JETPACK__PLUGIN_FILE )
 		);
 
+		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			$user      = wp_get_current_user();
+			$user_data = array(
+				'userid'   => $user->ID,
+				'username' => $user->user_login,
+			);
+			$blog_id   = get_current_blog_id();
+		} else {
+			$user_data = Jetpack_Tracks_Client::get_connected_user_tracks_identity();
+			$blog_id   = Jetpack_Options::get_option( 'id', 0 );
+		}
+
 		wp_localize_script(
 			'jetpack-blocks-editor',
 			'Jetpack_Editor_Initial_State',
@@ -609,33 +637,14 @@ class Jetpack_Gutenberg {
 				'available_blocks' => self::get_availability(),
 				'jetpack'          => array( 'is_active' => Jetpack::is_active() ),
 				'siteFragment'     => $site_fragment,
+				'tracksUserData'   => $user_data,
+				'wpcomBlogId'      => $blog_id,
 			)
 		);
 
-		wp_set_script_translations( 'jetpack-blocks-editor', 'jetpack', plugins_url( 'languages/json', JETPACK__PLUGIN_FILE ) );
-
-		// Adding a filter late to allow every other filter to process the path, including the CDN.
-		add_filter( 'pre_load_script_translations', array( __CLASS__, 'filter_pre_load_script_translations' ), 1000, 3 );
+		wp_set_script_translations( 'jetpack-blocks-editor', 'jetpack' );
 
 		wp_enqueue_style( 'jetpack-blocks-editor', $editor_style, array(), $version );
-	}
-
-	/**
-	 * A workaround for setting i18n data for WordPress client-side i18n mechanism.
-	 * We are not yet using dotorg language packs for the editor file, so this short-circuits
-	 * the translation loading and feeds our JSON data directly into the translation getter.
-	 *
-	 * @param NULL   $null     not used.
-	 * @param String $file     the file path that is being loaded, ignored.
-	 * @param String $handle   the script handle.
-	 * @return NULL|String the translation data only if we're working with our handle.
-	 */
-	public static function filter_pre_load_script_translations( $null, $file, $handle ) {
-		if ( 'jetpack-blocks-editor' !== $handle ) {
-			return null;
-		}
-
-		return Jetpack::get_i18n_data_json();
 	}
 
 	/**
@@ -658,5 +667,47 @@ class Jetpack_Gutenberg {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get CSS classes for a block.
+	 *
+	 * @since 7.7.0
+	 *
+	 * @param string $slug  Block slug.
+	 * @param array  $attr  Block attributes.
+	 * @param array  $extra Potential extra classes you may want to provide.
+	 *
+	 * @return string $classes List of CSS classes for a block.
+	 */
+	public static function block_classes( $slug = '', $attr, $extra = array() ) {
+		if ( empty( $slug ) ) {
+			return '';
+		}
+
+		// Basic block name class.
+		$classes = array(
+			'wp-block-jetpack-' . $slug,
+		);
+
+		// Add alignment if provided.
+		if (
+			! empty( $attr['align'] )
+			&& in_array( $attr['align'], array( 'left', 'center', 'right', 'wide', 'full' ), true )
+		) {
+			array_push( $classes, 'align' . $attr['align'] );
+		}
+
+		// Add custom classes if provided in the block editor.
+		if ( ! empty( $attr['className'] ) ) {
+			array_push( $classes, $attr['className'] );
+		}
+
+		// Add any extra classes.
+		if ( is_array( $extra ) && ! empty( $extra ) ) {
+			$classes = array_merge( $classes, $extra );
+		}
+
+		return implode( $classes, ' ' );
 	}
 }

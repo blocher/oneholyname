@@ -26,7 +26,7 @@ class M_NextGen_Admin extends C_Base_Module
             'photocrati-nextgen_admin',
             'NextGEN Administration',
             'Provides a framework for adding Administration pages',
-            '3.1.19',
+            '3.2.10',
             'https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/',
             'Imagely',
             'https://www.imagely.com'
@@ -149,6 +149,11 @@ class M_NextGen_Admin extends C_Base_Module
     {
         // Register scripts
         add_action('init', array($this, 'register_scripts'), 9);
+        add_action('init', array($this, 'handle_cache_flush_requests'));
+
+        // Elementor's editor.php runs `new \WP_Scripts()` which requires we register scripts on both init and this
+        // action if we want our resources to be used with the page builder.
+        add_action('elementor/editor/before_enqueue_scripts', array($this, 'register_scripts'));
 
         // Wizard-related hooks
         add_action('admin_enqueue_scripts', array($this, 'enqueue_wizard_components'));
@@ -697,6 +702,21 @@ class M_NextGen_Admin extends C_Base_Module
     function add_menu_pages()
     {
         C_NextGen_Admin_Page_Manager::get_instance()->setup();
+    }
+
+    public function handle_cache_flush_requests()
+    {
+        if (isset($_REQUEST['ngg_flush']) && current_user_can('administrator'))
+        {
+            C_Photocrati_Transient_Manager::flush();
+            die("Flushed all caches");
+        }
+
+        if (isset($_REQUEST['ngg_flush_expired']) && current_user_can('administrator'))
+        {
+            C_Photocrati_Transient_Manager::get_instance()->flush_expired();
+            die("Flushed all expired caches");
+        }
     }
 
     function get_type_list()

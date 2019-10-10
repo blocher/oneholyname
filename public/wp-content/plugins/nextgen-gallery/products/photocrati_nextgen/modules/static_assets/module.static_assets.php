@@ -61,6 +61,15 @@ class M_Static_Assets extends C_Base_Module
         );
 
         $module_dir = wp_normalize_path(C_Component_Registry::get_instance()->get_module_dir($module));
+
+        // In case NextGen is in a symlink we make $mod_dir relative to the NGG parent root and then rebuild it
+        // using WP_PLUGIN_DIR; without this NGG-in-symlink creates URL that reference the file abspath
+        if (is_link(path_join(WP_PLUGIN_DIR, basename(NGG_PLUGIN_DIR))))
+        {
+            $module_dir = ltrim(str_replace(dirname(NGG_PLUGIN_DIR), '', $module_dir), DIRECTORY_SEPARATOR);
+            $module_dir = path_join(WP_PLUGIN_DIR, $module_dir);
+        }
+
         $static_dir = self::trim_preceding_slash(C_NextGen_Settings::get_instance()->mvc_static_dir);
 
         $override_dir = wp_normalize_path(self::get_static_override_dir($module));

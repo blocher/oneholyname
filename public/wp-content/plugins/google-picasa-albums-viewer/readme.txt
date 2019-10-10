@@ -2,10 +2,10 @@
 
 Contributors: nakunakifi
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZAZHU9ERY8W34
-Tags: album, gallery, slideshow, photo, google photos, google picasa, image, images gallery, lightbox, picasa, picasa web, photo, photos
+Tags: best gallery plugin, free gallery, gallery plugin, album, gallery, slideshow, photo, google photos, google picasa, image, images gallery, lightbox, justified gallery, picasa, picasa web, photo, photos
 Requires at least: 3.0.1
-Tested up to: 5.1.1
-Stable tag: 3.2.2
+Tested up to: 5.2.2
+Stable tag: 3.2.3
 
 The best Google Photos Gallery plugin to display your Google Photo Albums on your WordPress blog. It is fully responsive and looks awesome. 
 
@@ -178,6 +178,9 @@ For example
 * Photoswipe - Dmitry Semenov
 
 == Changelog ==
+
+= 3.2.3 =
+* Fixed bug where Google API returns images if album id not specified
 
 = 3.2.2 =
 * Fixed image light box bug, dimensions was not honouring Lightbox image size in settings

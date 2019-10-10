@@ -24,10 +24,10 @@ div[data-type="imagely/nextgen-gallery"] .ngg-freeform-toolbar {
 
 div[data-type="imagely/nextgen-gallery"] .add-ngg-gallery-wrap {
     min-height: 210px;
-    margin: 0 0 -50px !important;
+    margin: 0 !important;
     padding: 80px;
     position: relative;
-    top: -40px;
+    top: -32px;
     width: 100%;
     z-index: 1;
     background: #fff;
@@ -80,11 +80,9 @@ div[data-type="imagely/nextgen-gallery"] .nggPlaceholder {
     color: #fff;
     font-family: sans-serif;
     font-size: 20px;
-    margin-bottom: -25px !important;
     outline: none !important;
     position: relative;
     text-align: center;
-    top: -15px;
     width: 100%;
     z-index: 2;
     min-height: 210px;

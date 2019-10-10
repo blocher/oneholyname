@@ -1,7 +1,12 @@
 <div class="wrap options-page">
 	<h2><?php echo esc_html( $title ); ?></h2>
 
-<div id="nav"><?php if(!empty($navigation)){echo $navigation;} ?></div>
+<div class="nav">
+	<a class="nav-link" href="https://metinsaylan.com/wordpress/plugins/countdown/">Plugin page</a>
+	<a class="nav-link" href="https://metinsaylan.com/wordpress/plugins/countdown/help/">Usage</a>
+	<a class="nav-link" href="https://metinsaylan.com/docs/countdown-widget-shortcode/">Shortcode</a>
+	<a class="nav-link" href="https://metinsaylan.com/donate/">❤️ Donate</a>
+</div>
 
 <div id="notifications">
 <?php if ( isset($_GET['message']) && isset($messages[$_GET['message']]) ) { ?>
@@ -33,7 +38,7 @@ switch ( $field['type'] ) {
 	case 'close': ?>
 
 <div class="submit-wrap">
-	<?php submit_button( 'Save Changes', 'primary', 'save', false ); ?>
+	<?php submit_button( 'Save Changes', 'primary', 'save', false ); ?> <a href="https://metinsaylan.com/donate/" target="_blank" class="button-secondary">❤️ <?php _e('Donate'); ?></a> 
 </div>
 
 </div><!-- settings-wrap -->

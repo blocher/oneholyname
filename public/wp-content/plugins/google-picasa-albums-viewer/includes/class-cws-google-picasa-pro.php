@@ -69,7 +69,7 @@ class CWS_Google_Picasa_Pro {
 	public function __construct() {
         
 		$this->plugin_name = 'cws-google-picasa-pro';
-		$this->version = '3.2.2';
+		$this->version = '3.2.3';
 		$this->isPro = 0;
 		$this->load_dependencies();
 		$this->set_locale();

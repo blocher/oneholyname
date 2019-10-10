@@ -92,6 +92,11 @@ class Advanced_Excerpt {
 		$page_type_matches = array_intersect( $page_types, $skip_page_types );
 		if ( !empty( $page_types ) && !empty( $page_type_matches ) ) return;
 
+		// skip woocommerce products
+		if ( in_array( 'woocommerce', $skip_page_types ) && get_post_type( get_the_ID() ) == 'product' ) {
+			return;
+		}
+
 		if ( 1 == $this->options['the_excerpt'] ) {
 			remove_all_filters( 'get_the_excerpt' );
 			remove_all_filters( 'the_excerpt' );
@@ -219,11 +224,16 @@ class Advanced_Excerpt {
 	}
 
 	function filter( $content ) {
+
 		extract( wp_parse_args( $this->options, $this->default_options ), EXTR_SKIP );
 
 		if ( true === apply_filters( 'advanced_excerpt_skip_excerpt_filtering', false ) ) {
 			return $content;
-		}
+        }
+        
+        if ( is_post_type_archive( 'tribe_events' ) ) {
+            return $content;
+        }
 
 		global $post;
 		if ( $the_content_no_break && false !== strpos( $post->post_content, '<!--more-->' ) && 'content' == $this->filter_type ) {
@@ -253,7 +263,7 @@ class Advanced_Excerpt {
 
 		// add our filter back in
 		if ( $content_has_filter ) { 
-			add_filter( 'the_content', array( $this, 'filter_content' ) );
+            add_filter( 'the_content', array( $this, 'filter_content' ) );
 		}
 
 		// From the default wp_trim_excerpt():
@@ -297,6 +307,7 @@ class Advanced_Excerpt {
 		}
 
 		return apply_filters( 'advanced_excerpt_content', $text );
+
 	}
 
 	function text_excerpt( $text, $length, $length_type, $finish ) {
@@ -355,6 +366,9 @@ class Advanced_Excerpt {
 			}
 			
 			$read_more = str_replace( '{title}', get_the_title(), $read_more );
+			$read_more = do_shortcode( $read_more );
+			$read_more = apply_filters( 'advanced_excerpt_read_more_text', $read_more );
+
 			$ellipsis .= sprintf( $link_template, get_permalink(), $read_more, $screen_reader_html );
 
 		}
@@ -369,7 +383,7 @@ class Advanced_Excerpt {
 			 * There was previously a problem where our 'read-more' links were being appending incorrectly into unsuitable HTML tags.
 			 * As such we're now maintaining a whitelist of HTML tags that are suitable for being appended into.
 			 */
-			$allow_tags_to_append_into = apply_filters( 'advanced_excerpt_allow_tags_to_append_into', array( 'p', 'div', 'article', 'section' ) );
+			$allow_tags_to_append_into = apply_filters( 'advanced_excerpt_allow_tags_to_append_into', array( 'p', 'article', 'section' ) );
 
 			if( !in_array( $last_tag, $allow_tags_to_append_into ) ) {
 				// After the content
@@ -428,6 +442,7 @@ class Advanced_Excerpt {
 			'author'		=> __( 'Author Archive', 'advanced-excerpt' ),
 			'category'		=> __( 'Category Archive', 'advanced-excerpt' ),
 			'tag'			=> __( 'Tag Archive', 'advanced-excerpt' ),
+			'woocommerce'   => __( 'WooCommerce Products', 'advanced-excerpt' ),
 		);
 		$exclude_pages_list = apply_filters( 'advanced_excerpt_exclude_pages_list', $exclude_pages_list );
 

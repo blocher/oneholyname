@@ -1090,6 +1090,7 @@ class Mixin_NextGen_Admin_Page_Instance_Methods extends Mixin
             if ($this->object->is_post_request() && $this->has_method($action)) {
                 $this->object->{$action}($this->object->param($this->context));
             }
+            $index_template = $this->object->index_template();
             foreach ($this->object->get_forms() as $form) {
                 $form->page = $this->object;
                 $form->enqueue_static_resources();
@@ -1098,7 +1099,14 @@ class Mixin_NextGen_Admin_Page_Instance_Methods extends Mixin
                         $form->{$action}($this->object->param($form->context));
                     }
                 }
-                $tabs[] = $this->object->to_accordion_tab($form);
+                // This is a strange but necessary hack: this seemingly extraneous use of to_accordion_tab() normally
+                // just means that we're rendering the admin content twice but NextGen Pro's pricelist and coupons pages
+                // actually depend on echo'ing the $tabs variable here, unlike the 'nextgen_admin_page' template which
+                // doesn't make use of the $tabs parameter at all.
+                // TLDR: The next two lines are necessary for the pricelist and coupons pages.
+                if ($index_template !== 'photocrati-nextgen_admin#nextgen_admin_page') {
+                    $tabs[] = $this->object->to_accordion_tab($form);
+                }
                 $forms[] = $form;
                 if ($form->has_method('get_model') && $form->get_model()) {
                     if ($form->get_model()->is_invalid()) {
@@ -1112,7 +1120,7 @@ class Mixin_NextGen_Admin_Page_Instance_Methods extends Mixin
             // Render the view
             $index_params = array('page_heading' => $this->object->get_page_heading(), 'tabs' => $tabs, 'forms' => $forms, 'errors' => $errors, 'success' => $success, 'form_header' => FALSE, 'header_message' => $this->object->get_header_message(), 'nonce' => M_Security::create_nonce($this->object->get_required_permission()), 'show_save_button' => $this->object->show_save_button(), 'model' => $this->object->has_method('get_model') ? $this->get_model() : NULL, 'logo' => $this->get_router()->get_static_url('photocrati-nextgen_admin#imagely_icon.png'));
             $index_params = array_merge($index_params, $this->object->get_index_params());
-            $this->render_partial($this->object->index_template(), $index_params);
+            $this->render_partial($index_template, $index_params);
         } else {
             $this->render_view('photocrati-nextgen_admin#not_authorized', array('name' => $this->object->name, 'title' => $this->object->get_page_title()));
         }

@@ -56,6 +56,7 @@ class C_Photocrati_Resource_Manager
 		if (preg_match("#wp-admin/(network/)?update|wp-login|wp-signup#", $_SERVER['REQUEST_URI'])) $retval = FALSE;
 		else if (isset($_GET['display_gallery_iframe'])) 				  $retval = FALSE;
 		else if (defined('WP_ADMIN') && WP_ADMIN && defined('DOING_AJAX') && DOING_AJAX) $retval = FALSE;
+		else if (strpos($_SERVER['REQUEST_URI'], '/nextgen-image/') !== FALSE) $retval = FALSE;
 		else if (preg_match("/(js|css|xsl|xml|kml)$/", $_SERVER['REQUEST_URI'])) $retval = FALSE;
 		else if (preg_match("#/feed(/?)$#i", $_SERVER['REQUEST_URI']) || !empty($_GET['feed'])) $retval = FALSE;
 		elseif (preg_match("/\\.(\\w{3,4})$/", $_SERVER['REQUEST_URI'], $match)) {

@@ -5,11 +5,13 @@ Plugin Name: Print, PDF & Email by PrintFriendly
 Plugin URI: http://www.printfriendly.com
 Description: PrintFriendly & PDF button for your website. Optimizes your pages and brand for print, pdf, and email.
 Name and URL are included to ensure repeat visitors and new visitors when printed versions are shared.
-Version: 3.14.5
+Version: 3.14.7
 Author: Print, PDF, & Email by PrintFriendly
 Author URI: http://www.PrintFriendly.com
 
 Changelog :
+3.14.7 - Remove unnessary closing style tag. Add outline:none to printfriendly button link to remove outline on click.
+3.14.6 - Improvements to CSS and how we load JS. Moved button CSS from page head to a seperate stylesheet. Load JS using async attribute (now that all major browsers support async attribute, we need not insert JS dynamically)
 3.14.5 - New Feature: Password protected image option. Select this option if your images are password protected so they can be included in PDFs.
 3.14.4 - Make save options work without Pro field(email, domain) validation check.
 3.14.3 - Plugin copy and style changes. No functionality changes.
@@ -283,7 +285,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
 
     function init_error_reporting() {
       try {
-        require_once 'vendor/PrintFriendly/Raven/Autoloader.php';
+        require_once(dirname(__FILE__).'/vendor/PrintFriendly/Raven/Autoloader.php');
 
         PrintFriendly_Raven_Autoloader::register();
 
@@ -396,44 +398,13 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
         <style type="text/css" media="screen">
           div.printfriendly {
             margin: <?php echo $this->options['margin_top'].'px '.$this->options['margin_right'].'px '.$this->options['margin_bottom'].'px '.$this->options['margin_left'].'px'; ?>;
-            position: relative;
-            z-index: 1000;
           }
           div.printfriendly a, div.printfriendly a:link, div.printfriendly a:visited {
             font-size: <?php echo $this->options['text_size']; ?>px;
             color: <?php echo $this->options['text_color']; ?>;
-            vertical-align: bottom;
-          }
-          .printfriendly a {
-            box-shadow:none;
-          }
-          .printfriendly a:hover {
-            cursor: pointer;
-          }
-          .printfriendly a img  {
-            border: none;
-            padding:0;
-            margin-right: 6px;
-            box-shadow: none;
-            -webkit-box-shadow: none;
-            -moz-box-shadow: none;
-          }
-          .printfriendly a span{
-            vertical-align: bottom;
-          }
-          .pf-alignleft {
-            float: left;
-          }
-          .pf-alignright {
-            float: right;
-          }
-          div.pf-aligncenter {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
           }
         </style>
+		<link rel="stylesheet" href="<?php echo plugin_dir_url(__FILE__); ?>printfriendly.css" media="screen" />
         <style type="text/css" media="print">
           .printfriendly {
             display: none;
@@ -477,12 +448,8 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
           var pfDisablePrint = '<?php echo esc_js($this->options['print']); ?>';
           var pfCustomCSS = '<?php echo esc_js(esc_url($this->options['custom_css_url'])); ?>';
           var pfPlatform = 'Wordpress';
-      (function() {
-            var e = document.createElement('script'); e.type="text/javascript";
-            e.src = 'https://cdn.printfriendly.com/printfriendly.js';
-            document.getElementsByTagName('head')[0].appendChild(e);
-        })();
       </script>
+      <script async src='https://cdn.printfriendly.com/printfriendly.js'></script>
 <?php
       }
     }
@@ -583,7 +550,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
         if ( 'none' != $this->options['content_position'] )
           $align = ' pf-align'.$this->options['content_position'];
     $href = str_replace("&", "&amp;", $href );
-        $button = apply_filters( 'printfriendly_button', '<div class="printfriendly'.$align.'"><a href="'.$href.'" rel="nofollow" '.$onclick.' class="noslimstat" title="Printer Friendly, PDF & Email">'.$this->button().'</a></div>' );
+        $button = apply_filters( 'printfriendly_button', '<div class="printfriendly'.$align.'"><a href="'.$href.'" style="outline:none;" rel="nofollow" '.$onclick.' class="noslimstat" title="Printer Friendly, PDF & Email">'.$this->button().'</a></div>' );
     return $button;
   }
 
@@ -1440,8 +1407,8 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
     function on_load_printfriendly() {
       global $wp_version;
       if($this->wp_version_gt30()) {
-        require_once('includes/meta-boxes.php');
-        //require_once('includes/nav-menu.php');
+        //require_once(dirname(__FILE__).'/includes/meta-boxes.php');
+        //require_once(dirname(__FILE__).''includes/nav-menu.php');
         wp_enqueue_script('post');
 
         add_meta_box('categorydiv', __('Only display when post is in:', $this->hook), 'post_categories_meta_box', 'settings_page_'. $this->hook, 'normal', 'core');
@@ -1712,7 +1679,7 @@ if ( ! class_exists( 'PrintFriendly_WordPress' ) ) {
         <!--Section 3 Button Positioning-->
         <div id="button-positioning">
           <h3><?php _e( "Button Positioning", $this->hook ); ?>
-          <span id="css"><input type="checkbox" name="<?php echo $this->option_name; ?>[enable_css]" value="<?php $this->val('enable_css');?>" <?php $this->checked('enable_css', 'off'); ?> /><?php _e('Do not use CSS for button styles'); ?></span>
+          <span id="css"><input type="checkbox" name="<?php echo $this->option_name; ?>[enable_css]" value="<?php $this->val('enable_css');?>" <?php $this->checked('enable_css', 'off'); ?> /><?php _e('Do not use CSS for button styles', $this->hook); ?></span>
                 </h3>
                 <div id="button-positioning-options">
                   <div id="alignment">

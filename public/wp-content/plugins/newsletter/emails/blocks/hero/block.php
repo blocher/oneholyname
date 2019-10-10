@@ -7,10 +7,9 @@
 
 /* @var $options array */
 /* @var $wpdb wpdb */
-include NEWSLETTER_INCLUDES_DIR . '/helper.php';
 
 $defaults = array(
-    'url' => '',
+    'button_url' => '',
     'title' => 'An Awesome Title',
     'text' => 'This is just a simple text you should change',
     'font_family' => 'Helvetica, Arial, sans-serif',
@@ -26,12 +25,20 @@ $defaults = array(
     'button_label' => 'Click Here',
     'button_color' => '#ffffff',
     'button_background' => '#256F9C',
-    'layout' => 'full'
+    'layout' => 'full',
+    'block_padding_top'=>20,
+    'block_padding_bottom'=>20
 );
 
 $options = array_merge($defaults, $options);
+$layout = $options['layout'];
 
-$url = $options['url'];
+if ($layout == 'full') {
+    $options = array_merge(array('block_padding_left'=>0, 'block_padding_right'=>0), $options);
+} else {
+    $options = array_merge(array('block_padding_left'=>15, 'block_padding_right'=>15), $options);
+}
+$url = $options['button_url'];
 
 $font_family = $options['font_family'];
 $font_size = $options['font_size'];
@@ -48,12 +55,7 @@ $button_background = $options['button_background'];
 $button_label = $options['button_label'];
 $layout = $options['layout'];
 
-$options['block_padding_top'] = 20;
-$options['block_padding_bottom'] = 20;
-$options['block_padding_left'] = 0;
-$options['block_padding_right'] = 0;
-
-if (!empty($options['image'])) {
+if (!empty($options['image']['id'])) {
     if ($layout == 'full') {
         $image = tnp_media_resize($options['image']['id'], array(600, 0));
     } else {
@@ -90,7 +92,7 @@ if (!empty($options['image'])) {
             color: <?php echo $button_color ?>;
             font-family:<?php echo $font_family ?>; 
             font-size:16px; 
-            font-weight:bold; 
+            font-weight:normal; 
             letter-spacing:-.5px; 
             line-height:150%; 
             padding-top:15px; 
@@ -105,6 +107,7 @@ if (!empty($options['image'])) {
         .hero-image {
             max-width: 100%!important; 
             display: block;
+            border: 0px;
         }   
     </style>
 
@@ -114,7 +117,7 @@ if (!empty($options['image'])) {
         <tr>
             <td class="padding-copy tnpc-row-edit">
                 <a href="<?php echo $url ?>" target="_blank" rel="noopener nofollow">
-                    <img src="<?php echo $image ?>" border="0" alt="" inline-class="hero-image">
+                    <img src="<?php echo $image ?>" border="0" alt="Image" inline-class="hero-image">
                 </a>
             </td>
         </tr>
