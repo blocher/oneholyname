@@ -3,14 +3,15 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) { die('You 
 
 /**
  * Plugin Name: NextGEN Gallery
- * Description: The most popular gallery plugin for WordPress and one of the most popular plugins of all time with over 26 million downloads.
- * Version: 3.2.18
+ * Description: The most popular gallery plugin for WordPress and one of the most popular plugins of all time with over 28 million downloads.
+ * Version: 3.3.6
  * Author: Imagely
  * Plugin URI: https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/
  * Author URI: https://www.imagely.com
  * License: GPLv2
  * Text Domain: nggallery
  * Domain Path: /products/photocrati_nextgen/modules/i18n/lang
+ * Requires PHP: 5.4
  */
 
 if (!class_exists('E_Clean_Exit')) { class E_Clean_Exit extends RuntimeException {} }
@@ -269,9 +270,7 @@ class C_NextGEN_Bootstrap
 		if ($tmp && (int)$tmp <= 300) @ini_set('xdebug.max_nesting_level', 300);
 
 		// Include pope framework
-		require_once(implode(
-			DIRECTORY_SEPARATOR, array(NGG_PLUGIN_DIR, 'pope','lib','autoload.php')
-		));
+		require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'vendor/autoload.php');
 
 		// Enable/disable pope caching. For now, the pope cache will not be used in multisite environments
 		if (class_exists('C_Pope_Cache')) {
@@ -622,7 +621,7 @@ class C_NextGEN_Bootstrap
 
 		// Set context to path if subdirectory install
 		$parts     = parse_url($router->get_base_url(FALSE));
-		$siteparts = parse_url(get_option('siteurl'));
+		$siteparts = parse_url(get_option('home'));
 
         if (isset($parts['path']) && isset($siteparts['path']))
         {
@@ -714,7 +713,7 @@ class C_NextGEN_Bootstrap
 		define('NGG_PRODUCT_URL', path_join(str_replace("\\" , '/', NGG_PLUGIN_URL), 'products'));
 		define('NGG_MODULE_URL', path_join(str_replace("\\", '/', NGG_PRODUCT_URL), 'photocrati_nextgen/modules'));
 		define('NGG_PLUGIN_STARTED_AT', microtime());
-		define('NGG_PLUGIN_VERSION', '3.2.18');
+		define('NGG_PLUGIN_VERSION', '3.3.6');
 
 		define(
 			'NGG_SCRIPT_VERSION',
@@ -957,9 +956,6 @@ function ngg_fs_custom_connect_message(
 	);
 }
 
-
-
-
 /**
  * Add custom NextGEN Gallery icon for Freemius
  *
@@ -1074,7 +1070,8 @@ function ngg_fs( $activate_for_all = false ) {
 }
 
 // Init Freemius
-ngg_fs();
+if (!defined('NGG_DISABLE_FREEMIUS') || !NGG_DISABLE_FREEMIUS)
+    ngg_fs();
 
 // #endregion Freemius
 

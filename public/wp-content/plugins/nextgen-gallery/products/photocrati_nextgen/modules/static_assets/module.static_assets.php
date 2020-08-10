@@ -101,26 +101,29 @@ class M_Static_Assets extends C_Base_Module
      */
     static function get_static_override_dir($module_id = NULL)
     {
-        $dir = path_join(WP_CONTENT_DIR, 'ngg');
-        if (!@file_exists($dir))
-            wp_mkdir_p($dir);
+        $root = trailingslashit(path_join(WP_CONTENT_DIR, 'ngg'));
+        if (!@file_exists($root) && is_writable(trailingslashit(WP_CONTENT_DIR)))
+            wp_mkdir_p($root);
 
-        $dir = path_join($dir, 'modules');
-        if (!@file_exists($dir))
-            wp_mkdir_p($dir);
+        $modules = trailingslashit(path_join($root, 'modules'));
+
+        if (!@file_exists($modules) && is_writable($root))
+            wp_mkdir_p($modules);
 
         if ($module_id)
         {
-            $dir = path_join($dir, $module_id);
-            if (!@file_exists($dir))
-                wp_mkdir_p($dir);
+            $module_dir = trailingslashit(path_join($modules, $module_id));
+            if (!@file_exists($module_dir) && is_writable($modules))
+                wp_mkdir_p($module_dir);
 
-            $dir = path_join($dir, 'static');
-            if (!@file_exists($dir))
-                wp_mkdir_p($dir);
+            $static_dir = trailingslashit(path_join($module_dir, 'static'));
+            if (!@file_exists($static_dir) && is_writable($module_dir))
+                wp_mkdir_p($static_dir);
+
+            return $static_dir;
         }
 
-        return $dir;
+        return $modules;
     }
 }
 

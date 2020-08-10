@@ -1,7 +1,7 @@
 <?php
 defined('ABSPATH') || exit;
 
-@include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
+include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
 $controls = new NewsletterControls();
 $module = NewsletterSubscription::instance();
 
@@ -117,7 +117,7 @@ if ($controls->is_action()) {
     <div id="tnp-heading">
 
         <h2><?php _e('Subscription Configuration', 'newsletter') ?></h2>
-        <?php $controls->page_help('https://www.thenewsletterplugin.com/documentation/subscription') ?>
+        <?php $controls->page_help('https://www.thenewsletterplugin.com/documentation/subscription/subscription/') ?>
 
     </div>
 
@@ -139,24 +139,22 @@ if ($controls->is_action()) {
                     <table class="form-table">
                         
                         <tr>
-                            <th><?php _e('Opt In', 'newsletter') ?></th>
+                            <th><?php $controls->field_label(__('Opt In', 'newsletter'), '/documentation/subscription/subscription/') ?></th>
                             <td>
                                 <?php $controls->select('noconfirmation', array(0 => __('Double Opt In', 'newsletter'), 1 => __('Single Opt In', 'newsletter'))); ?>
-                                <?php $controls->help('https://www.thenewsletterplugin.com/documentation/subscription#opt-in') ?>
                             </td>
                         </tr>
                         <tr>
-                            <th><?php _e('Override Opt In', 'newsletter') ?></th>
+                            <th><?php $controls->field_label(__('Override Opt In', 'newsletter'), '/documentation/subscription/subscription/#advanced') ?></th>
                             <td>
                                 <?php $controls->yesno('optin_override'); ?>
                             </td>
                         </tr>
                         <tr>
-                            <th><?php _e('Repeated subscriptions', 'newsletter') ?></th>
+                            <th><?php $controls->field_label(__('Repeated subscriptions', 'newsletter'), '/documentation/subscription/subscription/') ?></th>
                             <td>
                                 <?php //$controls->select('multiple', array('0'=>__('No', 'newsletter'), '1'=>__('Yes', 'newsletter'), '2'=>__('On new lists added', 'newsletter'))); ?> 
                                 <?php $controls->select('multiple', array('0'=>__('No', 'newsletter'), '1'=>__('Yes', 'newsletter'))); ?> 
-                                <?php $controls->help('https://www.thenewsletterplugin.com/documentation/subscription#repeated')?>
                             </td>
                         </tr>
                         

@@ -45,6 +45,7 @@ input[type="radio"], img {
 }
 #custom-button-preview img {
   margin-right: 6px;
+  vertical-align: bottom;
 }
 #placement-adv-options {
   float: left;

@@ -1,7 +1,7 @@
 <?php
 
 define('NGG_ATTACH_TO_POST_SLUG', 'nextgen-attach_to_post');
-define('NGG_ATTACH_TO_POST_VERSION', '3.2.10');
+define('NGG_ATTACH_TO_POST_VERSION', '3.2.21');
 
 class M_Attach_To_Post extends C_Base_Module
 {

@@ -198,6 +198,10 @@ class M_Gallery_Display extends C_Base_Module
         if (defined('FONT_AWESOME_OFFICIAL_LOADED') && !is_admin())
             return;
 
+        $settings = C_NextGen_Settings::get_instance();
+        if ($settings->get('disable_fontawesome'))
+            return;
+
         wp_register_script(
             'fontawesome_v4_shim',
             'https://use.fontawesome.com/releases/v5.3.1/js/v4-shims.js',

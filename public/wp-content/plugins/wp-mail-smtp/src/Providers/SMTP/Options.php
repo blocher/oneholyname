@@ -20,12 +20,12 @@ class Options extends OptionsAbstract {
 
 		parent::__construct(
 			array(
-				'logo_url'    => wp_mail_smtp()->plugin_url . '/assets/images/smtp.svg',
+				'logo_url'    => wp_mail_smtp()->assets_url . '/images/providers/smtp.svg',
 				'slug'        => 'smtp',
 				'title'       => esc_html__( 'Other SMTP', 'wp-mail-smtp' ),
 				'description' => sprintf(
 					wp_kses(
-						/* translators: %s - URL to a related article on WPForms.com. */
+						/* translators: %s - URL to SMTP documentation. */
 						__( 'Use the SMTP details provided by your hosting provider or email service.<br><br>To see recommended settings for the popular services as well as troubleshooting tips, check out our <a href="%s" target="_blank" rel="noopener noreferrer">SMTP documentation</a>.', 'wp-mail-smtp' ),
 						array(
 							'br' => array(),

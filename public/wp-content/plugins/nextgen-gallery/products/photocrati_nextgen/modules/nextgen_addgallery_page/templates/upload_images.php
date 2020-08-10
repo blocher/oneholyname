@@ -115,7 +115,15 @@
                             });
 
                             // Change the text for the dragdrop
-                            $('.plupload_droptext').html("<?php _e('Drag image and ZIP files here or click <strong>Add Files</strong>', 'nggallery'); ?>");
+                            <?php
+                            $settings = C_NextGen_Settings::get_instance();
+                            $display_zips = (!is_multisite() || (is_multisite() && $settings->get('wpmuZipUpload')));
+                            if ($display_zips)
+                                $message = __('Drag image and ZIP files here or click <strong>Add Files</strong>', 'nggallery');
+                            else
+                                $message = __('Drag image files here or click <strong>Add Files</strong>', 'nggallery');
+                            ?>
+                            $('.plupload_droptext').html("<?php print $message; ?>");
 
                             // Move the buttons
                             var buttons = $('.plupload_buttons').detach();

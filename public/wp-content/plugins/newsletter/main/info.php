@@ -1,17 +1,25 @@
 <?php
+/* @var $this Newsletter */
 defined('ABSPATH') || exit;
 
-@include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
-$module = Newsletter::instance();
+include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
 $controls = new NewsletterControls();
+
+$current_language = $this->get_current_language();
+
+$is_all_languages = $this->is_all_languages();
+
+//if (!$is_all_languages) {
+//    $controls->warnings[] = 'You are configuring the language "<strong>' . $current_language . '</strong>". Switch to "all languages" to see every options.';
+//}
 
 if (!$controls->is_action()) {
     $controls->data = get_option('newsletter_main');
 } else {
 
     if ($controls->is_action('save')) {
-        $module->merge_options($controls->data);
-        $module->save_options($controls->data, 'info');
+        $this->merge_options($controls->data);
+        $this->save_options($controls->data, 'info');
         $controls->add_message_saved();
     }
 }
@@ -108,12 +116,6 @@ if (!$controls->is_action()) {
                             <th>Instagram URL</th>
                             <td>
                                 <?php $controls->text('instagram_url', 40); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Google+ URL</th>
-                            <td>
-                                <?php $controls->text('googleplus_url', 40); ?>
                             </td>
                         </tr>
                         <tr>

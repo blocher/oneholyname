@@ -87,6 +87,10 @@ if ( isset( $data['g-recaptcha-response'] ) ) {
 	$submission_handler->handle_recaptcha( $recaptcha_response );
 }
 
+if ( isset( $data['recaptcha_three_response'] ) ) {
+	$submission_handler->handle_recaptcha( $data['recaptcha_three_response'], 3 );
+}
+
 // Loop through the submitted data to sanitize and format values
 $merge_variables = $submission_handler->get_submitted_merge_values( $data, $form_fields );
 
@@ -208,6 +212,14 @@ if ( is_wp_error( $member_exists ) || $double_optin_resubscribe === true ) {
 $member_data = apply_filters( 'yikes-mailchimp-filter-subscribe-request', $member_data, $form_id );
 $member_data = apply_filters( "yikes-mailchimp-filter-subscribe-request-{$form_id}", $member_data, $form_id );
 
+// If this is the first time subscriber add the tags along with the subscribe request.
+// This allows for double opt-in forms submissions to be tagged.
+if ( ! empty( $form_data['tags'] ) && ! is_array( $member_exists ) ) {
+	foreach( $form_data['tags'] as $tag ) {
+		$member_data['tags'][] = $tag['name'];
+	}
+}
+
 // Send the API request to create a new subscriber! (Or update an existing one)
 $subscribe_response = $list_handler->member_subscribe( $list_id, md5( $sanitized_email ), $member_data );
 
@@ -217,10 +229,9 @@ $subscribe_response = $list_handler->member_subscribe( $list_id, md5( $sanitized
 if ( is_wp_error( $subscribe_response ) ) {
 	$submission_handler->handle_submission_response_error( $subscribe_response, $form_fields );
 } else {
-
 	// Check if we have any tags to add.
 	$tags_response = $submission_handler->maybe_add_tags( $form_data, $data );
-
+	
 	$submission_handler->handle_submission_response_success( $submission_settings, $page_data, $merge_variables, $notifications, $optin_settings, $new_subscriber );
 }
 

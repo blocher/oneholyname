@@ -1,55 +1,53 @@
 <?php
-if (!defined('ABSPATH'))
-    exit;
+/* @var $this NewsletterSubscription */
+defined('ABSPATH') || exit;
 
-@include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
+include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
 $controls = new NewsletterControls();
-$module = NewsletterSubscription::instance();
 
-$current_language = $module->get_current_language();
+$current_language = $this->get_current_language();
 
-$is_all_languages = $module->is_all_languages();
+$is_all_languages = $this->is_all_languages();
 
 if (!$is_all_languages) {
     $controls->warnings[] = 'You are configuring the language "<strong>' . $current_language . '</strong>". Switch to "all languages" to see every options.';
 }
 
 if (!$controls->is_action()) {
-    $controls->data = $module->get_options('profile', $current_language);
+    $controls->data = $this->get_options('profile', $current_language);
 } else {
     if ($controls->is_action('save')) {
-        $module->save_options($controls->data, 'profile', null, $current_language);
+        $this->save_options($controls->data, 'profile', null, $current_language);
+        $controls->data = $this->get_options('profile', $current_language);
         $controls->add_message_saved();
     }
 
     if ($controls->is_action('reset')) {
-        $controls->data = $module->reset_options('profile');
+        $controls->data = $this->reset_options('profile');
         $controls->add_message_done();
     }
 }
 
 $status = array(0 => __('Private', 'newsletter'), 1 => __('Show on profile page', 'newsletter'), 2 => __('Show on subscription form', 'newsletter'));
 $rules = array(0 => __('Optional', 'newsletter'), 1 => __('Required', 'newsletter'));
+$extra_type = array('text' => __('Text', 'newsletter'), 'select' => __('List', 'newsletter'));
 ?>
 
 <div class="wrap" id="tnp-wrap">
-
-    <?php $help_url = 'https://www.thenewsletterplugin.com/plugins/newsletter/subscription-module'; ?>
 
     <?php include NEWSLETTER_DIR . '/tnp-header.php'; ?>
 
     <div id="tnp-heading">
 
         <h2><?php _e('Subscription Form Fields and Layout', 'newsletter') ?></h2>
+
         <p>
-            This panel contains the configuration of the subscription and profile editing forms which collect the subscriber data you want to have.<br>
-            And let you to <strong>translate</strong> every single button and label.<br>
-            <strong>Preferences</strong> can be an important setting for your newsletter: <a href="https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-preferences" target="_blank">here you can read more about them</a>.
+            <a href="?page=newsletter_subscription_forms">HTML samples and hand coded forms</a>
         </p>
 
     </div>
 
-    <div id="tnp-body">  
+    <div id="tnp-body">
 
         <form action="" method="post">
             <?php $controls->init(); ?>
@@ -59,7 +57,6 @@ $rules = array(0 => __('Optional', 'newsletter'), 1 => __('Required', 'newslette
                 <ul>
                     <li><a href="#tabs-2">Main profile fields</a></li>
                     <li><a href="#tabs-3">Extra profile fields</a></li>
-                    <li><a href="#tabs-5">Form code</a></li>
                 </ul>
 
                 <div id="tabs-2">
@@ -120,7 +117,7 @@ $rules = array(0 => __('Optional', 'newsletter'), 1 => __('Required', 'newslette
                                             male: <?php $controls->text('sex_male'); ?>
                                             not specified: <?php $controls->text('sex_none'); ?>
                                         </td></tr>
-                                    
+
 
                                     <tr><th>Salutation titles</th><td>
 
@@ -180,8 +177,8 @@ $rules = array(0 => __('Optional', 'newsletter'), 1 => __('Required', 'newslette
                                         <td><?php $controls->text('privacy_error', 50); ?></td></tr>
                                 </table>
                                 <p class="description">
-                                    The privacy acceptance checkbox (required in many Europen countries) force the subscriber to
-                                    check it before proceeding. If an URL is specified the label become a link.
+                                    The privacy acceptance checkbox (required in many Europen countries) forces the subscriber to
+                                    check it before proceeding. If an URL is specified the label becomes a link.
                                 </p>
                             </td>
                         </tr>
@@ -211,9 +208,17 @@ $rules = array(0 => __('Optional', 'newsletter'), 1 => __('Required', 'newslette
 
                     <table class="widefat">
                         <thead>
-                            <tr>
-                                <th>Field</th><th>Name/Label</th><th>Placeholder</th><th>When/Where</th><th>Type</th><th>Rule</th><th>List values comma separated</th>
-                            </tr>
+                        <tr>
+                            <th>Field</th>
+                            <th>Name/Label</th>
+                            <th>Placeholder</th>
+	                        
+                                <th>When/Where</th>
+                                <th>Type</th>
+                                <th>Rule</th>
+	                        
+                            <th>List values comma separated</th>
+                        </tr>
                         </thead>
                         <?php for ($i = 1; $i <= NEWSLETTER_PROFILE_MAX; $i++) { ?>
                             <tr>
@@ -222,8 +227,12 @@ $rules = array(0 => __('Optional', 'newsletter'), 1 => __('Required', 'newslette
                                 <td><?php $controls->text('profile_' . $i . '_placeholder'); ?></td>
                                 <?php if ($is_all_languages) { ?>
                                 <td><?php $controls->select('profile_' . $i . '_status', $status); ?></td>
-                                <td><?php $controls->select('profile_' . $i . '_type', array('text' => 'Text', 'select' => 'List')); ?></td>
+                                <td><?php $controls->select('profile_' . $i . '_type', $extra_type); ?></td>
                                 <td><?php $controls->select('profile_' . $i . '_rules', $rules); ?></td>
+                                <?php } else { ?>
+                                <td><?php echo esc_html($status[$controls->get_value('profile_' . $i . '_status')]) ?></td>
+                                <td><?php echo esc_html($extra_type[$controls->get_value('profile_' . $i . '_type')]) ?></td>
+                                <td><?php echo esc_html($rules[$controls->get_value('profile_' . $i . '_rules')]) ?></td>
                                 <?php } ?>
                                 <td>
                                     <?php $controls->textarea_fixed('profile_' . $i . '_options', '200px', '50px'); ?>
@@ -234,17 +243,7 @@ $rules = array(0 => __('Optional', 'newsletter'), 1 => __('Required', 'newslette
 
                 </div>
 
-                <div id="tabs-5">
 
-                    <p>This panel shows the form HTML code generated by Newsletter if you want to copy it as starting point for a custom form.</p>
-
-                    <h3>Standard form code</h3>
-                    <textarea readonly style="width: 100%; height: 500px; font-family: monospace"><?php echo esc_html(NewsletterSubscription::instance()->get_subscription_form()); ?></textarea>
-
-                    <h3>Widget form code</h3>
-                    <textarea readonly style="width: 100%; height: 500px; font-family: monospace"><?php echo htmlspecialchars(NewsletterSubscription::instance()->get_subscription_form()); ?></textarea>
-
-                </div>
 
             </div>
 

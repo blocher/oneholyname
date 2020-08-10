@@ -4,7 +4,7 @@ namespace WPMailSMTP\Providers;
 
 use WPMailSMTP\Conflicts;
 use WPMailSMTP\Debug;
-use WPMailSMTP\MailCatcher;
+use WPMailSMTP\MailCatcherInterface;
 use WPMailSMTP\Options;
 use WPMailSMTP\WP;
 
@@ -32,7 +32,7 @@ abstract class MailerAbstract implements MailerInterface {
 	/**
 	 * @since 1.0.0
 	 *
-	 * @var MailCatcher
+	 * @var MailCatcherInterface
 	 */
 	protected $phpmailer;
 	/**
@@ -74,9 +74,9 @@ abstract class MailerAbstract implements MailerInterface {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param MailCatcher $phpmailer
+	 * @param MailCatcherInterface $phpmailer The MailCatcher object.
 	 */
-	public function __construct( MailCatcher $phpmailer ) {
+	public function __construct( MailCatcherInterface $phpmailer ) {
 
 		$this->options = new Options();
 		$this->mailer  = $this->options->get( 'mail', 'mailer' );
@@ -94,15 +94,12 @@ abstract class MailerAbstract implements MailerInterface {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param MailCatcher $phpmailer
+	 * @param MailCatcherInterface $phpmailer The MailCatcher object.
 	 */
 	public function process_phpmailer( $phpmailer ) {
 
-		// Make sure that we have access to MailCatcher class methods.
-		if (
-			! $phpmailer instanceof MailCatcher &&
-			! $phpmailer instanceof \PHPMailer
-		) {
+		// Make sure that we have access to PHPMailer class methods.
+		if ( ! wp_mail_smtp()->is_valid_phpmailer( $phpmailer ) ) {
 			return;
 		}
 
@@ -223,7 +220,11 @@ abstract class MailerAbstract implements MailerInterface {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Get the email headers.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
 	 */
 	public function get_headers() {
 
@@ -231,15 +232,21 @@ abstract class MailerAbstract implements MailerInterface {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Send the email.
+	 *
+	 * @since 1.0.0
+	 * @since 1.8.0 Added timeout for requests, same as max_execution_time.
 	 */
 	public function send() {
+
+		$timeout = (int) ini_get( 'max_execution_time' );
 
 		$params = Options::array_merge_recursive(
 			$this->get_default_params(),
 			array(
 				'headers' => $this->get_headers(),
 				'body'    => $this->get_body(),
+				'timeout' => $timeout ? $timeout : 30,
 			)
 		);
 
@@ -296,7 +303,13 @@ abstract class MailerAbstract implements MailerInterface {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Whether the email is sent or not.
+	 * We basically check the response code from a request to provider.
+	 * Might not be 100% correct, not guarantees that email is delivered.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
 	 */
 	public function is_email_sent() {
 
@@ -341,7 +354,11 @@ abstract class MailerAbstract implements MailerInterface {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Whether the mailer supports the current PHP version or not.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
 	 */
 	public function is_php_compatible() {
 
@@ -393,5 +410,55 @@ abstract class MailerAbstract implements MailerInterface {
 		}
 
 		return implode( '<br>', $smtp_text );
+	}
+
+	/**
+	 * Get the email addresses for the reply to email parameter.
+	 *
+	 * @deprecated 2.1.1
+	 *
+	 * @since 2.1.0
+	 * @since 2.1.1 Not used anymore.
+	 *
+	 * @return array
+	 */
+	public function get_reply_to_addresses() {
+
+		_deprecated_function( __CLASS__ . '::' . __METHOD__, '2.1.1 of WP Mail SMTP plugin' );
+
+		$reply_to = $this->phpmailer->getReplyToAddresses();
+
+		// Return the passed reply to addresses, if defined.
+		if ( ! empty( $reply_to ) ) {
+			return $reply_to;
+		}
+
+		// Return the default reply to addresses.
+		return apply_filters(
+			'wp_mail_smtp_providers_mailer_default_reply_to_addresses',
+			$this->default_reply_to_addresses()
+		);
+	}
+
+	/**
+	 * Get the default email addresses for the reply to email parameter.
+	 *
+	 * @deprecated 2.1.1
+	 *
+	 * @since 2.1.0
+	 * @since 2.1.1 Not used anymore.
+	 *
+	 * @return array
+	 */
+	public function default_reply_to_addresses() {
+
+		_deprecated_function( __CLASS__ . '::' . __METHOD__, '2.1.1 of WP Mail SMTP plugin' );
+
+		return [
+			$this->phpmailer->From => [
+				$this->phpmailer->From,
+				$this->phpmailer->FromName,
+			],
+		];
 	}
 }

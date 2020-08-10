@@ -1,12 +1,12 @@
 <?php
 /* @var $wpdb wpdb */
+/* @var $this NewsletterUsers */
 
 defined('ABSPATH') || exit;
 
-@include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
+include_once NEWSLETTER_INCLUDES_DIR . '/controls.php';
 
 $controls = new NewsletterControls();
-$module = NewsletterUsers::instance();
 
 if ($controls->is_action('remove_unconfirmed')) {
     $r = $wpdb->query("delete from " . NEWSLETTER_USERS_TABLE . " where status='S'");
@@ -50,8 +50,8 @@ if ($controls->is_action('list_remove')) {
 
 if ($controls->is_action('list_delete')) {
     $count = $wpdb->query("delete from " . NEWSLETTER_USERS_TABLE . " where list_" . ((int) $controls->data['list']) . "<>0");
-    $module->clean_sent_table();
-    $module->clean_stats_table();
+    $this->clean_sent_table();
+    $this->clean_stats_table();
 
     $controls->messages = $count . ' ' . __('deleted', 'newsletter');
 }
@@ -267,7 +267,7 @@ if ($controls->is_action('bounces')) {
                             </td>
                         </tr>
                         
-                        <?php if ($module->is_multilanguage()) { ?>
+                        <?php if ($this->is_multilanguage()) { ?>
                         <tr>
                             <td>Language</td>
                             <td>

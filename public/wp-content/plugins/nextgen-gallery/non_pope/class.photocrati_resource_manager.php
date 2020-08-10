@@ -82,7 +82,13 @@ class C_Photocrati_Resource_Manager
 	 */
 	function start_buffer()
 	{
-		if (defined('NGG_DISABLE_RESOURCE_MANAGER') && NGG_DISABLE_RESOURCE_MANAGER)
+	    // This is admittedly an ugly hack, but much easier than reworking the entire nextgen_admin modules
+        if (!empty($_GET['page']) && $_GET['page'] === 'ngg_addgallery' && isset($_GET['attach_to_post']))
+            $force = TRUE;
+        else
+            $force = FALSE;
+
+		if (defined('NGG_DISABLE_RESOURCE_MANAGER') && NGG_DISABLE_RESOURCE_MANAGER && !$force)
 			return;
 
 		if (apply_filters('run_ngg_resource_manager', $this->valid_request)) {

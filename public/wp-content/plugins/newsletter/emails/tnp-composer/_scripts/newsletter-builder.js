@@ -58,10 +58,11 @@ jQuery.fn.perform_block_edit = function () {
             if (!options) {
                 options = target.attr("data-options");
             }
-            //debugger;
+
             jQuery("#tnpc-block-options-form").load(ajaxurl, {
                 action: "tnpc_options",
                 id: container.data("id"),
+                context_type: tnp_context_type,
                 options: options
             }, function () {
                 start_options = jQuery("#tnpc-block-options-form").serialize();
@@ -122,14 +123,9 @@ jQuery(function () {
     if (!preloadedContent) {
         preloadedContent = jQuery('input[name="options[body]"]').val();
     }
-    // console.log(preloadedContent);
     if (!preloadedContent) {
         tnpc_show_presets();
     } else {
-        // Extract the body part
-        //var x = preloadedContent.indexOf("<body");
-        //var y = preloadedContent.indexOf("</body>");
-        //preloadedContent = preloadedContent.substring(x, y);
         jQuery('#newsletter-builder-area-center-frame-content').html(preloadedContent);
         start_composer();
     }
@@ -153,9 +149,7 @@ function start_composer() {
             return helper;
         },
         update: function (event, ui) {
-            //console.log(event);
-            //console.log(ui.item.data("id"));
-            // debugger;
+
             if (ui.item.attr("id") == "draggable-helper") {
                 loading_row = jQuery('<div style="text-align: center; padding: 20px; background-color: #d4d5d6; color: #52BE7F;"><i class="fa fa-cog fa-2x fa-spin" /></div>');
                 ui.item.before(loading_row);
@@ -246,19 +240,25 @@ function start_composer() {
     });
 
     // live preview from block options *** EXPERIMENTAL ***
-    jQuery('#tnpc-block-options-form').change(function () {
+    jQuery('#tnpc-block-options-form').change(function (event) {
         var data = jQuery("#tnpc-block-options-form").serialize();
         jQuery.post(ajaxurl, data, function (response) {
             target.html(response);
+            if (event.target.dataset.afterRendering === 'reload') {
+                container.find(".tnpc-row-edit-block").click();
+            }
         }).fail(function () {
             alert("Block rendering failed");
         });
+            
+    
 
     });
 
     jQuery(".tnpc-row").add_delete();
     jQuery(".tnpc-row").add_block_edit();
     jQuery(".tnpc-row").add_block_clone();
+
 
     tnpc_mobile_preview();
 
@@ -292,7 +292,7 @@ function tnpc_save(form) {
 
     let css = jQuery.trim(form.elements["options[css]"].value);
 
-    let export_content = '<!DOCTYPE html>\n<html>\n<head>\n<title>{subject}</title>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta http-equiv="X-UA-Compatible" content="IE=edge">\n';
+    let export_content = '<!DOCTYPE html>\n<html>\n<head>\n<title>{email_subject}</title>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta http-equiv="X-UA-Compatible" content="IE=edge">\n';
     export_content += '<style type="text/css">' + css + '</style>';
     export_content += '</head>\n<body style="margin: 0; padding: 0;">\n';
     export_content += preload_export_html;
@@ -369,8 +369,7 @@ function tnpc_reload_options(e) {
             options[i].value = 'tnpc_options';
         }
     }
-    //console.log(options);
-    //debugger;
+
     options["action"] = "tnpc_options";
     options["id"] = container.data("id");
     jQuery("#tnpc-block-options-form").load(ajaxurl, options);

@@ -11,6 +11,7 @@ class Geo {
 
 	/**
 	 * Get the current site hostname.
+	 * In case of CLI we don't have SERVER_NAME, so use host name instead, may be not a domain name.
 	 * Examples: example.com, localhost.
 	 *
 	 * @since 1.5.0
@@ -19,7 +20,7 @@ class Geo {
 	 */
 	public static function get_site_domain() {
 
-		return ! empty( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : wp_parse_url( get_home_url( get_current_blog_id() ), PHP_URL_HOST );
+		return ! empty( $_SERVER['SERVER_NAME'] ) ? wp_unslash( $_SERVER['SERVER_NAME'] ) : wp_parse_url( get_home_url( get_current_blog_id() ), PHP_URL_HOST );
 	}
 
 	/**
@@ -47,6 +48,7 @@ class Geo {
 	 *
 	 * @since 1.5.0
 	 * @since 1.6.0 Added new geo API endpoint, provided by WPForms.
+	 * @since 2.0.0 Updated the WPForms geo API endpoint to v3.
 	 *
 	 * @param string $ip
 	 *
@@ -59,7 +61,7 @@ class Geo {
 			return array();
 		}
 
-		$request = wp_remote_get( 'https://geo.wpforms.com/v2/geolocate/json/' . $ip );
+		$request = wp_remote_get( 'https://geo.wpforms.com/v3/geolocate/json/' . $ip );
 
 		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ), true );
@@ -69,7 +71,7 @@ class Geo {
 					'longitude' => sanitize_text_field( $request['longitude'] ),
 					'city'      => sanitize_text_field( $request['city'] ),
 					'region'    => sanitize_text_field( $request['region_name'] ),
-					'country'   => sanitize_text_field( $request['country_code'] ),
+					'country'   => sanitize_text_field( $request['country_iso'] ),
 					'postal'    => sanitize_text_field( $request['zip_code'] ),
 				);
 

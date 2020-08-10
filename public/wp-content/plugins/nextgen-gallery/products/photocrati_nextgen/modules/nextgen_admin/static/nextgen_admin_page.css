@@ -334,10 +334,59 @@ table.nextgen_settings_position {
     float: right;
     margin: -98px 0 0 0;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: bold;
     color: black;
     line-height: 80px;
     letter-spacing: .3px;
+}
+
+#ngg_page_content .ngg_page_content_header p.ngg-header-promo {
+    margin: -113px -40px 0 0;
+    color: black;
+    line-height: 80px;
+    padding: 10px 20px;
+    background: #9ebc1b;
+    color: white;
+    line-height: 20px;
+    padding: 30px 290px 30px 24px;
+    display: inline-block;
+    max-width: 720px;
+    box-sizing: border-box;
+}
+
+#ngg_page_content .ngg_page_content_header .ngg-header-promo a {
+    margin-left: 16px !important;
+    position: absolute;
+    top: 32px;
+    right: 24px;
+    height: 38px !important;
+    line-height: 38px !important;
+}
+
+#ngg_page_content .ngg_page_content_header p.ngg-header-promo.black-friday {
+    padding: 30px 330px 30px 40px;
+    font-size: 16px;
+}
+
+#ngg_page_content .ngg_page_content_header p.ngg-header-promo.black-friday span {
+    text-transform: uppercase;
+    padding-bottom: 4px;
+    display: inline-block;
+    font-size: 20px;
+}
+
+#ngg_page_content .ngg_page_content_header .ngg-header-promo.black-friday a {
+    right: 40px;
+}
+
+#ngg_page_content .ngg_page_content_header .ngg-header-promo a:after {
+    content: "\f345";
+    font: normal 16px dashicons;
+    color: white !important;
+    display: inline-block;
+    position: relative;
+    top: 4px;
+    left: 6px;
 }
 
 #ngg_page_content .ngg_page_content_header .ngg_save_settings_button {
@@ -705,12 +754,34 @@ table.nextgen_settings_position {
     font-family: Lato, sans-serif;
     font-size: 14px;
     font-weight: 600;
+    background: #9ebc1b;
+    line-height: 50px !important;
+    display: none;
+}
+
+#attach_to_post_tabs #displayed_tab .ngg_options_promo {
+    display: table-cell;
 }
 
 .ngg_options_promo a {
     text-decoration: none;
     font-weight: 600;
-    margin-left: 6px;
+    margin-left: 10px;
+    background: black;
+    color: #fff !important;
+    padding: 10px 20px;
+    font-size: 12px !important;
+    text-transform: uppercase;
+}
+
+.ngg_options_promo a:after {
+    content: "\f345";
+    font: normal 13px dashicons;
+    color: white !important;
+    display: inline-block;
+    position: relative;
+    top: 2px;
+    left: 6px;
 }
 
 .gallery_page_ngg_other_options #ngg_page_content .ngg_page_content_main tbody tr td.ngg_options_promo {
@@ -1166,15 +1237,10 @@ table.nextgen_settings_position {
 
 /* 8) NGG Admin CSS: Media Queries */
 
-@media (max-width: 1030px) {
-    #ngg_page_content .ngg_page_content_header p {
-        padding: 0 20px;
-    }
-}
-
-@media (max-width: 900px) {
-    #ngg_page_content .ngg_page_content_header p {
-        display: none;
+@media (max-width: 1240px) {
+    #ngg_page_content .ngg_page_content_header p,
+    .ngg_options_promo {
+        display: none !important;
     }
 }
 

@@ -3,7 +3,7 @@
 namespace WPMailSMTP\Providers;
 
 use WPMailSMTP\Debug;
-use WPMailSMTP\MailCatcher;
+use WPMailSMTP\MailCatcherInterface;
 use WPMailSMTP\Options;
 
 /**
@@ -18,23 +18,28 @@ class Loader {
 	 *
 	 * @since 1.0.0
 	 * @since 1.6.0 Added Sendinblue.
+	 * @since 1.7.0 Added AmazonSES/Outlook as indication of the Pro mailers.
 	 *
 	 * @var array
 	 */
 	protected $providers = array(
-		'mail'       => 'WPMailSMTP\Providers\Mail\\',
-		'sendinblue' => 'WPMailSMTP\Providers\Sendinblue\\',
-		'mailgun'    => 'WPMailSMTP\Providers\Mailgun\\',
-		'sendgrid'   => 'WPMailSMTP\Providers\Sendgrid\\',
-		'gmail'      => 'WPMailSMTP\Providers\Gmail\\',
-		'smtp'       => 'WPMailSMTP\Providers\SMTP\\',
-		'pepipost'   => 'WPMailSMTP\Providers\Pepipost\\',
+		'mail'        => 'WPMailSMTP\Providers\Mail\\',
+		'smtpcom'     => 'WPMailSMTP\Providers\SMTPcom\\',
+		'pepipostapi' => 'WPMailSMTP\Providers\PepipostAPI\\',
+		'sendinblue'  => 'WPMailSMTP\Providers\Sendinblue\\',
+		'mailgun'     => 'WPMailSMTP\Providers\Mailgun\\',
+		'sendgrid'    => 'WPMailSMTP\Providers\Sendgrid\\',
+		'amazonses'   => 'WPMailSMTP\Providers\AmazonSES\\',
+		'gmail'       => 'WPMailSMTP\Providers\Gmail\\',
+		'outlook'     => 'WPMailSMTP\Providers\Outlook\\',
+		'smtp'        => 'WPMailSMTP\Providers\SMTP\\',
+		'pepipost'    => 'WPMailSMTP\Providers\Pepipost\\',
 	);
 
 	/**
 	 * @since 1.0.0
 	 *
-	 * @var MailCatcher
+	 * @var MailCatcherInterface
 	 */
 	private $phpmailer;
 
@@ -127,17 +132,14 @@ class Loader {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string      $provider
-	 * @param MailCatcher $phpmailer
+	 * @param string               $provider  The provider name.
+	 * @param MailCatcherInterface $phpmailer The MailCatcher object.
 	 *
 	 * @return MailerAbstract|null
 	 */
 	public function get_mailer( $provider, $phpmailer ) {
 
-		if (
-			$phpmailer instanceof MailCatcher ||
-			$phpmailer instanceof \PHPMailer
-		) {
+		if ( wp_mail_smtp()->is_valid_phpmailer( $phpmailer ) ) {
 			$this->phpmailer = $phpmailer;
 		}
 

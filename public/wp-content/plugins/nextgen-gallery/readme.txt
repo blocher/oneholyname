@@ -2,11 +2,12 @@
 Contributors: photocrati, imagely
 Tags: wordpress gallery plugin, gallery, nextgen, nextgen gallery, photo gallery, image gallery, photography, slideshow, images, photo, photo album, watermark
 Requires at least: 4.0.0
-Stable tag: 3.2.18
-Tested up to: 5.2.3
+Stable tag: 3.3.6
+Tested up to: 5.4.0
 License: GPLv2
+Requires PHP: 5.4
 
-The most popular WordPress gallery plugin and one of the most popular plugins of all time with over 26 million downloads.
+The most popular WordPress gallery plugin and one of the most popular plugins of all time with over 28 million downloads.
 
 == Description ==
 
@@ -178,6 +179,66 @@ For more information, feel free to visit the official website for the NextGEN Ga
 
 
 == Changelog ==
+
+= V3.3.6 - 06.24.2020 =
+* NEW:     Added a mechanism in Other Options > Misc to update page featured images assigned with NextGen version 1 that were broken by a WordPress 5.4 API change
+* NEW:     Added two filters (ngg_default_settings and ngg_default_global_settings) to allow control over default settings for new networks, sites and sub-sites
+* NEW:     Updated SimpleLightbox to the latest version. This fixes all gallery images appearing in the lightbox if more than one gallery was on the page.
+* Fixed:   Album routing was broken if the albums were named using a non-latin alphabet
+* Fixed:   Gallery path validation was broken on some IIS servers
+* Fixed:   NextGen was unable to serve AJAX requests on home.pl hosting
+* Fixed:   Removed the unused simple_html_dom module which was causing errors with PHP 7.3
+
+= V3.3.5 - 04.09.2020 =
+* Fixed:   Broken dynamic images
+
+= V3.3.2 - 04.07.2020 =
+* Fixed:   Gallery paths were calculated incorrectly on wordpress.com hosting
+* Fixed:   Insert Gallery Window could not edit an existing displayed gallery with a legacy template without breaking the displayed gallery
+* Fixed:   Manage Albums page could generate lengthy PHP warnings if galleries or other albums did not have a preview image assigned
+* Fixed:   NextGen was forcing the 'screen_options_show_screen' filter to always be true
+* Fixed:   Plugin would not load and would throw an error due to C_Component_Registry not being found
+* Fixed:   Removed last traces of javascript that were in display type templates
+
+= V3.3.0 - 03.10.2020 =
+* NEW:     Added feature on Manage Galleries page to search gallery names
+* NEW:     Added filter 'ngg_disable_shortcodes_in_request_api' to disable rendering of NextGen shortcodes in REST
+* NEW:     Added option to automatically watermark images during upload
+* Changed: Minimum PHP version supported is now 5.4
+* Changed: Pope framework now included via Composer
+* Changed: Removed use of 'contextual_help' filter which is deprecated
+* Changed: Renamed nggallery.po to nggallery.pot for better compatibility with Loco Translate
+* Fixed:   Compatibility with Divi Booster
+* Fixed:   Copying images to another gallery caused a PHP warning
+* Fixed:   Featured Image feature was not working
+* Fixed:   Fixed PHP warning sometimes displayed with album breadcrumbs
+* Fixed:   Fixed PHP warning when displaying certain albums
+* Fixed:   No notification was given when moving or copying images on Manage Gallery
+* Fixed:   PHP warning would be displayed when MediaRSS feature was enabled
+* Fixed:   SimpleLightbox would not use image alttext attribute for titles
+* Fixed:   Uploading zip files containing images with uppercase file extensions would fail to extract any images
+* Fixed:   Uploading images with invalid EXIF would reject the image entirely
+
+= V3.2.23 - 12.02.2019 =
+* NEW:     There is a new setting under Other Options > Misc to disable enqueueing FontAwesome entirely
+* Changed: WP-CLI commands have been namespaced and numerous new commands have been added
+* Fixed:   Add Gallery / Images page would instruct users to upload zip files even if the multisite settings disallowed it
+* Fixed:   Conflict with Elementor breaking the Attach-To-Post window styling
+* Fixed:   Corrected PHP warnings generated when creating the template & static override directory ('ngg') inside WP_CONTENT_DIR if write access isn't available
+* Fixed:   Gallery slug generation was broken when the gallery name included special characters and broke those galleries as album children
+* Fixed:   Improved performance on Manage Galleries page by simplifying query to count images belonging to galleries
+* Fixed:   Manage Galleries could generate a PHP warning when listing galleries created by users that have since been deleted
+* Fixed:   Shutter Reloaded's navigation icons were always missing
+* Fixed:   Slideshow widget was enqueueing a file that no exists
+* Fixed:   Two basic slideshow displays on one page would cause a JS error that broke their display
+* Fixed:   URL resolution for paginated galleries and dynamic thumbnails was broken if WordPress was in a sub-directory of a sub-directory install (split home & site url)
+
+= V3.2.21 - 11.20.2019 =
+* Changed: Small branding and color update
+
+= V3.2.19 - 10.30.2019 =
+* Fixed:   Conflict with Imagify and the Imagely Lightroom plugin
+* Fixed:   Ability to update image metadata from the Imagely Lightroom plugin
 
 = V3.2.18 - 09.18.2019 =
 * Fixed:   Ability to sort images by random

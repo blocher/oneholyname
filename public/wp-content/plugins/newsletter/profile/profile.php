@@ -2,8 +2,6 @@
 
 defined('ABSPATH') || exit;
 
-require_once NEWSLETTER_INCLUDES_DIR . '/module.php';
-
 class NewsletterProfile extends NewsletterModule {
 
     static $instance;
@@ -20,28 +18,27 @@ class NewsletterProfile extends NewsletterModule {
 
     function __construct() {
         parent::__construct('profile', '1.1.0');
-        add_action('init', array($this, 'hook_init'), 1);
-        add_action('wp_loaded', array($this, 'hook_wp_loaded'));
         add_shortcode('newsletter_profile', array($this, 'shortcode_newsletter_profile'));
-    }
-
-    function hook_init() {
-        add_filter('newsletter_replace', array($this, 'hook_newsletter_replace'), 10, 3);
+        add_filter('newsletter_replace', array($this, 'hook_newsletter_replace'), 10, 4);
         add_filter('newsletter_page_text', array($this, 'hook_newsletter_page_text'), 10, 3);
+        add_action('newsletter_action', array($this, 'hook_newsletter_action'), 12, 3);
     }
 
-    function hook_wp_loaded() {
-        global $wpdb;
+    function hook_newsletter_action($action, $user, $email) {
 
-        switch (Newsletter::instance()->action) {
+        if (in_array($action, ['p', 'profile', 'pe', 'profile-save', 'profile_export', 'ps'])) {
+            if (!$user || $user->status != TNP_User::STATUS_CONFIRMED) {
+
+                $this->dienow(__('The subscriber was not found or is not confirmed.', 'newsletter'), '', 404);
+            }
+        }
+
+        switch ($action) {
             case 'profile':
             case 'p':
             case 'pe':
-                $user = $this->check_user();
-                if ($user == null) {
-                    die('No subscriber found.');
-                }
-                $profile_url = $this->build_message_url($this->options['url'], 'profile', $user);
+
+                $profile_url = $this->build_message_url($this->options['url'], 'profile', $user, $email);
                 $profile_url = apply_filters('newsletter_profile_url', $profile_url, $user);
 
                 wp_redirect($profile_url);
@@ -51,14 +48,13 @@ class NewsletterProfile extends NewsletterModule {
 
             case 'profile-save':
             case 'ps':
-                $user = $this->save_profile();
+                $user = $this->save_profile($user);
                 // $user->alert is a temporary field
-                wp_redirect($this->build_message_url($this->options['url'], 'profile', $user, null, $user->alert));
+                wp_redirect($this->build_message_url($this->options['url'], 'profile', $user, $email, $user->alert));
                 die();
                 break;
 
             case 'profile_export':
-                $user = $this->get_user_from_request(true);
                 header('Content-Type: application/json;charset=UTF-8');
                 echo $this->to_json($user);
                 die();
@@ -66,7 +62,7 @@ class NewsletterProfile extends NewsletterModule {
     }
 
     /**
-     * 
+     *
      * @param stdClass $user
      */
     function get_profile_export_url($user) {
@@ -74,20 +70,24 @@ class NewsletterProfile extends NewsletterModule {
     }
 
     /**
-     * 
+     * URL to the subscriber profile edit action. This URL MUST NEVER be changed by
+     * 3rd party plugins. Plugins can change the final URL after the action has been executed using the
+     * <code>newsletter_profile_url</code> filter.
+     *
      * @param stdClass $user
      */
-    function get_profile_url($user) {
-        return $this->build_action_url('profile', $user);
+    function get_profile_url($user, $email = null) {
+        return $this->build_action_url('profile', $user, $email);
     }
 
-    function hook_newsletter_replace($text, $user, $email) {
+    function hook_newsletter_replace($text, $user, $email, $html = true) {
         if (!$user) {
+            $text = $this->replace_url($text, 'PROFILE_URL', $this->build_action_url('nul'));
             return $text;
         }
 
         // Profile edit page URL and link
-        $url = $this->get_profile_url($user);
+        $url = $this->get_profile_url($user, $email);
         $text = $this->replace_url($text, 'PROFILE_URL', $url);
         // Profile export URL and link
         $url = $this->get_profile_export_url($user);
@@ -100,7 +100,7 @@ class NewsletterProfile extends NewsletterModule {
     }
 
     /**
-     * 
+     *
      * @param type $text
      * @param type $key
      * @param TNP_User $user
@@ -137,29 +137,29 @@ class NewsletterProfile extends NewsletterModule {
 
         $fields = array('name', 'surname', 'sex', 'created', 'ip', 'email');
         $data = array(
-            'email'=>$user->email,
-            'name'=>$user->name,
-            'last_name'=>$user->surname,
-            'gender'=>$user->sex,
-            'created'=>$user->created,
-            'ip'=>$user->ip,
-            );
-        
+            'email' => $user->email,
+            'name' => $user->name,
+            'last_name' => $user->surname,
+            'gender' => $user->sex,
+            'created' => $user->created,
+            'ip' => $user->ip,
+        );
+
         // Lists
         $data['lists'] = array();
-        
+
         $lists = $this->get_lists_public();
         foreach ($lists as $list) {
             $field = 'list_' . $list->id;
             if ($user->$field == 1) {
                 $data['lists'][] = $list->name;
-            } 
+            }
         }
-        
+
         // Profile
         $options_profile = get_option('newsletter_profile', array());
         $data['profiles'] = array();
-        for ($i=1; $i<NEWSLETTER_PROFILE_MAX; $i++) {
+        for ($i = 1; $i < NEWSLETTER_PROFILE_MAX; $i++) {
             $field = 'profile_' . $i;
             if ($options_profile[$field . '_status'] != 1 && $options_profile[$field . '_status'] != 2) {
                 continue;
@@ -173,15 +173,17 @@ class NewsletterProfile extends NewsletterModule {
             $newsletters = array();
             foreach ($sent as $item) {
                 $action = 'none';
-                if ($item->open == 1)
+                if ($item->open == 1) {
                     $action = 'read';
-                else if ($item->open == 2)
+                } else if ($item->open == 2) {
                     $action = 'click';
+                }
 
                 $email = $this->get_email($item->email_id);
-                if (!$email)
+                if (!$email) {
                     continue;
-                // 'id'=>$item->email_id, 
+                }
+                // 'id'=>$item->email_id,
                 $newsletters[] = array('subject' => $email->subject, 'action' => $action, 'sent' => date('Y-m-d h:i:s', $email->send_on));
             }
 
@@ -195,9 +197,15 @@ class NewsletterProfile extends NewsletterModule {
         return json_encode($data, JSON_PRETTY_PRINT);
     }
 
+    /**
+     * Build the profile editing form for the specified subscriber.
+     *
+     * @param TNP_User $user
+     * @return string
+     */
     function get_profile_form($user) {
         // Do not pay attention to option name here, it's a compatibility problem
-        
+
         $language = $this->get_user_language($user);
         $options = NewsletterSubscription::instance()->get_options('profile', $language);
 
@@ -238,6 +246,23 @@ class NewsletterProfile extends NewsletterModule {
             $buffer .= "</div>\n";
         }
 
+        if ($this->is_multilanguage()) {
+
+            $languages = $this->get_languages();
+
+            $buffer .= '<div class="tnp-field tnp-field-language">';
+            $buffer .= '<label>' . __('Language', 'Newsletter') . '</label>';
+            $buffer .= '<select name="nlng" class="tnp-language">';
+
+            $buffer .= '<option value="" disabled ' . ( empty($user->language) ? ' selected' : '' ) . '>' . __('Select language', 'newsletter') . '</option>';
+            foreach ($languages as $key => $language) {
+                $buffer .= '<option value="' . $key . '"' . ( $user->language == $key ? ' selected' : '' ) . '>' . $language . '</option>';
+            }
+
+            $buffer .= '</select>';
+            $buffer .= "</div>\n";
+        }
+
         // Profile
         for ($i = 1; $i <= NEWSLETTER_PROFILE_MAX; $i++) {
             if ($options['profile_' . $i . '_status'] == 0) {
@@ -261,8 +286,9 @@ class NewsletterProfile extends NewsletterModule {
                 for ($j = 0; $j < count($opts); $j++) {
                     $opts[$j] = trim($opts[$j]);
                     $buffer .= '<option';
-                    if ($opts[$j] == $user->$field)
+                    if ($opts[$j] == $user->$field) {
                         $buffer .= ' selected';
+                    }
                     $buffer .= '>' . esc_html($opts[$j]) . '</option>';
                 }
                 $buffer .= '</select>';
@@ -297,7 +323,7 @@ class NewsletterProfile extends NewsletterModule {
             $buffer .= $x['field'];
             $buffer .= "</div>\n";
         }
-        
+
         $local_options = $this->get_options('', $this->get_user_language($user));
 
         // Privacy
@@ -326,20 +352,19 @@ class NewsletterProfile extends NewsletterModule {
     }
 
     /**
-     * Saves the subscriber data.
-     * 
+     * Saves the subscriber data extracting them from the $_REQUEST and for the
+     * subscriber identified by the <code>$user</code> object.
+     *
      * @return type
      */
-    function save_profile() {
+    function save_profile($user) {
         global $wpdb;
-
-        // Get the current subscriber, fail if not found
-        $user = $this->get_user_from_request(true);
 
         // Conatains the cleaned up user data to be saved
         $data = array();
         $data['id'] = $user->id;
 
+        $options = $this->get_options('', $this->get_current_language($user));
         $options_profile = get_option('newsletter_profile', array());
         $options_main = get_option('newsletter_main', array());
 
@@ -347,7 +372,7 @@ class NewsletterProfile extends NewsletterModule {
         $subscription_module = NewsletterSubscription::instance();
 
         if (!$this->is_email($_REQUEST['ne'])) {
-            $user->alert = $this->options['profile_error'];
+            $user->alert = $options['profile_error'];
             return $user;
         }
 
@@ -358,8 +383,7 @@ class NewsletterProfile extends NewsletterModule {
         if ($email_changed) {
             $tmp = $this->get_user($email);
             if ($tmp != null && $tmp->id != $user->id) {
-                // TODO: Move the label on profile setting panel
-                $user->alert = $this->options['error'];
+                $user->alert = $options['error'];
                 return $user;
             }
             $data['status'] = Newsletter::STATUS_NOT_CONFIRMED;
@@ -369,15 +393,27 @@ class NewsletterProfile extends NewsletterModule {
         $data['email'] = $email;
         if (isset($_REQUEST['nn'])) {
             $data['name'] = $this->normalize_name(stripslashes($_REQUEST['nn']));
+            if ($subscription_module->is_spam_text($data['name'])) {
+                die();
+            }
         }
         if (isset($_REQUEST['ns'])) {
             $data['surname'] = $this->normalize_name(stripslashes($_REQUEST['ns']));
+            if ($subscription_module->is_spam_text($data['surname'])) {
+                die();
+            }
         }
         if ($options_profile['sex_status'] >= 1) {
             $data['sex'] = $_REQUEST['nx'][0];
             // Wrong data injection check
             if ($data['sex'] != 'm' && $data['sex'] != 'f' && $data['sex'] != 'n') {
                 die('Wrong sex field');
+            }
+        }
+        if (isset($_REQUEST['nlng'])) {
+            $languages = $this->get_languages();
+            if (isset($languages[$_REQUEST['nlng']])) {
+                $data['language'] = $_REQUEST['nlng'];
             }
         }
 
@@ -425,8 +461,7 @@ class NewsletterProfile extends NewsletterModule {
         if (isset($alert)) {
             $user->alert = $alert;
         } else {
-            // TODO: Move this label on profile settings panel
-            $user->alert = $this->options['saved'];
+            $user->alert = $options['saved'];
         }
         return $user;
     }
@@ -435,24 +470,6 @@ class NewsletterProfile extends NewsletterModule {
         global $wpdb, $charset_collate;
 
         parent::upgrade();
-
-        // Migration code
-        if (empty($this->options) || empty($this->options['email_changed'])) {
-            // Options of the subscription module (worng name, I know)
-            $options = get_option('newsletter');
-            $this->options['saved'] = $options['profile_saved'];
-            $this->options['text'] = $options['profile_text'];
-            $this->options['email_changed'] = $options['profile_email_changed'];
-            $this->options['error'] = $options['profile_error'];
-            $this->options['url'] = $options['profile_url'];
-            $this->save_options($this->options);
-        }
-
-        if (empty($this->options) || empty($this->options['save_label'])) {
-            $options = get_option('newsletter_profile');
-            $this->options['save_label'] = $options['save'];
-            $this->save_options($this->options);
-        }
     }
 
     function admin_menu() {
@@ -461,7 +478,7 @@ class NewsletterProfile extends NewsletterModule {
 
     // Patch to avoid conflicts with the "newsletter_profile" option of the subscription module
     // TODO: Fix it
-    public function get_prefix($sub = '', $language='') {
+    public function get_prefix($sub = '', $language = '') {
         if (empty($sub)) {
             $sub = 'main';
         }
