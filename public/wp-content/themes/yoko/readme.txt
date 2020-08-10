@@ -6,6 +6,10 @@ For a detailed documentation and support please visit: http://www.elmastudio.de/
 Changelog:
 ------------------------------------------------------------------------------------------------------------
 
+Version 1.2.5 - 18th October 2019
+-----------------------------------
+- Bugfix: Update function.php for PHP 7+ compatibility.
+
 Version 1.2.4 - 18th October 2018
 -----------------------------------
 - Bugfix: Featured header image fix (header.php).
