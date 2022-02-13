@@ -94,7 +94,7 @@ if (!$controls->is_action()) {
                                 <?php $controls->text('footer_legal', 40); ?>
                             </td>
                         </tr>
-                    </table>                
+                    </table>
                 </div>
 
                 <div id="tabs-social">
@@ -154,13 +154,43 @@ if (!$controls->is_action()) {
                                 <?php $controls->text('soundcloud_url', 40); ?>
                             </td>
                         </tr>
+                        <tr>
+                            <th>Telegram URL</th>
+                            <td>
+                                <?php $controls->text('telegram_url', 40); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>VK URL</th>
+                            <td>
+                                <?php $controls->text('vk_url', 40); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Twitch</th>
+                            <td>
+                                <?php $controls->text('twitch_url', 40); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Discord</th>
+                            <td>
+                                <?php $controls->text('discord_url', 40); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>TikTok</th>
+                            <td>
+                                <?php $controls->text('tiktok_url', 40); ?>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
 
-            <p>
+            <div class="tnp-buttons">
                 <?php $controls->button_save(); ?>
-            </p>
+            </div>
 
         </form>
     </div>

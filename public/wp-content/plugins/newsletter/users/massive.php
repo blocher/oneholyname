@@ -18,6 +18,11 @@ if ($controls->is_action('remove_unsubscribed')) {
     $controls->messages = __('Subscribers unsubscribed deleted: ', 'newsletter') . $r . '.';
 }
 
+if ($controls->is_action('remove_complained')) {
+    $r = $wpdb->query("delete from " . NEWSLETTER_USERS_TABLE . " where status='P'");
+    $controls->messages = __('Subscribers complained deleted: ', 'newsletter') . $r . '.';
+}
+
 if ($controls->is_action('remove_bounced')) {
     $r = $wpdb->query("delete from " . NEWSLETTER_USERS_TABLE . " where status='B'");
     $controls->messages = __('Subscribers bounced deleted: ', 'newsletter') . $r . '.';
@@ -86,66 +91,16 @@ if ($controls->is_action('list_none')) {
 }
 
 if ($controls->is_action('update_inactive')) {
+    //Update users 'last_activity' column
     $wpdb->query("update `{$wpdb->prefix}newsletter` n join (select user_id, max(s.time) as max_time from `{$wpdb->prefix}newsletter_sent` s where s.open>0 group by user_id) as ss
         on n.id=ss.user_id set last_activity=ss.max_time");
-    
+
     $inactive_time = (int) $controls->data['inactive_time'];
 
     $where = 'last_activity > 0 and last_activity<' . (time() - $inactive_time * 30 * 24 * 3600);
 
     $count = $wpdb->query("update " . NEWSLETTER_USERS_TABLE . ' set list_' . ((int) $controls->data['list_inactive']) . '=1 where ' . $where);
     $controls->messages = $count . ' subscribers updated';
-}
-
-if ($controls->is_action('bounces')) {
-    $lines = explode("\n", $controls->data['bounced_emails']);
-    $total = 0;
-    $marked = 0;
-    $error = 0;
-    $not_found = 0;
-    $already_bounced = 0;
-    $results = '';
-    foreach ($lines as &$email) {
-        $email = trim($email);
-        if (empty($email))
-            continue;
-
-        $total++;
-
-        $email = NewsletterModule::normalize_email($email);
-        if (empty($email)) {
-            $results .= '[INVALID] ' . $email . "\n";
-            $error++;
-            continue;
-        }
-
-        $user = NewsletterUsers::instance()->get_user($email);
-
-        if ($user == null) {
-            $results .= '[NOT FOUND] ' . $email . "\n";
-            $not_found++;
-            continue;
-        }
-
-        if ($user->status == 'B') {
-            $results .= '[ALREADY BOUNCED] ' . $email . "\n";
-            $already_bounced++;
-            continue;
-        }
-
-        $r = $wpdb->query($wpdb->prepare('update ' . NEWSLETTER_USERS_TABLE . " set status='B' where email=%s limit 1", $email));
-        if ($r === 1) {
-            $results .= '[BOUNCED] ' . $email . "\n";
-            $marked++;
-            continue;
-        }
-    }
-
-    $controls->messages .= 'Total: ' . $total . '<br>';
-    $controls->messages .= 'Bounce: ' . $marked . '<br>';
-    $controls->messages .= 'Errors: ' . $error . '<br>';
-    $controls->messages .= 'Not found: ' . $not_found . '<br>';
-    $controls->messages .= 'Already bounced: ' . $already_bounced . '<br>';
 }
 ?>
 
@@ -178,7 +133,6 @@ if ($controls->is_action('bounces')) {
                 <ul>
                     <li><a href="#tabs-1"><?php _e('General', 'newsletter') ?></a></li>
                     <li><a href="#tabs-2"><?php _e('Lists', 'newsletter') ?></a></li>
-                    <li><a href="#tabs-4"><?php _e('Bounces', 'newsletter') ?></a></li>
                 </ul>
 
                 <div id="tabs-1">
@@ -191,7 +145,7 @@ if ($controls->is_action('bounces')) {
                             </tr>
                         </thead>
                         <tr>
-                            <td><?php _e('Total collected emails', 'newsletter') ?></td>
+                            <td><?php _e('Total', 'newsletter') ?></td>
                             <td>
                                 <?php echo $wpdb->get_var("select count(*) from " . NEWSLETTER_USERS_TABLE); ?>
                             </td>
@@ -227,7 +181,7 @@ if ($controls->is_action('bounces')) {
                                 <?php echo $wpdb->get_var("select count(*) from " . NEWSLETTER_USERS_TABLE . " where status='U'"); ?>
                             </td>
                             <td>
-                                <?php $controls->button_confirm('remove_unsubscribed', __('Delete all unsubscribed', 'newsletter')); ?>
+                                <?php $controls->button_confirm('remove_unsubscribed', __('Delete all', 'newsletter')); ?>
                             </td>
                         </tr>
 
@@ -237,14 +191,28 @@ if ($controls->is_action('bounces')) {
                                 <?php echo $wpdb->get_var("select count(*) from " . NEWSLETTER_USERS_TABLE . " where status='B'"); ?>
                             </td>
                             <td>
-                                <?php $controls->button_confirm('remove_bounced', __('Delete all bounced', 'newsletter')); ?>
+                                <?php $controls->button_confirm('remove_bounced', __('Delete all', 'newsletter')); ?>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><?php _e('Complained', 'newsletter') ?></td>
+                            <td>
+                                <?php echo $wpdb->get_var("select count(*) from " . NEWSLETTER_USERS_TABLE . " where status='P'"); ?>
+                            </td>
+                            <td>
+                                <?php $controls->button_confirm('remove_complained', __('Delete all', 'newsletter')); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td><?php _e('Inactive since', 'newsletter') ?></td>
+                            <td>
+                                <?php _e('Inactive since', 'newsletter') ?>
+                                <?php $controls->field_help('https://www.thenewsletterplugin.com/documentation/subscribers-and-management/subscribers/#inactive')?>
+                            </td>
                             <td>
                                 <?php
                                 $controls->select('inactive_time', array(
+                                    '3' => '3 ' . __('months', 'newsletter'),
                                     '6' => '6 ' . __('months', 'newsletter'),
                                     '12' => '1 ' . __('year', 'newsletter'),
                                     '24' => '2 ' . __('years', 'newsletter'),
@@ -257,25 +225,25 @@ if ($controls->is_action('bounces')) {
                                     '108' => '9 ' . __('years', 'newsletter'),
                                     '120' => '10 ' . __('years', 'newsletter')
                                 ))
-                                ?> 
-                                to
+                                ?>
+                                add to
                                 <?php $controls->lists_select('list_inactive'); ?>
-                                
+
                             </td>
                             <td>
-                                <?php $controls->button_confirm('update_inactive', __('Update', 'newsletter')); ?>
+                                <?php $controls->btn('update_inactive', __('Update', 'newsletter'), ['confirm'=>true]); ?>
                             </td>
                         </tr>
-                        
+
                         <?php if ($this->is_multilanguage()) { ?>
                         <tr>
                             <td>Language</td>
                             <td>
                                 <?php _e('Set to', 'newsletter') ?>
-                                <?php $controls->language('language', false) ?> <?php _e('subscribers without a language', 'newsletter') ?> 
+                                <?php $controls->language('language', false) ?> <?php _e('subscribers without a language', 'newsletter') ?>
                             </td>
                             <td>
-                                <?php $controls->button_confirm('language', '&raquo;'); ?>
+                                <?php $controls->btn('language', '&raquo;', ['confirm'=>true]); ?>
                             </td>
                         </tr>
                         <?php } ?>
@@ -312,33 +280,10 @@ if ($controls->is_action('bounces')) {
                                 <?php $controls->lists_select('list_3') ?> <?php _e('subscribers without a list', 'newsletter') ?> <?php $controls->button_confirm('list_none', '&raquo;'); ?>
                             </td>
                         </tr>
-                        
-                        
+
+
 
                     </table>
-                </div>
-
-
-
-                <div id="tabs-4">
-                    <p>
-                        Import a set of bounced email addresses: they will be marked as "bounced" and no more contacted. Sending
-                        messages to bounced address (many times) can put your server in some black list.
-                    </p>
-
-                    <table class="form-table">
-                        <tr>
-                            <th><?php _e('Bounced addresses', 'newsletter') ?></th>
-                            <td>
-                                <?php $controls->textarea('bounced_emails'); ?>
-                                <p class="description">
-                                    <?php _e('One email address per line.', 'newsletter') ?>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <?php $controls->button_confirm('bounces', 'Mark those emails as bounced'); ?>
                 </div>
 
             </div>

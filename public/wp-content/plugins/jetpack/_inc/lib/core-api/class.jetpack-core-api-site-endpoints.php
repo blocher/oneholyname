@@ -2,7 +2,7 @@
 /**
  * List of /site core REST API endpoints used in Jetpack's dashboard.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 use Automattic\Jetpack\Connection\Client;
@@ -59,7 +59,6 @@ class Jetpack_Core_API_Site_Endpoint {
 		);
 	}
 
-
 	/**
 	 * Returns the result of `/sites/%s/purchases` endpoint call.
 	 *
@@ -75,7 +74,7 @@ class Jetpack_Core_API_Site_Endpoint {
 			return self::get_failed_fetch_error();
 		}
 
-		if ( 200 !== intval( wp_remote_retrieve_response_code( $response ) ) ) {
+		if ( 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
 			return self::get_failed_fetch_error();
 		}
 
@@ -155,8 +154,10 @@ class Jetpack_Core_API_Site_Endpoint {
 			$stats = stats_get_from_restapi( array( 'fields' => 'stats' ) );
 		}
 
+		$has_stats = null !== $stats && ! is_wp_error( $stats );
+
 		// Yearly visitors.
-		if ( null !== $stats && $stats->stats->visitors > 0 ) {
+		if ( $has_stats && $stats->stats->visitors > 0 ) {
 			$benefits[] = array(
 				'name'        => 'jetpack-stats',
 				'title'       => esc_html__( 'Site Stats', 'jetpack' ),
@@ -179,7 +180,7 @@ class Jetpack_Core_API_Site_Endpoint {
 		}
 
 		// Number of followers.
-		if ( null !== $stats && $stats->stats->followers_blog > 0 && Jetpack::is_module_active( 'subscriptions' ) ) {
+		if ( $has_stats && $stats->stats->followers_blog > 0 && Jetpack::is_module_active( 'subscriptions' ) ) {
 			$benefits[] = array(
 				'name'        => 'subscribers',
 				'title'       => esc_html__( 'Subscribers', 'jetpack' ),
@@ -220,7 +221,7 @@ class Jetpack_Core_API_Site_Endpoint {
 		// Number of images in the library if Photon is active.
 		if ( Jetpack::is_module_active( 'photon' ) ) {
 			$photon_count = array_reduce(
-				get_object_vars( wp_count_attachments( array( 'image/jpeg', 'image/png', 'image/gif', 'image/bmp' ) ) ),
+				get_object_vars( wp_count_attachments( array( 'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp' ) ) ),
 				function ( $i, $j ) {
 					return $i + $j;
 				}
@@ -270,7 +271,7 @@ class Jetpack_Core_API_Site_Endpoint {
 		}
 
 		// Total number of shares.
-		if ( null !== $stats && $stats->stats->shares > 0 ) {
+		if ( $has_stats && $stats->stats->shares > 0 ) {
 			$benefits[] = array(
 				'name'        => 'sharing',
 				'title'       => esc_html__( 'Sharing', 'jetpack' ),

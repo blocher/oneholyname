@@ -2,6 +2,8 @@
 
 namespace WPMailSMTP\Tasks;
 
+use WPMailSMTP\Tasks\Reports\SummaryEmailTask;
+
 /**
  * Class Tasks manages the tasks queue and provides API to work with it.
  *
@@ -23,6 +25,14 @@ class Tasks {
 	 */
 	public function init() {
 
+		// Hide the Action Scheduler admin menu item.
+		add_action( 'admin_menu', array( $this, 'admin_hide_as_menu' ), PHP_INT_MAX );
+
+		// Skip tasks registration if Action Scheduler is not usable yet.
+		if ( ! self::is_usable() ) {
+			return;
+		}
+
 		// Register tasks.
 		foreach ( $this->get_tasks() as $task ) {
 			if ( ! is_subclass_of( $task, '\WPMailSMTP\Tasks\Task' ) ) {
@@ -36,8 +46,6 @@ class Tasks {
 				$new_task->init();
 			}
 		}
-
-		add_action( 'admin_menu', array( $this, 'admin_hide_as_menu' ), PHP_INT_MAX );
 	}
 
 	/**
@@ -51,7 +59,18 @@ class Tasks {
 	 */
 	public function get_tasks() {
 
-		return apply_filters( 'wp_mail_smtp_tasks_get_tasks', array() );
+		$tasks = [
+			SummaryEmailTask::class,
+		];
+
+		/**
+		 * Filters list of tasks classes.
+		 *
+		 * @since 2.1.2
+		 *
+		 * @param Task[] $tasks List of tasks classes.
+		 */
+		return apply_filters( 'wp_mail_smtp_tasks_get_tasks', $tasks );
 	}
 
 	/**
@@ -120,7 +139,7 @@ class Tasks {
 	 *
 	 * @return bool
 	 */
-	public function is_usable() {
+	public static function is_usable() {
 
 		// No tasks if ActionScheduler wasn't loaded.
 		if ( ! class_exists( 'ActionScheduler_DataController' ) ) {
@@ -139,7 +158,7 @@ class Tasks {
 	 *
 	 * @return bool
 	 */
-	public function is_scheduled( $hook ) {
+	public static function is_scheduled( $hook ) {
 
 		if ( ! function_exists( 'as_next_scheduled_action' ) ) {
 			return false;

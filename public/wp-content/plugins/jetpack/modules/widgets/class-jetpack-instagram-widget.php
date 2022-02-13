@@ -2,10 +2,11 @@
 /**
  * Instagram Widget. Display some Instagram photos via a widget.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 use Automattic\Jetpack\Connection\Client;
+use Automattic\Jetpack\Connection\Manager;
 
 /**
  * This is the actual Instagram widget along with other code that only applies to the widget.
@@ -41,11 +42,15 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 			/** This filter is documented in modules/widgets/facebook-likebox.php */
 			apply_filters( 'jetpack_widget_name', esc_html__( 'Instagram', 'jetpack' ) ),
 			array(
-				'description' => __( 'Display your latest Instagram photos.', 'jetpack' ),
+				'description'           => __( 'Display your latest Instagram photos.', 'jetpack' ),
+				'show_instance_in_rest' => true,
 			)
 		);
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_css' ) );
+		if ( is_active_widget( false, false, self::ID_BASE ) || is_active_widget( false, false, 'monster' ) || is_customize_preview() ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_css' ) );
+		}
+
 		add_action( 'wp_ajax_wpcom_instagram_widget_update_widget_token_id', array( $this, 'ajax_update_widget_token_id' ) );
 
 		$this->valid_options = array(
@@ -68,16 +73,25 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 			'columns'  => 2,
 			'count'    => 6,
 		);
+
+		add_filter( 'widget_types_to_hide_from_legacy_widget_block', array( $this, 'hide_widget_in_block_editor' ) );
+	}
+
+	/**
+	 * Remove the "Instagram" widget from the Legacy Widget block
+	 *
+	 * @param array $widget_types List of widgets that are currently removed from the Legacy Widget block.
+	 * @return array $widget_types New list of widgets that will be removed.
+	 */
+	public function hide_widget_in_block_editor( $widget_types ) {
+		$widget_types[] = self::ID_BASE;
+		return $widget_types;
 	}
 
 	/**
 	 * Enqueues the widget's frontend CSS but only if the widget is currently in use.
 	 */
 	public function enqueue_css() {
-		if ( ! is_active_widget( false, false, self::ID_BASE ) || is_active_widget( false, false, 'monster' ) || is_customize_preview() ) {
-			return;
-		}
-
 		wp_enqueue_style( self::ID_BASE, plugins_url( 'instagram/instagram.css', __FILE__ ), array(), JETPACK__VERSION );
 	}
 
@@ -118,8 +132,8 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 			wp_send_json_error( array( 'message' => 'not_authorized' ), 403 );
 		}
 
-		$token_id  = (int) $_POST['keyring_id'];
-		$widget_id = (int) $_POST['instagram_widget_id'];
+		$token_id  = ! empty( $_POST['keyring_id'] ) ? (int) $_POST['keyring_id'] : null;
+		$widget_id = ! empty( $_POST['instagram_widget_id'] ) ? (int) $_POST['instagram_widget_id'] : null;
 
 		// For Simple sites check if the token is valid.
 		// (For Atomic sites, this check is done via the api: wpcom/v2/instagram/<token_id>).
@@ -270,7 +284,7 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 
 		if ( ! empty( $instance['title'] ) ) {
 			echo $args['before_title']; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo esc_html( $instance['title'] );
+			echo $instance['title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $args['after_title']; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
@@ -370,7 +384,7 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 	 * @return bool if this request trying to remove the widgets stored id.
 	 */
 	public function removing_widgets_stored_id( $status ) {
-		return $status['valid'] && isset( $_GET['instagram_widget_id'] ) && (int) $_GET['instagram_widget_id'] === (int) $this->number && ! empty( $_GET['instagram_widget'] ) && 'remove_token' === $_GET['instagram_widget'];
+		return $status['valid'] && isset( $_GET['instagram_widget_id'] ) && (int) $_GET['instagram_widget_id'] === (int) $this->number && ! empty( $_GET['instagram_widget'] ) && 'remove_token' === $_GET['instagram_widget']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
@@ -382,6 +396,18 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 	public function form( $instance ) {
 		$instance = wp_parse_args( $instance, $this->defaults );
 
+		if ( ( ! defined( 'IS_WPCOM' ) || ! IS_WPCOM ) && ! ( new Manager() )->is_user_connected() ) {
+			echo '<p>';
+			printf(
+				// translators: %1$1 and %2$s are the opening and closing a tags creating a link to the Jetpack dashboard.
+				esc_html__( 'In order to use this widget you need to %1$scomplete your Jetpack connection%2$s by authorizing your user.', 'jetpack' ),
+				'<a href="' . esc_url( Jetpack::admin_url( array( 'page' => 'jetpack#/connect-user' ) ) ) . '">',
+				'</a>'
+			);
+			echo '</p>';
+			return;
+		}
+
 		// If coming back to the widgets page from an action, expand this widget.
 		if ( isset( $_GET['instagram_widget_id'] ) && (int) $_GET['instagram_widget_id'] === (int) $this->number ) {
 			echo '<script type="text/javascript">jQuery(document).ready(function($){ $(\'.widget[id$="wpcom_instagram_widget-' . esc_js( $this->number ) . '"] .widget-inside\').slideDown(\'fast\'); });</script>';
@@ -391,7 +417,7 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 
 		// If removing the widget's stored token ID.
 		if ( $this->removing_widgets_stored_id( $status ) ) {
-			if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'instagram-widget-remove-token-' . $this->number . '-' . $instance['token_id'] ) ) {
+			if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['nonce'] ), 'instagram-widget-remove-token-' . $this->number . '-' . $instance['token_id'] ) ) {
 				wp_die( esc_html__( 'Missing or invalid security nonce.', 'jetpack' ) );
 			}
 
@@ -588,11 +614,17 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 			$instance['token_id'] = $old_instance['token_id'];
 		}
 
-		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
+		if ( isset( $new_instance['title'] ) ) {
+			$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
+		}
 
-		$instance['columns'] = max( 1, min( $this->valid_options['max_columns'], (int) $new_instance['columns'] ) );
+		if ( isset( $new_instance['columns'] ) ) {
+			$instance['columns'] = max( 1, min( $this->valid_options['max_columns'], (int) $new_instance['columns'] ) );
+		}
 
-		$instance['count'] = max( 1, min( $this->valid_options['max_count'], (int) $new_instance['count'] ) );
+		if ( isset( $new_instance['count'] ) ) {
+			$instance['count'] = max( 1, min( $this->valid_options['max_count'], (int) $new_instance['count'] ) );
+		}
 
 		return $instance;
 	}
@@ -600,9 +632,10 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 
 add_action(
 	'widgets_init',
-	function() {
-		if ( Jetpack::is_active() ) {
+	function () {
+		if ( Jetpack::is_connection_ready() ) {
 			register_widget( 'Jetpack_Instagram_Widget' );
 		}
 	}
 );
+

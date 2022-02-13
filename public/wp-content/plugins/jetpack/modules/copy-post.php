@@ -70,7 +70,7 @@ class Jetpack_Copy_Post {
 		add_filter( 'default_excerpt', array( $this, 'filter_excerpt' ), 10, 2 );
 
 		// Required to avoid the block editor from adding default blocks according to post format.
-		add_filter( 'block_editor_settings', array( $this, 'remove_post_format_template' ) );
+		add_filter( 'block_editor_settings_all', array( $this, 'remove_post_format_template' ) );
 
 		/**
 		 * Fires after all updates have been performed, and default content filters have been added.
@@ -112,7 +112,7 @@ class Jetpack_Copy_Post {
 			'post_excerpt'   => $source_post->post_excerpt,
 			'comment_status' => $source_post->comment_status,
 			'ping_status'    => $source_post->ping_status,
-			'post_category'  => $source_post->post_category,
+			'post_category'  => wp_get_post_categories( $source_post->ID ),
 			'post_password'  => $source_post->post_password,
 			'tags_input'     => $source_post->tags_input,
 		);

@@ -1,6 +1,8 @@
 <?php
 
 use Automattic\Jetpack\Assets;
+use Automattic\Jetpack\Redirect;
+use Automattic\Jetpack\Status;
 use Automattic\Jetpack\Sync\Settings;
 
 include_once dirname( __FILE__ ) . '/sharing-sources.php';
@@ -28,8 +30,7 @@ class Sharing_Service {
 	 * Gets a generic list of all services, without any config
 	 */
 	public function get_all_services_blog() {
-		$options = get_option( 'sharing-options' );
-
+		$options  = get_option( 'sharing-options' );
 		$all      = $this->get_all_services();
 		$services = array();
 
@@ -684,16 +685,7 @@ add_action( 'template_redirect', 'sharing_process_requests', 9 );
  * @return string the customisation URL or null if it couldn't be determinde.
  */
 function get_sharing_buttons_customisation_url() {
-	if ( class_exists( 'Jetpack' ) && method_exists( 'Jetpack', 'build_raw_urls' ) ) {
-		$site_suffix = Jetpack::build_raw_urls( home_url() );
-	} elseif ( class_exists( 'WPCOM_Masterbar' ) && method_exists( 'WPCOM_Masterbar', 'get_calypso_site_slug' ) ) {
-		$site_suffix = WPCOM_Masterbar::get_calypso_site_slug( get_current_blog_id() );
-	}
-
-	if ( $site_suffix ) {
-		return Automattic\Jetpack\Redirect::get_url( 'calypso-marketing-sharing-buttons', array( 'site' => $site_suffix ) );
-	}
-	return null;
+	return Redirect::get_url( 'calypso-marketing-sharing-buttons', array( 'site' => ( new Status() )->get_site_suffix() ) );
 }
 
 /**
@@ -790,6 +782,11 @@ function sharing_display( $text = '', $echo = false ) {
 
 	if ( 'private' === $post_status ) {
 		$show = false;
+	}
+
+	// Hide on password protected posts unless password is provided.
+	if ( post_password_required( $post->ID ) ) {
+			$show = false;
 	}
 
 	/**
@@ -940,7 +937,7 @@ function sharing_display( $text = '', $echo = false ) {
 			if ( defined( 'JETPACK__VERSION' ) ) {
 				$ver = JETPACK__VERSION;
 			} else {
-				$ver = '20141212';
+				$ver = '20211226';
 			}
 
 			// @todo: Investigate if we can load this JS in the footer instead.
@@ -950,7 +947,7 @@ function sharing_display( $text = '', $echo = false ) {
 					'_inc/build/sharedaddy/sharing.min.js',
 					'modules/sharedaddy/sharing.js'
 				),
-				array( 'jquery' ),
+				array(),
 				$ver,
 				false
 			);
@@ -997,7 +994,7 @@ function get_base_recaptcha_lang_code() {
 		'tr'    => 'tr',
 	);
 
-	$blog_lang_code = function_exists( 'get_blog_lang_code' ) ? get_blog_lang_code() : get_bloginfo( 'language' );
+	$blog_lang_code = get_bloginfo( 'language' );
 	if ( isset( $base_recaptcha_lang_code_mapping[ $blog_lang_code ] ) ) {
 		return $base_recaptcha_lang_code_mapping[ $blog_lang_code ];
 	}

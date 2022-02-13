@@ -22,15 +22,6 @@ class Processor {
 	protected $wp_mail_from;
 
 	/**
-	 * Processor constructor.
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct() {
-		$this->hooks();
-	}
-
-	/**
 	 * Assign all hooks to proper places.
 	 *
 	 * @since 1.0.0
@@ -150,10 +141,8 @@ class Processor {
 			return false;
 		}
 
-		if ( $mailer === 'gmail' ) {
-			$forced = true;
-		} elseif ( $mailer === 'outlook' ) {
-			$sender     = $options->get( 'outlook', 'user_details' );
+		if ( in_array( $mailer, [ 'outlook', 'zoho' ], true ) ) {
+			$sender     = $options->get( $mailer, 'user_details' );
 			$from_email = ! empty( $sender['email'] ) ? $sender['email'] : '';
 			$forced     = true;
 		}

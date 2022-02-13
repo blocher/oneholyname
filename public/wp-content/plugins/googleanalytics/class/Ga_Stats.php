@@ -10,7 +10,7 @@
  */
 class Ga_Stats {
 
-	private $profile  = array();
+	private $profile = array();
 
 	/**
 	 * Primary class constructor.
@@ -19,7 +19,6 @@ class Ga_Stats {
 	 * @since 7.0.0
 	 */
 	public function __construct() {
-		$this->profile = $this->get_analytics_profile();
 	}
 
 	/**
@@ -29,18 +28,27 @@ class Ga_Stats {
 	 * @param int $id_view The Analytics view ID from which to retrieve data.
 	 * @param string $date_range The start date for the query in the format YYYY-MM-DD or '7daysAgo'
 	 * @param string $metric A metric expression
+	 * @param bool $old Use old query style.
 	 *
 	 * @return array Request query
 	 */
-	public static function get_query( $query, $id_view, $date_range = null, $metric = null ) {
+	public static function get_query( $query, $id_view, $date_range = null, $metric = null, $old = false ) {
 		if ( $query == 'main_chart' ) {
-			return self::main_chart_query( $id_view, $date_range, $metric );
+			return $old ? self::main_chart_query_old($id_view, $date_range, $metric) : self::main_chart_query($id_view,
+				$date_range, $metric);
+		} elseif ( $query == 'gender' ) {
+			return self::gender_chart_query($id_view, $date_range, $metric);
+		} elseif ( $query == 'device' ) {
+			return self::device_chart_query($id_view, $date_range, $metric);
+		} elseif ( $query == 'age' ) {
+			return self::age_chart_query($id_view, $date_range, $metric);
 		} elseif ( $query == 'boxes' ) {
 			return self::boxes_query( $id_view );
 		} elseif ( $query == 'dashboard_boxes' ) {
-			return self::dashboard_boxes_query( $id_view, $date_range );
+			return $old ? self::dashboard_boxes_query_old( $id_view, $date_range ) :
+				self::dashboard_boxes_query( $id_view, $date_range );
 		} elseif ( $query == 'sources' ) {
-			return self::sources_query( $id_view );
+			return self::sources_query( $id_view, $date_range );
 		} else {
 			return array();
 		}
@@ -50,17 +58,16 @@ class Ga_Stats {
 	 * Preparing query for top traffic sources table
 	 *
 	 * @param int $id_view The Analytics view ID from which to retrieve data.
-	 *
+	 * @param array $date_ranges An array representing the date ranges that will be passed to chart query.
 	 * @return array Sources query
 	 */
-	public static function sources_query( $id_view ) {
-		$reports_requests	 = array();
-		$daysAgo = isset($_GET['th']) ? '30daysAgo' : '7daysAgo';
+	public static function sources_query( $id_view, $date_ranges ) {
+		$reports_requests = array();
 
 		if ( isset( $_GET['ts'] ) ) {
 			$reports_requests[] = array(
 				'viewId'			 => $id_view,
-				'dateRanges'		 => self::set_date_ranges( $daysAgo, 'yesterday' ),
+				'dateRanges'		 => $date_ranges,
 				'metrics'			 => self::set_metrics( array( 'ga:pageviews' ) ),
 				'includeEmptyRows'	 => true,
 				'pageSize'			 => 10,
@@ -70,7 +77,7 @@ class Ga_Stats {
 		} else {
 			$reports_requests[] = array(
 				'viewId'           => $id_view,
-				'dateRanges'       => self::set_date_ranges( $daysAgo, 'yesterday' ),
+				'dateRanges'       => $date_ranges,
 				'metrics'          => self::set_metrics( array(
 					'ga:pageviews',
 					'ga:uniquePageviews',
@@ -94,21 +101,20 @@ class Ga_Stats {
 	}
 
 	/**
-	 * Preparing query for dashbord boxes
+	 * Preparing query for dashboard boxes
 	 *
 	 * @param int $id_view The Analytics view ID from which to retrieve data.
-	 * @param string $date_range The start date for the query in the format YYYY-MM-DD or '7daysAgo'
+	 * @param array $date_ranges An array representing the date ranges that will be passed to chart query.
 	 *
 	 * @return array Dashboard boxes query
 	 */
-	public static function dashboard_boxes_query( $id_view, $date_range ) {
-		$reports_requests	 = array();
-		$daysAgo = isset($_GET['th']) ? '30daysAgo' : '7daysAgo';
+	public static function dashboard_boxes_query( $id_view, $date_ranges ) {
+		$reports_requests = array();
 
 		if ( isset( $_GET['ts'] ) ) {
 			$reports_requests[] = array(
 				'viewId'			 => $id_view,
-				'dateRanges'		 => self::set_date_ranges( $daysAgo, 'yesterday' ),
+				'dateRanges'		 => $date_ranges,
 				'metrics'			 => self::set_metrics( array( 'ga:pageviews' ) ),
 				'includeEmptyRows'	 => true,
 				'pageSize'			 => 10,
@@ -118,7 +124,7 @@ class Ga_Stats {
 		} else {
 			$reports_requests[] = array(
 				'viewId'           => $id_view,
-				'dateRanges'       => self::set_date_ranges( $daysAgo, 'yesterday' ),
+				'dateRanges'       => $date_ranges,
 				'metrics'          => self::set_metrics( array(
 					'ga:pageviews',
 					'ga:uniquePageviews',
@@ -136,6 +142,56 @@ class Ga_Stats {
 		$query				 = array(
 			'reportRequests' => $reports_requests
 		);
+
+		return $query;
+	}
+
+	/**
+	 * Preparing query for dashboard boxes
+	 *
+	 * @param int $id_view       The Analytics view ID from which to retrieve data.
+	 * @param string $date_range The start date for the query in the format YYYY-MM-DD or '7daysAgo'
+	 *
+	 * @return array Dashboard boxes query
+	 * @deprecated
+	 *
+	 */
+	public static function dashboard_boxes_query_old($id_view, $date_range)
+	{
+		$reports_requests = [];
+		$daysAgo          = isset($_GET['th']) ? '30daysAgo' : '7daysAgo';
+
+		if (isset($_GET['ts'])) {
+			$reports_requests[] = [
+				'viewId'           => $id_view,
+				'dateRanges'       => self::set_date_ranges($daysAgo, 'yesterday'),
+				'metrics'          => self::set_metrics(['ga:pageviews']),
+				'includeEmptyRows' => true,
+				'pageSize'         => 10,
+				'dimensions'       => self::set_dimensions('ga:sourceMedium'),
+				'orderBys'         => self::set_order_bys('ga:pageviews', 'DESCENDING'),
+			];
+		} else {
+			$reports_requests[] = [
+				'viewId'           => $id_view,
+				'dateRanges'       => self::set_date_ranges($daysAgo, 'yesterday'),
+				'metrics'          => self::set_metrics([
+					'ga:pageviews',
+					'ga:uniquePageviews',
+					'ga:timeOnPage',
+					'ga:bounces',
+					'ga:entrances',
+					'ga:exits',
+				]),
+				'includeEmptyRows' => true,
+				'pageSize'         => 10,
+				'dimensions'       => self::set_dimensions('ga:pagePath'),
+				'orderBys'         => self::set_order_bys('ga:pageviews', 'DESCENDING'),
+			];
+		}
+		$query = [
+			'reportRequests' => $reports_requests,
+		];
 
 		return $query;
 	}
@@ -175,19 +231,13 @@ class Ga_Stats {
 	 * Preparing query for chart
 	 *
 	 * @param int $id_view The Analytics view ID from which to retrieve data.
-	 * @param string $date_range The start date for the query in the format YYYY-MM-DD or '7daysAgo'
+	 * @param array $date_ranges An array representing the date ranges that will be passed to chart query.
 	 * @param string $metric A metric expression
 	 *
 	 * @return array Chart query
 	 */
-	public static function main_chart_query( $id_view, $date_range = null, $metric = null ) {
-		if ( empty( $date_range ) ) {
-			$date_ranges = self::set_date_ranges( '7daysAgo', 'yesterday', '14daysAgo', '8daysAgo' );
-		} else {
-			$date_ranges = self::set_date_ranges( $date_range, 'yesterday', '14daysAgo', '8daysAgo' );
-		}
-
-		if ( empty( $metric ) ) {
+	public static function main_chart_query( $id_view, $date_ranges = null, $metric = null ) {
+		if ( true === empty( $metric ) ) {
 			$metric = 'ga:pageviews';
 		} else {
 			$metric = 'ga:' . $metric;
@@ -200,6 +250,128 @@ class Ga_Stats {
 			'metrics'			 => self::set_metrics( $metric ),
 			'includeEmptyRows'	 => true,
 			'dimensions'		 => self::set_dimensions( 'ga:date' )
+		);
+		$query				 = array(
+			'reportRequests' => $reports_requests
+		);
+
+		return $query;
+	}
+
+	/**
+	 * Preparing query for chart
+	 *
+	 * @param int $id_view       The Analytics view ID from which to retrieve data.
+	 * @param string $date_range The start date for the query in the format YYYY-MM-DD or '7daysAgo'
+	 * @param string $metric     A metric expression
+	 *
+	 * @return array Chart query
+	 * @deprecated
+	 *
+	 */
+	public static function main_chart_query_old($id_view, $date_range = null, $metric = null)
+	{
+		if (empty($date_range)) {
+			$date_ranges = self::set_date_ranges('7daysAgo', 'yesterday', '14daysAgo', '8daysAgo');
+		} else {
+			$date_ranges = self::set_date_ranges($date_range, 'yesterday', '14daysAgo', '8daysAgo');
+		}
+
+		if (empty($metric)) {
+			$metric = 'ga:pageviews';
+		} else {
+			$metric = 'ga:' . $metric;
+		}
+
+		$reports_requests   = [];
+		$reports_requests[] = [
+			'viewId'           => $id_view,
+			'dateRanges'       => $date_ranges,
+			'metrics'          => self::set_metrics($metric),
+			'includeEmptyRows' => true,
+			'dimensions'       => self::set_dimensions('ga:date'),
+		];
+		$query              = [
+			'reportRequests' => $reports_requests,
+		];
+
+		return $query;
+	}
+
+	/**
+	 * Preparing query for gender chart
+	 *
+	 * @param int $id_view The Analytics view ID from which to retrieve data.
+	 * @param array $date_ranges An array representing the date ranges that will be passed to chart query.
+	 * @param string $metric A metric expression
+	 *
+	 * @return array Chart query
+	 */
+	public static function gender_chart_query( $id_view, $date_ranges = null, $metric = null ) {
+		if ( true === empty( $date_ranges ) ) {
+			$date_ranges = self::set_date_ranges( '7daysAgo', 'yesterday', '14daysAgo', '8daysAgo' );
+		}
+
+		$reports_requests	 = array();
+		$reports_requests[]	 = array(
+			'viewId'			 => $id_view,
+			'dateRanges'		 => $date_ranges,
+			'metrics'			 => self::set_metrics( 'ga:sessions' ),
+			'includeEmptyRows'	 => true,
+			'dimensions'		 => self::set_dimensions( 'ga:userGender' )
+		);
+		$query				 = array(
+			'reportRequests' => $reports_requests
+		);
+
+		return $query;
+	}
+
+	/**
+	 * Preparing query for device chart.
+	 *
+	 * @param int $id_view The Analytics view ID from which to retrieve data.
+	 * @param array $date_ranges An array representing the date ranges that will be passed to chart query.
+	 * @param string $metric A metric expression
+	 *
+	 * @return array Chart query
+	 * @since 2.5.2
+	 */
+	public static function device_chart_query( $id_view, $date_ranges = null, $metric = null ) {
+		return array(
+			'reportRequests' => array(
+				array(
+					'viewId'           => $id_view,
+					'dateRanges'       => $date_ranges,
+					'metrics'          => self::set_metrics( 'ga:sessions' ),
+					'includeEmptyRows' => true,
+					'dimensions'       => self::set_dimensions( 'ga:deviceCategory' )
+				)
+			)
+		);
+	}
+
+	/**
+	 * Preparing query for age chart
+	 *
+	 * @param int $id_view The Analytics view ID from which to retrieve data.
+	 * @param array $date_ranges An array representing the date ranges that will be passed to chart query.
+	 * @param string $metric A metric expression
+	 *
+	 * @return array Chart query
+	 */
+	public static function age_chart_query( $id_view, $date_ranges = null, $metric = null ) {
+		if ( true === empty( $date_ranges ) ) {
+			$date_ranges = self::set_date_ranges( '7daysAgo', 'yesterday', '14daysAgo', '8daysAgo' );
+		}
+
+		$reports_requests	 = array();
+		$reports_requests[]	 = array(
+			'viewId'			 => $id_view,
+			'dateRanges'		 => $date_ranges,
+			'metrics'			 => self::set_metrics( 'ga:sessions' ),
+			'includeEmptyRows'	 => true,
+			'dimensions'		 => self::set_dimensions( 'ga:userAgeBracket' )
 		);
 		$query				 = array(
 			'reportRequests' => $reports_requests
@@ -280,12 +452,12 @@ class Ga_Stats {
 		$date_danges	 = array();
 		$date_danges[]	 = array(
 			'startDate'	 => $start_date,
-			'endDate'	 => $end_date
+			'endDate'	 => $end_date,
 		);
 		if ( !empty( $prev_start_date ) and ! empty( $prev_end_date ) ) {
 			$date_danges[] = array(
 				'startDate'	 => $prev_start_date,
-				'endDate'	 => $prev_end_date
+				'endDate'	 => $prev_end_date,
 			);
 		}
 
@@ -317,7 +489,7 @@ class Ga_Stats {
 	 *
 	 * @param array $row Analytics response row
 	 *
-	 * @return array Dimensions
+	 * @return array|bool Dimensions
 	 */
 	public static function get_dimensions( $row ) {
 		if ( !empty( $row[ 'dimensions' ] ) ) {
@@ -332,7 +504,7 @@ class Ga_Stats {
 	 *
 	 * @param array $row Analytics response row
 	 *
-	 * @return array Metrics
+	 * @return array|bool Metrics
 	 */
 	public static function get_metrics( $row ) {
 		if ( !empty( $row[ 'metrics' ] ) ) {
@@ -347,7 +519,7 @@ class Ga_Stats {
 	 *
 	 * @param array $report_data Analytics response report data
 	 *
-	 * @return array Rows
+	 * @return array|bool Rows
 	 */
 	public static function get_rows( $report_data ) {
 		if ( !empty( $report_data[ 'rows' ] ) ) {
@@ -362,7 +534,7 @@ class Ga_Stats {
 	 *
 	 * @param array $report_data Analytics response report data
 	 *
-	 * @return array Row count
+	 * @return array|bool Row count
 	 */
 	public static function get_row_count( $report_data ) {
 		if ( !empty( $report_data[ 'rowCount' ] ) ) {
@@ -377,7 +549,7 @@ class Ga_Stats {
 	 *
 	 * @param array $report_data Analytics response report data
 	 *
-	 * @return array Totals
+	 * @return array|bool Totals
 	 */
 	public static function get_totals( $report_data ) {
 		if ( !empty( $report_data[ 'totals' ] ) ) {
@@ -392,7 +564,7 @@ class Ga_Stats {
 	 *
 	 * @param array $data Analytics response data
 	 *
-	 * @return array Reports
+	 * @return array|bool Reports
 	 */
 	public static function get_reports_from_response( $data ) {
 		if ( !empty( $data[ 'reports' ] ) ) {
@@ -431,7 +603,7 @@ class Ga_Stats {
 	 *
 	 * @param array $data Analytics response data
 	 *
-	 * @return array Report
+	 * @return array|bool Report
 	 */
 	public static function get_single_report( $data ) {
 		if ( !empty( $data ) ) {
@@ -450,7 +622,7 @@ class Ga_Stats {
 	 *
 	 * @param array $rows Analytics response data rows
 	 *
-	 * @return array Row
+	 * @return array|bool Row
 	 */
 	public static function get_single_row( $rows ) {
 		if ( !empty( $rows ) ) {
@@ -501,21 +673,105 @@ class Ga_Stats {
 	 *
 	 * @return array chart data
 	 */
-	public static function get_chart( $response_data ) {
+	public static function get_chart( $response_data, $period_in_days = 7 ) {
 		$chart_data = array();
+		if ( ! empty( $response_data ) ) {
+			$data = ( ! empty( $response_data['reports'] ) && ! empty( $response_data['reports'][0] ) && ! empty( $response_data['reports'][0]['data'] ) ) ? $response_data['reports'][0]['data'] : array();
+			$rows = ( ! empty( $data['rows'] ) ) ? $data['rows'] : array();
+			if ( ! empty( $rows ) ) {
+				foreach ( $rows as $key => $row ) {
+					if ( $key < $period_in_days ) {
+						$chart_data[ $key ]['previous']     = ! empty( $row['metrics'][1]['values'][0] ) ? $row['metrics'][1]['values'][0] : 0;
+						$chart_data[ $key ]['previous-day'] = date( 'M j', strtotime( $row['dimensions'][0] ) );
+					} else {
+						$chart_data[ $key - $period_in_days ]['day']     = date( 'M j', strtotime( $row['dimensions'][0] ) );
+						$chart_data[ $key - $period_in_days ]['current'] = ! empty( $row['metrics'][0]['values'][0] ) ? $row['metrics'][0]['values'][0] : 0;
+						$chart_data['date']                              = strtotime( $row['dimensions'][0] );
+					}
+				}
+			}
+		}
+
+		return $chart_data;
+	}
+
+	/**
+	 * Get gender chart from response data
+	 *
+	 * @param array $response_data Analytics response data
+	 *
+	 * @return array chart data
+	 */
+	public static function get_gender_chart( $response_data ) {
+		$chart_data = [];
 		if ( !empty( $response_data ) ) {
-			$data	 = (!empty( $response_data[ 'reports' ] ) && !empty( $response_data[ 'reports' ][ 0 ] ) && !empty( $response_data[ 'reports' ][ 0 ][ 'data' ] ) ) ? $response_data[ 'reports' ][ 0 ][ 'data' ] : array();
-			$rows	 = (!empty( $data[ 'rows' ] ) ) ? $data[ 'rows' ] : array();
+			$data = (!empty( $response_data[ 'reports' ] ) && !empty( $response_data[ 'reports' ][ 0 ] ) && !empty( $response_data[ 'reports' ][ 0 ][ 'data' ] ) ) ? $response_data[ 'reports' ][ 0 ][ 'data' ] : array();
+			$rows = (!empty( $data[ 'rows' ] ) ) ? $data[ 'rows' ] : array();
 			if ( !empty( $rows ) ) {
 				foreach ( $rows as $key => $row ) {
-					if ( $key < 7 ) {
-						$chart_data[ $key ][ 'previous' ]		 = !empty( $row[ 'metrics' ][ 1 ][ 'values' ][ 0 ] ) ? $row[ 'metrics' ][ 1 ][ 'values' ][ 0 ] : 0;
-						$chart_data[ $key ][ 'previous-day' ]	 = date( 'M j', strtotime( $row[ 'dimensions' ][ 0 ] ) );
-					} else {
-						$chart_data[ $key - 7 ][ 'day' ]		 = date( 'M j', strtotime( $row[ 'dimensions' ][ 0 ] ) );
-						$chart_data[ $key - 7 ][ 'current' ]	 = !empty( $row[ 'metrics' ][ 0 ][ 'values' ][ 0 ] ) ? $row[ 'metrics' ][ 0 ][ 'values' ][ 0 ] : 0;
-						$chart_data[ 'date' ]					 = strtotime( $row[ 'dimensions' ][ 0 ] );
-					}
+					$chart_data[$row['dimensions'][0]] = self::get_metric_value($row['metrics']);
+				}
+			}
+		}
+
+		return $chart_data;
+	}
+
+	/**
+	 * Get device chart from response data.
+	 *
+	 * @param array $response_data Analytics response data array.
+	 *
+	 * @return array Chart data array.
+	 */
+	public static function get_device_chart( $response_data ) {
+		$chart_data = [];
+		if ( false === empty( $response_data ) ) {
+			$data = (false === empty( $response_data[ 'reports' ] ) && !empty( $response_data[ 'reports' ][ 0 ] ) && !empty( $response_data[ 'reports' ][ 0 ][ 'data' ] ) ) ? $response_data[ 'reports' ][ 0 ][ 'data' ] : array();
+			$rows = ( false === empty( $data['rows'] ) ) ? $data['rows'] : array();
+			if ( false === empty( $rows ) ) {
+				foreach ( $rows as $row ) {
+					$chart_data[$row['dimensions'][0]] = self::get_metric_value($row['metrics']);
+				}
+			}
+		}
+
+		return $chart_data;
+	}
+
+	/**
+	 * Get the value of metric data response.
+	 *
+	 * @param $metrics
+	 *
+	 * @return mixed
+	 */
+	private static function get_metric_value($metrics)
+	{
+		if (is_array($metrics)) {
+			foreach($metrics as $metric) {
+				$values[] = $metric['values'][0];
+			}
+		}
+
+		return $values[0];
+	}
+
+	/**
+	 * Get gender chart from response data
+	 *
+	 * @param array $response_data Analytics response data
+	 *
+	 * @return array chart data
+	 */
+	public static function get_age_chart( $response_data ) {
+		$chart_data = [];
+		if ( !empty( $response_data ) ) {
+			$data = (!empty( $response_data[ 'reports' ] ) && !empty( $response_data[ 'reports' ][ 0 ] ) && !empty( $response_data[ 'reports' ][ 0 ][ 'data' ] ) ) ? $response_data[ 'reports' ][ 0 ][ 'data' ] : array();
+			$rows = (!empty( $data[ 'rows' ] ) ) ? $data[ 'rows' ] : array();
+			if ( !empty( $rows ) ) {
+				foreach ( $rows as $key => $row ) {
+					$chart_data[$row['dimensions'][0]] = self::get_metric_value($row['metrics']);
 				}
 			}
 		}
@@ -662,7 +918,7 @@ class Ga_Stats {
 	 *
 	 * @param array $data Analytics response data
 	 *
-	 * @return array sources data
+	 * @return array|bool sources data
 	 */
 	public static function get_sources( $data ) {
 		if ( !empty( $data ) ) {
@@ -754,6 +1010,11 @@ class Ga_Stats {
 		}
 	}
 
+	/**
+	 * Get Empty Boxes Structure.
+	 *
+	 * @return array Array of empty boxes structure values.
+	 */
 	public static function get_empty_boxes_structure() {
 		$boxes_data							 = array();
 		$boxes_data[ 'Sessions' ]				 = array(

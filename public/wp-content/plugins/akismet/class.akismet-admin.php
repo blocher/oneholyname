@@ -612,7 +612,12 @@ class Akismet_Admin {
 						$message = esc_html( __( 'Akismet cleared this comment.', 'akismet' ) );
 					break;
 					case 'wp-blacklisted':
-						$message = sprintf( esc_html( __( 'Comment was caught by %s.', 'akismet' ) ), '<code>wp_blacklist_check</code>' );
+					case 'wp-disallowed':
+						$message = sprintf(
+							/* translators: The placeholder is a WordPress PHP function name. */
+							esc_html( __( 'Comment was caught by %s.', 'akismet' ) ),
+							function_exists( 'wp_check_comment_disallowed_list' ) ? '<code>wp_check_comment_disallowed_list</code>' : '<code>wp_blacklist_check</code>'
+						);
 					break;
 					case 'report-spam':
 						if ( isset( $row['user'] ) ) {
@@ -883,6 +888,23 @@ class Akismet_Admin {
 		) );
 	}
 
+	public static function get_usage_limit_alert_data() {
+		return array(
+			'type'         => 'usage-limit',
+			'code'         => (int) get_option( 'akismet_alert_code' ),
+			'msg'          => get_option( 'akismet_alert_msg' ),
+			'api_calls'    => get_option( 'akismet_alert_api_calls' ),
+			'usage_limit'  => get_option( 'akismet_alert_usage_limit' ),
+			'upgrade_plan' => get_option( 'akismet_alert_upgrade_plan' ),
+			'upgrade_url'  => get_option( 'akismet_alert_upgrade_url' ),
+			'upgrade_type' => get_option( 'akismet_alert_upgrade_type' ),
+		);
+	}
+
+	public static function display_usage_limit_alert() {
+		Akismet::view( 'notice', self::get_usage_limit_alert_data() );
+	}
+
 	public static function display_spam_check_warning() {
 		Akismet::fix_scheduled_recheck();
 
@@ -1016,6 +1038,11 @@ class Akismet_Admin {
 			$notices[] = array( 'type' => $akismet_user->status );
 		}
 
+		$alert_code = get_option( 'akismet_alert_code' );
+		if ( isset( Akismet::$limit_notices[ $alert_code ] ) ) {
+			$notices[] = self::get_usage_limit_alert_data();
+		}
+
 		/*
 		// To see all variants when testing.
 		$notices[] = array( 'type' => 'active-notice', 'time_saved' => 'Cleaning up spam takes time. Akismet has saved you 1 minute!' );
@@ -1035,6 +1062,7 @@ class Akismet_Admin {
 		$notices[] = array( 'type' => 'new-key-failed' );
 		$notices[] = array( 'type' => 'limit-reached', 'level' => 'yellow' );
 		$notices[] = array( 'type' => 'limit-reached', 'level' => 'red' );
+		$notices[] = array( 'type' => 'usage-limit', 'api_calls' => '15000', 'usage_limit' => '10000', 'upgrade_plan' => 'Enterprise', 'upgrade_url' => 'https://akismet.com/account/' );
 		*/
 		
 		Akismet::log( compact( 'stat_totals', 'akismet_user' ) );
@@ -1051,11 +1079,16 @@ class Akismet_Admin {
 
 		if ( in_array( $hook_suffix, array( 'edit-comments.php' ) ) && (int) get_option( 'akismet_alert_code' ) > 0 ) {
 			Akismet::verify_key( Akismet::get_api_key() ); //verify that the key is still in alert state
-			
-			if ( get_option( 'akismet_alert_code' ) > 0 )
+
+			$alert_code = get_option( 'akismet_alert_code' );
+			if ( isset( Akismet::$limit_notices[ $alert_code ] ) ) {
+				self::display_usage_limit_alert();
+			} elseif ( $alert_code > 0 ) {
 				self::display_alert();
+			}
 		}
-		elseif ( $hook_suffix == 'plugins.php' && !Akismet::get_api_key() ) {
+		elseif ( ( 'plugins.php' === $hook_suffix || 'edit-comments.php' === $hook_suffix ) && ! Akismet::get_api_key() ) {
+			// Show the "Set Up Akismet" banner on the comments and plugin pages if no API key has been set.
 			self::display_api_key_warning();
 		}
 		elseif ( $hook_suffix == 'edit-comments.php' && wp_next_scheduled( 'akismet_schedule_cron_recheck' ) ) {
@@ -1125,7 +1158,7 @@ class Akismet_Admin {
 		if ( !class_exists('Jetpack') )
 			return false;
 
-		if ( defined( 'JETPACK__VERSION' ) && version_compare( JETPACK__VERSION, '7.7', '<' )  ) {
+		if ( defined( 'JETPACK__VERSION' ) && version_compare( JETPACK__VERSION, '7.7', '<' ) ) {
 			// For version of Jetpack prior to 7.7.
 			Jetpack::load_xml_rpc_client();
 		}

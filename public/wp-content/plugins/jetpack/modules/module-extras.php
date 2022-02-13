@@ -4,7 +4,7 @@
  * For example, if a module shouldn't be activatable unless certain conditions are met,
  * the code belongs in this file.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 /**
@@ -19,7 +19,9 @@ $tools = array(
 	'custom-post-types/nova.php',
 	'geo-location.php',
 	// Those oEmbed providers are always available.
+	'shortcodes/facebook.php',
 	'shortcodes/others.php',
+	// Theme Tools.
 	'theme-tools.php',
 	'theme-tools/social-links.php',
 	'theme-tools/random-redirect.php',
@@ -31,11 +33,6 @@ $tools = array(
 	'theme-tools/social-menu.php',
 	'theme-tools/content-options.php',
 	'theme-tools/devicepx.php',
-	// Needed for SEO Tools.
-	'seo-tools/jetpack-seo-utils.php',
-	'seo-tools/jetpack-seo-titles.php',
-	'seo-tools/jetpack-seo-posts.php',
-	'verification-tools/verification-tools-utils.php',
 	// Needed for VideoPress, so videos keep working in existing posts/pages when the module is deactivated.
 	'videopress/utility-functions.php',
 	'videopress/class.videopress-gutenberg.php',
@@ -43,16 +40,21 @@ $tools = array(
 
 // Some features are only available when connected to WordPress.com.
 $connected_tools = array(
-	'calypsoify/class.jetpack-calypsoify.php',
+	'calypsoify/class-jetpack-calypsoify.php',
+	'cloudflare-analytics/cloudflare-analytics.php',
 	'plugin-search.php',
 	'scan/scan.php', // Shows Jetpack Scan alerts in the admin bar if threats found.
 	'simple-payments/simple-payments.php',
 	'wpcom-block-editor/class-jetpack-wpcom-block-editor.php',
 	'wpcom-tos/wpcom-tos.php',
+	// These oEmbed providers are available when connected to WordPress.com.
+	// Starting from 2020-10-24, they need an authentication token, and that token is stored on WordPress.com.
+	// More information: https://developers.facebook.com/docs/instagram/oembed/.
+	'shortcodes/instagram.php',
 );
 
 // Add connected features to our existing list if the site is currently connected.
-if ( Jetpack::is_active() ) {
+if ( Jetpack::is_connection_ready() ) {
 	$tools = array_merge( $tools, $connected_tools );
 }
 

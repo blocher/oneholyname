@@ -13,6 +13,7 @@ class NewsletterUsers extends NewsletterModule {
         if (self::$instance == null) {
             self::$instance = new NewsletterUsers();
         }
+
         return self::$instance;
     }
 
@@ -86,31 +87,30 @@ class NewsletterUsers extends NewsletterModule {
         $sql .= "PRIMARY KEY (`id`),\nUNIQUE KEY `email` (`email`),\nKEY `wp_user_id` (`wp_user_id`)\n) $charset_collate;";
 
         dbDelta($sql);
-        
+
         if ($this->old_version < '1.2.7') {
             $this->query("update " . NEWSLETTER_USERS_TABLE . " set geo=1 where country<>''");
-            
         }
         if ($this->old_version > '1.2.5' && $this->old_version < '1.2.9') {
             $this->upgrade_query("ALTER TABLE " . NEWSLETTER_USERS_TABLE . " DROP COLUMN last_ip;");
         }
-        
     }
 
     function admin_menu() {
-        $this->add_menu_page('index', 'Subscribers');
-        $this->add_admin_page('new', 'New subscriber');
-        $this->add_admin_page('edit', 'Subscribers Edit');
-        $this->add_admin_page('massive', 'Massive Management');
-        $this->add_admin_page('export', 'Export');
-        $this->add_admin_page('import', 'Import');
-        $this->add_admin_page('statistics', 'Statistics');
+        $this->add_menu_page('index', __('Subscribers', 'newsletter'));
+        $this->add_admin_page('new', __('New subscriber', 'newsletter'));
+        $this->add_admin_page('edit', __('Subscriber Edit', 'newsletter'));
+        $this->add_admin_page('massive', __('Subscribers Maintenance', 'newsletter'));
+        $this->add_admin_page('export', __('Export', 'newsletter'));
+        $this->add_admin_page('import', __('Import', 'newsletter'));
+        $this->add_admin_page('statistics', __('Statistics', 'newsletter'));
     }
 
     function export($options = null) {
         global $wpdb;
 
-        header('Content-Type: application/octet-stream');
+        @setlocale(LC_CTYPE, 'en_US.UTF-8');
+        header('Content-Type: application/octet-stream;charset=UTF-8');
         header('Content-Disposition: attachment; filename="newsletter-subscribers.csv"');
 
         // BOM
@@ -175,8 +175,9 @@ class NewsletterUsers extends NewsletterModule {
                 echo "\n";
                 flush();
             }
-            if (count($recipients) < 500)
+            if (count($recipients) < 500) {
                 break;
+            }
             $page++;
         }
         die();
@@ -187,14 +188,63 @@ class NewsletterUsers extends NewsletterModule {
         $text = str_replace("\n", ' ', $text);
         $text = str_replace("\r", ' ', $text);
         $text = str_replace(";", ' ', $text);
-        
+
         // Do you wonder? Excel...
         $first = substr($text, 0, 1);
-        if ($first == '=' || $first == '+' || $first == '-' || $first == '@')
-        {
+        if ($first == '=' || $first == '+' || $first == '-' || $first == '@') {
             $text = "'" . $text;
         }
+
         return $text;
+    }
+
+    /**
+     * @param array $args
+     * @param string $format
+     *
+     * @return array|object|null
+     */
+    function get_users($args, $format = OBJECT) {
+        global $wpdb;
+
+        $default_args = array(
+            'page' => 1,
+            'per_page' => 10
+        );
+
+        $args = array_merge($default_args, $args);
+
+        $query = 'SELECT * FROM ' . NEWSLETTER_USERS_TABLE . ' ';
+        $query_args = [];
+
+        $query .= ' LIMIT %d OFFSET %d';
+        $query_args[] = (int) $args['per_page'];
+        $query_args[] = ( (int) $args['page'] - 1 ) * (int) $args['per_page'];
+
+        $records = $wpdb->get_results($wpdb->prepare($query, $query_args), $format);
+
+        if ($wpdb->last_error) {
+            $this->logger->error($wpdb->last_error);
+
+            return null;
+        }
+
+        return $records;
+    }
+
+    /**
+     * Check if email exists
+     *
+     * @param string $email
+     *
+     * @return bool
+     */
+    function email_exists($email) {
+
+        $email = parent::normalize_email($email);
+        $user = parent::get_user($email);
+
+        return $user ? true : false;
     }
 
 }

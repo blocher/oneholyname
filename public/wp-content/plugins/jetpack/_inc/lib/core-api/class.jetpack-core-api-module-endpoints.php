@@ -455,14 +455,14 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 					$business_address = is_array( $business_address ) ? array_map( array( $this, 'decode_special_characters' ), $business_address ) : $business_address;
 
 					$response[ $setting ] = array(
-						'siteTitle' => $this->decode_special_characters( get_option( 'blogname' ) ),
-						'siteDescription' => $this->decode_special_characters( get_option( 'blogdescription' ) ),
-						'siteType' => get_option( 'jpo_site_type' ),
-						'homepageFormat' => get_option( 'jpo_homepage_format' ),
-						'addContactForm' => intval( get_option( 'jpo_contact_page' ) ),
-						'businessAddress' => $business_address,
+						'siteTitle'          => $this->decode_special_characters( get_option( 'blogname' ) ),
+						'siteDescription'    => $this->decode_special_characters( get_option( 'blogdescription' ) ),
+						'siteType'           => get_option( 'jpo_site_type' ),
+						'homepageFormat'     => get_option( 'jpo_homepage_format' ),
+						'addContactForm'     => (int) get_option( 'jpo_contact_page' ),
+						'businessAddress'    => $business_address,
 						'installWooCommerce' => is_plugin_active( 'woocommerce/woocommerce.php' ),
-						'stats' => Jetpack::is_active() && Jetpack::is_module_active( 'stats' ),
+						'stats'              => Jetpack::is_connection_ready() && Jetpack::is_module_active( 'stats' ),
 					);
 					break;
 
@@ -715,7 +715,12 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 					break;
 
 				case 'jetpack_protect_global_whitelist':
+					if ( ! function_exists( 'jetpack_protect_save_whitelist' ) ) {
+						require_once JETPACK__PLUGIN_DIR . 'modules/protect/shared-functions.php';
+					}
+
 					$updated = jetpack_protect_save_whitelist( explode( PHP_EOL, str_replace( array( ' ', ',' ), array( '', "\n" ), $value ) ) );
+
 					if ( is_wp_error( $updated ) ) {
 						$error = $updated->get_error_message();
 					}
@@ -732,19 +737,31 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 
 				case 'search_auto_config':
 					if ( ! $value ) {
+						// Skip execution if no value is specified.
 						$updated = true;
-					} elseif ( class_exists( 'Jetpack_Search' ) ) {
-						$jps = Jetpack_Search::instance();
-						if ( is_a( $jps, 'Jetpack_Instant_Search' ) ) {
-							$jps->auto_config_search();
-							$updated = true;
-						} else {
-							$updated = new WP_Error( 'instant_search_disabled', 'Instant Search Disabled', array( 'status' => 400 ) );
-							$error   = $updated->get_error_message();
-						}
 					} else {
-						$updated = new WP_Error( 'search_disabled', 'Search Disabled', array( 'status' => 400 ) );
-						$error   = $updated->get_error_message();
+						$plan = new Automattic\Jetpack\Search\Plan();
+						if ( ! $plan->supports_instant_search() ) {
+							$updated = new WP_Error( 'instant_search_not_supported', 'Instant Search is not supported by this site', array( 'status' => 400 ) );
+							$error   = $updated->get_error_message();
+						} else {
+							if ( ! Automattic\Jetpack\Search\Options::is_instant_enabled() ) {
+								$updated = new WP_Error( 'instant_search_disabled', 'Instant Search is disabled', array( 'status' => 400 ) );
+								$error   = $updated->get_error_message();
+							} else {
+								$instance = Automattic\Jetpack\Search\Instant_Search::instance();
+
+								// Perform initialization. This should have already been executed in modules/search.php.
+								// In other words: This is a failsafe.
+								if ( ! $instance ) {
+									Automattic\Jetpack\Search\Jetpack_Initializer::initialize();
+									$instance = Automattic\Jetpack\Search\Instant_Search::instance();
+								}
+
+								$instance->auto_config_search();
+								$updated = true;
+							}
+						}
 					}
 					break;
 
@@ -752,6 +769,7 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 				case 'bing':
 				case 'pinterest':
 				case 'yandex':
+				case 'facebook':
 					$grouped_options = $grouped_options_current = (array) get_option( 'verification_services_codes' );
 
 					// Extracts the content attribute from the HTML meta tag if needed
@@ -820,8 +838,8 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 				case 'count_roles':
 				case 'blog_id':
 				case 'do_not_track':
-				case 'hide_smile':
 				case 'version':
+				case 'collapse_nudges':
 					$grouped_options          = $grouped_options_current = (array) get_option( 'stats_options' );
 					$grouped_options[$option] = $value;
 
@@ -904,6 +922,13 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 						$error = sprintf( esc_html__( 'Onboarding failed to process: %s', 'jetpack' ), $result );
 						$updated = false;
 					}
+					break;
+
+				case 'stb_enabled':
+				case 'stc_enabled':
+					// Convert the false value to 0. This allows the option to be updated if it doesn't exist yet.
+					$sub_value = $value ? $value : 0;
+					$updated   = (string) get_option( $option ) !== (string) $sub_value ? update_option( $option, $sub_value ) : true;
 					break;
 
 				default:
@@ -1110,7 +1135,7 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 		}
 
 		if ( ! empty( $data['stats'] ) ) {
-			if ( Jetpack::is_active() ) {
+			if ( Jetpack::is_connection_ready() ) {
 				$stats_module_active = Jetpack::is_module_active( 'stats' );
 				if ( ! $stats_module_active ) {
 					$stats_module_active = Jetpack::activate_module( 'stats', false, false );
@@ -1320,10 +1345,11 @@ class Jetpack_Core_API_Module_Data_Endpoint {
 	 * @return int|string Number of spam blocked by Akismet. Otherwise, an error message.
 	 */
 	public function get_akismet_data() {
-		if ( ! is_wp_error( $status = $this->akismet_is_active_and_registered() ) ) {
-			return rest_ensure_response( Akismet_Admin::get_stats( Akismet::get_api_key() ) );
+		$akismet_status = $this->akismet_is_active_and_registered();
+		if ( ! is_wp_error( $akismet_status ) ) {
+			return number_format_i18n( get_option( 'akismet_spam_count', 0 ) );
 		} else {
-			return $status->get_error_code();
+			return $akismet_status->get_error_code();
 		}
 	}
 
@@ -1533,6 +1559,9 @@ class Jetpack_Core_API_Module_Data_Endpoint {
 						break;
 					case 'yandex':
 						$services[] = 'Yandex';
+						break;
+					case 'facebook':
+						$services[] = 'Facebook';
 						break;
 				}
 			}

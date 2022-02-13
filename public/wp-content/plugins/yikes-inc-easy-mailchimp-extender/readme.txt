@@ -1,11 +1,11 @@
 ﻿=== Easy Forms for Mailchimp ===
-Contributors: yikesinc, eherman24, liljimmi, JPry, yikesitskevin, fmixell
+Contributors: yikesinc, eherman24, liljimmi, JPry, yikesitskevin, fmixell, vochr
 Donate link: https://yikesplugins.com/?utm_source=wp_plugin_repo&utm_medium=donate_link&utm_campaign=easy_forms_for_mailchimp
 Tags: Mailchimp, Mailchimp forms, Mailchimp lists, opt-in forms, sign up form, Mailchimp, email, forms, mailing lists, marketing, newsletter, sign up
 Requires at least: 4.0
-Tested up to: 5.4
+Tested up to: 5.9
 Requires PHP: 5.2.13
-Stable tag: 6.7.0
+Stable tag: 6.8.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -172,16 +172,39 @@ For information and code examples on how to implement the hooks and filters prov
 
 == Changelog ==
 
-= 6.7.0 - July, 1, 2020 =
+= 6.8.6 - December 17, 2021 =
+* Addressed potential XSS vulnerability
+
+= 6.8.5 - September 2, 2021 =
+* Deprecated filter block_categories is replaced by block_categories_all in WP 5.8
+
+= 6.8.4 - April 12, 2021 =
+* Increase specifity of admin asset inclusion to prevent conflicts with other plugins.
+
+= 6.8.3 - March 4, 2021 =
+* Rename assets folder
+
+= 6.8.2 - February 17, 2021 =
+* Dropdown hotfix
+
+= 6.8.1 - December 30, 2020 =
+* Added 'yearRange' to jQuery UI Datepicker Options
+Thank you to @ptsteadman
+
+= 6.8.0 - September 14, 2020 =
+* Added 'Placeholder' for dropdown.
+* Patched bug for checkbox interest group.
+
+= 6.7.0 - July 1, 2020 =
 * Adding support for Google Recaptcha Version 3.
 
-= 6.6.4 - March, 26, 2020 =
+= 6.6.4 - March 26, 2020 =
 * Fixes "Freddie" logo image path.
 
-= 6.6.3 - February, 27, 2020 =
+= 6.6.3 - February 27, 2020 =
 * Important security release.
 
-= 6.6.2 - November, 3, 2019 =
+= 6.6.2 - November 3, 2019 =
 * Bug scrub WCUS! Fixed issues with adding tags on resubscribe.
 
 = 6.6.0 - October 25, 2019 =

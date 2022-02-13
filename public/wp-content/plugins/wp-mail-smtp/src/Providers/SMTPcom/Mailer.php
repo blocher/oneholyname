@@ -274,7 +274,7 @@ class Mailer extends MailerAbstract {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $attachments
+	 * @param array $attachments The array of attachments data.
 	 */
 	public function set_attachments( $attachments ) {
 
@@ -282,23 +282,10 @@ class Mailer extends MailerAbstract {
 			return;
 		}
 
-		$data = array();
+		$data = [];
 
 		foreach ( $attachments as $attachment ) {
-			$file = false;
-
-			/*
-			 * We are not using WP_Filesystem API as we can't reliably work with it.
-			 * It is not always available, same as credentials for FTP.
-			 */
-			try {
-				if ( is_file( $attachment[0] ) && is_readable( $attachment[0] ) ) {
-					$file = file_get_contents( $attachment[0] ); // phpcs:ignore
-				}
-			}
-			catch ( \Exception $e ) {
-				$file = false;
-			}
+			$file = $this->get_attachment_file_content( $attachment );
 
 			if ( $file === false ) {
 				continue;
@@ -306,23 +293,23 @@ class Mailer extends MailerAbstract {
 
 			$filetype = str_replace( ';', '', trim( $attachment[4] ) );
 
-			$data[] = array(
-				'content'     => base64_encode( $file ),
+			$data[] = [
+				'content'     => chunk_split( base64_encode( $file ) ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 				'type'        => $filetype,
 				'encoding'    => 'base64',
 				'filename'    => empty( $attachment[2] ) ? 'file-' . wp_hash( microtime() ) . '.' . $filetype : trim( $attachment[2] ),
-				'disposition' => in_array( $attachment[6], array( 'inline', 'attachment' ), true ) ? $attachment[6] : 'attachment', // either inline or attachment.
+				'disposition' => in_array( $attachment[6], [ 'inline', 'attachment' ], true ) ? $attachment[6] : 'attachment', // either inline or attachment.
 				'cid'         => empty( $attachment[7] ) ? '' : trim( (string) $attachment[7] ),
-			);
+			];
 		}
 
 		if ( ! empty( $data ) ) {
 			$this->set_body_param(
-				array(
-					'body' => array(
+				[
+					'body' => [
 						'attachments' => $data,
-					),
-				)
+					],
+				]
 			);
 		}
 	}
@@ -389,6 +376,31 @@ class Mailer extends MailerAbstract {
 	public function set_return_path( $from_email ) {}
 
 	/**
+	 * We might need to do something after the email was sent to the API.
+	 * In this method we preprocess the response from the API.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param mixed $response Response data.
+	 */
+	protected function process_response( $response ) {
+
+		parent::process_response( $response );
+
+		if (
+			! is_wp_error( $response ) &&
+			! empty( $this->response['body']->data->message )
+		) {
+			preg_match( '/msg_id: (.*)/', $this->response['body']->data->message, $output );
+
+			if ( ! empty( $output[1] ) ) {
+				$this->phpmailer->addCustomHeader( 'X-Msg-ID', $output[1] );
+				$this->verify_sent_status = true;
+			}
+		}
+	}
+
+	/**
 	 * Get a SMTP.com-specific response with a helpful error.
 	 *
 	 * SMTP.com API error response (non 200 error code responses) is:
@@ -405,7 +417,7 @@ class Mailer extends MailerAbstract {
 	 *
 	 * @return string
 	 */
-	protected function get_response_error() {
+	public function get_response_error() {
 
 		$body = (array) wp_remote_retrieve_body( $this->response );
 
@@ -415,6 +427,8 @@ class Mailer extends MailerAbstract {
 			foreach ( (array) $body['data'] as $error_key => $error_message ) {
 				$error_text[] = $error_key . ' - ' . $error_message;
 			}
+		} elseif ( ! empty( $this->error_message ) ) {
+			$error_text[] = $this->error_message;
 		}
 
 		return implode( PHP_EOL, array_map( 'esc_textarea', $error_text ) );

@@ -1,364 +1,598 @@
-# Copyright (C) 2010 
-# This file is distributed under the same license as the  package.
+# Copyright (C) 2021 Print, PDF, & Email by PrintFriendly
+# This file is distributed under the same license as the Print, PDF & Email by PrintFriendly package.
 msgid ""
 msgstr ""
-"Project-Id-Version: PrintFriendly\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/printfriendly\n"
-"POT-Creation-Date: 2015-06-17 20:37+0530\n"
-"PO-Revision-Date: 2015-06-17 20:38+0530\n"
-"Last-Translator: EJ Reinders Folmer <poedit_nospam@adviesenzo.nl>\n"
-"Language-Team: PrintFriendly Team <support@printfriendly>\n"
-"Language: en_US\n"
+"Project-Id-Version: Print, PDF & Email by PrintFriendly 5.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-printfriendly\n"
+"POT-Creation-Date: 2021-12-29 15:35:50+00:00\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
-"X-Poedit-KeywordsList: __;_e;_n;_x;_ex;_nx;esc_html__;esc_html_e;esc_html_x;"
-"esc_attr__;esc_attr_e;esc_attr_x;_n_noop;_nx_noop\n"
-"X-Poedit-Basepath: .\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPath-1: ..\n"
+"Last-Translator: PrintFriendly Translate Team <support@printfriendly.com>\n"
+"Language-Team: PrintFriendly Translate Team <support@printfriendly.com>\n"
 
-#: ../pf.php:492
+#: pf.php:652
 msgid ""
-"No valid custom image url received, please enter a valid url to use a custom "
-"image."
+"No valid custom image url received, please enter a valid url to use a "
+"custom image."
 msgstr ""
 
-#: ../pf.php:501
+#: pf.php:660
 msgid "The text size you entered is invalid, please stay between 9px and 25px"
 msgstr ""
 
-#: ../pf.php:509
+#: pf.php:668
 msgid ""
 "The color you entered is not valid, it must be a valid hexadecimal RGB font "
 "color."
 msgstr ""
 
-#: ../pf.php:589
+#: pf.php:723
 msgid ""
 "No valid custom logo url received, please enter a valid url to use a custom "
 "logo."
 msgstr ""
 
-#: ../pf.php:642
+#: pf.php:820
 msgid "PrintFriendly Options"
 msgstr ""
 
-#: ../pf.php:642
+#: pf.php:820
 msgid "Print Friendly & PDF"
 msgstr ""
 
-#: ../pf.php:655
-msgid "Need Help?"
+#: pf.php:853 views/tabs.php:433
+msgid "Custom Image"
 msgstr ""
 
-#: ../pf.php:656
-#, php-format
-msgid "Be sure to check out the %s!"
+#: pf.php:854
+msgid "Use Image"
 msgstr ""
 
-#: ../pf.php:656
-msgid "Frequently Asked Questions"
+#: pf.php:855
+msgid "Invalid Image URL"
 msgstr ""
 
-#: ../pf.php:695
+#: pf.php:869
+msgid "Activation"
+msgstr ""
+
+#: pf.php:870
+msgid "Checking status"
+msgstr ""
+
+#: pf.php:871 views/pro.php:45
+msgid "Activate"
+msgstr ""
+
+#: pf.php:872
+msgid "Active Trial"
+msgstr ""
+
+#: pf.php:873
+msgid "Active"
+msgstr ""
+
+#: pf.php:874
+msgid "Expired"
+msgstr ""
+
+#: pf.php:875
+msgid "Please check Internet connection."
+msgstr ""
+
+#: pf.php:904
 msgid "Settings"
 msgstr ""
 
-#: ../pf.php:1112
-msgid "Only display when post is in:"
+#: pf.php:928 views/tabs.php:108 views/tabs.php:361 views/tabs.php:474
+msgid "Documentation"
 msgstr ""
 
-#: ../pf.php:1130
-msgid ""
-"Currently in Debug Mode. Following information is visible in debug mode only:"
-msgstr ""
-
-#: ../pf.php:1131
-msgid "Options:"
-msgstr ""
-
-#: ../pf.php:1137
-msgid "Print Friendly & PDF Settings"
-msgstr ""
-
-#: ../pf.php:1142
-msgid "Pick Your Button Style"
-msgstr ""
-
-#: ../pf.php:1165
+#: pf.php:1299 views/tabs.php:165
 msgid "Custom Button"
 msgstr ""
 
-#: ../pf.php:1168
-msgid "Enter Image URL"
+#: pf.php:1497
+msgid "Only display when post is in:"
 msgstr ""
 
-#: ../pf.php:1170
-msgid "Ex: http://www.example.com/<br>Ex: /wp/wp-content/uploads/example.png"
+#: pf.php:1593
+msgid ""
+"You are currently using %1$s%2$s%3$s. You can copy copy its contents into "
+"the textbox if you want to update the styles."
 msgstr ""
 
-#: ../pf.php:1176
-msgid "Text"
+#: test/wp/category-cat.php:53 test/wp/category-dog.php:52
+msgid "Previous page"
 msgstr ""
 
-#: ../pf.php:1180
-msgid "Text Color"
+#: test/wp/category-cat.php:54 test/wp/category-dog.php:53
+msgid "Next page"
 msgstr ""
 
-#: ../pf.php:1187
-msgid "Text Size"
+#: test/wp/category-cat.php:55 test/wp/category-dog.php:54
+msgid "Page"
 msgstr ""
 
-#: ../pf.php:1199
-msgid "Button Positioning"
+#: views/pro.php:18
+msgid "Learn more"
 msgstr ""
 
-#: ../pf.php:1206
-msgid "Left Align"
-msgstr ""
-
-#: ../pf.php:1718
-msgid "Do not use CSS for button styles"
-msgstr ""
-
-#: ../pf.php:1207
-msgid "Right Align"
-msgstr ""
-
-#: ../pf.php:1208
-msgid "Center"
-msgstr ""
-
-#: ../pf.php:1209
-msgid "None"
-msgstr ""
-
-#: ../pf.php:1216
-msgid "Above Content"
-msgstr ""
-
-#: ../pf.php:1217
-msgid "Below Content"
-msgstr ""
-
-#: ../pf.php:1224
-msgid "Margin Left"
-msgstr ""
-
-#: ../pf.php:1227
-msgid "Margin Right"
-msgstr ""
-
-#: ../pf.php:1230
-msgid "Margin Top"
-msgstr ""
-
-#: ../pf.php:1233
-msgid "Margin Bottom"
-msgstr ""
-
-#: ../pf.php:1242
-msgid "Display button on:"
-msgstr ""
-
-#: ../pf.php:1244
-msgid "Posts"
-msgstr ""
-
-#: ../pf.php:1245
-msgid "Pages"
-msgstr ""
-
-#: ../pf.php:1246
-msgid "Homepage"
-msgstr ""
-
-#: ../pf.php:1247
-msgid "Category Pages"
-msgstr ""
-
-#: ../pf.php:1248
-msgid "Taxonomy Pages"
-msgstr ""
-
-#: ../pf.php:1249
-msgid "Add direct to template"
-msgstr ""
-
-#: ../pf.php:1251
-msgid "or use shortcode inside your page/article"
-msgstr ""
-
-#: ../pf.php:1269
-msgid "Print PDF Options"
-msgstr ""
-
-#: ../pf.php:1271
-msgid "Page header"
-msgstr ""
-
-#: ../pf.php:1273
-msgid "My Website Icon"
-msgstr ""
-
-#: ../pf.php:1274
-msgid "Upload an Image"
-msgstr ""
-
-#: ../pf.php:1285
-msgid "Click-to-delete"
-msgstr ""
-
-#: ../pf.php:1287 ../pf.php:1310 ../pf.php:1317 ../pf.php:1324
-msgid "Allow"
-msgstr ""
-
-#: ../pf.php:1288 ../pf.php:1311 ../pf.php:1318 ../pf.php:1325
-msgid "Not Allow"
-msgstr ""
-
-#: ../pf.php:1292
-msgid "Images"
-msgstr ""
-
-#: ../pf.php:1294
-msgid "Include"
-msgstr ""
-
-#: ../pf.php:1295
-msgid "Exclude"
-msgstr ""
-
-#: ../pf.php:1299
-msgid "Image style"
-msgstr ""
-
-#: ../pf.php:1301
-msgid "Align Right"
-msgstr ""
-
-#: ../pf.php:1302
-msgid "Align Left"
-msgstr ""
-
-#: ../pf.php:1303
-msgid "Align None"
-msgstr ""
-
-#: ../pf.php:1304
-msgid "Center/Block"
-msgstr ""
-
-#: ../pf.php:1308
+#: views/pro.php:30 views/tabs.php:534
 msgid "Email"
 msgstr ""
 
-#: ../pf.php:1315
-msgid "PDF"
+#: views/pro.php:30
+msgid "To send account details"
 msgstr ""
 
-#: ../pf.php:1322
-msgid "Print"
+#: views/pro.php:33
+msgid "Email is invalid"
 msgstr ""
 
-#: ../pf.php:1329
-msgid "Custom css url"
+#: views/pro.php:38
+msgid "Website Domain"
 msgstr ""
 
-#: ../pf.php:1331
-msgid "?"
+#: views/pro.php:41
+msgid "Domain is invalid"
 msgstr ""
 
-#: ../pf.php:1336
-msgid "Webmaster Settings"
+#: views/pro.php:46
+msgid "Free 30 days trial, no credit card required."
 msgstr ""
 
-#: ../pf.php:1338
-msgid "Website Protocol"
+#: views/pro.php:50
+msgid "Buy Now"
 msgstr ""
 
-#: ../pf.php:1340
-msgid "http (common)"
+#: views/pro.php:55
+msgid "Last Checked"
 msgstr ""
 
-#: ../pf.php:1341
-msgid "https (secure)"
+#: views/pro.php:61
+msgid "Please wait"
 msgstr ""
 
-#: ../pf.php:1346
-msgid "Password Protected Content"
+#: views/pro.php:70
+msgid "Pro Features"
 msgstr ""
 
-#: ../pf.php:1348 ../pf.php:1355 ../pf.php:1367
-msgid "No"
+#: views/pro.php:72
+msgid "Faster, better experience for end-user"
 msgstr ""
 
-#: ../pf.php:1349 ../pf.php:1354 ../pf.php:1366
-msgid "Yes"
+#: views/pro.php:73
+msgid "Cache-free, so any updates are instantly included"
 msgstr ""
 
-#: ../pf.php:1352
-msgid "Use JavaScript"
+#: views/pro.php:74
+msgid "Ad-Free for companies and organizations"
 msgstr ""
 
-#: ../pf.php:1358
-msgid "Preview appears on the page in a Lightbox."
+#: views/pro.php:75
+msgid "Works on all sites (Password protected, Angular/React/Ember)"
 msgstr ""
 
-#: ../pf.php:1361
-msgid "Preview opens a new browser tab."
+#: views/pro.php:76
+msgid "Email support"
 msgstr ""
 
-#: ../pf.php:1364
-msgid "Track in Google Analytics"
+#: views/pro.php:78
+msgid "Have a development/staging domain?"
 msgstr ""
 
-#: ../pf.php:1371
-msgid "My Page Content Selected By:"
+#: views/pro.php:78
+msgid "Add Free Development Domain"
 msgstr ""
 
-#: ../pf.php:1371
-msgid "Change this setting if your content is not showing in the preview."
+#: views/settings.php:3
+msgid "Print Friendly & PDF Settings"
 msgstr ""
 
-#: ../pf.php:1373
-msgid "WP \"the_content\" filter"
-msgstr ""
-
-#: ../pf.php:1374
-msgid "Content Algorithm"
-msgstr ""
-
-#: ../pf.php:1379
-msgid "Save Options"
-msgstr ""
-
-#: ../pf.php:1380
-msgid "Cancel"
-msgstr ""
-
-#: ../pf.php:1383
+#: views/settings.php:16
 msgid ""
-"Need professional options for your corporate, education, or agency developed "
-"website? Check out"
+"If you like <strong>PrintFriendly</strong> please leave us a %s rating. A "
+"huge thanks in advance!"
 msgstr ""
 
-#: ../pf.php:1385
-msgid "Like PrintFriendly?"
+#: views/settings.php:18
+msgid ""
+"Need professional options for your corporate, education, or agency "
+"developed website? Check out"
 msgstr ""
 
-#: ../pf.php:1385
-msgid "Give us a rating"
-msgstr ""
-
-#: ../pf.php:1385
+#: views/settings.php:20
 msgid "Need help or have suggestions?"
 msgstr ""
 
-#: ../pf.php:1385
-msgid "PrintFriendly & PDF button for your website. Optimizes your pages and brand for print, pdf, and email."
-"Name and URL are included to ensure repeat visitors and new visitors when printed versions are shared."
+#: views/tabs.php:4
+msgid "Standard"
+msgstr ""
+
+#: views/tabs.php:5
+msgid "Advanced"
+msgstr ""
+
+#: views/tabs.php:7
+msgid "Debug"
+msgstr ""
+
+#: views/tabs.php:20
+msgid "Select content using"
+msgstr ""
+
+#: views/tabs.php:29
+msgid "Not available for WooCommerce"
+msgstr ""
+
+#: views/tabs.php:37
+msgid "WP Template"
+msgstr ""
+
+#: views/tabs.php:44
+msgid "Content Algorithm"
+msgstr ""
+
+#: views/tabs.php:51
+msgid "Custom CSS Selectors"
+msgstr ""
+
+#: views/tabs.php:57
+msgid "Author Selector"
+msgstr ""
+
+#: views/tabs.php:61
+msgid "Content Selector"
+msgstr ""
+
+#: views/tabs.php:65
+msgid "Date Selector"
+msgstr ""
+
+#: views/tabs.php:69
+msgid "Title Selector"
+msgstr ""
+
+#: views/tabs.php:73
+msgid "Image Selector"
+msgstr ""
+
+#: views/tabs.php:78
+msgid "Content Fallback Strategy"
+msgstr ""
+
+#: views/tabs.php:81
+msgid "Use existing rules to find content"
+msgstr ""
+
+#: views/tabs.php:85
+msgid "Show an error message"
+msgstr ""
+
+#: views/tabs.php:88
+msgid ""
+"This setting can be used to configure the behaviour of the plugin, when "
+"content CSS selector does not match any content."
+msgstr ""
+
+#: views/tabs.php:90
+msgid ""
+"We recommend setting this to \"Use existing rules to find content\" in "
+"production and to \"Show an error message\" in development."
+msgstr ""
+
+#: views/tabs.php:93
+msgid "Show Options Code"
+msgstr ""
+
+#: views/tabs.php:96 views/tabs.php:323 views/tabs.php:331 views/tabs.php:345
+#: views/tabs.php:353
+msgid "Copy Code"
+msgstr ""
+
+#: views/tabs.php:107
+msgid "Change this setting if your content is not showing in the preview."
+msgstr ""
+
+#: views/tabs.php:115
+msgid "Button Style"
+msgstr ""
+
+#: views/tabs.php:170
+msgid "Image"
+msgstr ""
+
+#: views/tabs.php:184
+msgid "Use Your Image"
+msgstr ""
+
+#: views/tabs.php:187 views/tabs.php:439
+msgid "Select Image"
+msgstr ""
+
+#: views/tabs.php:195
+msgid "Width"
+msgstr ""
+
+#: views/tabs.php:197
+msgid "Height"
+msgstr ""
+
+#: views/tabs.php:206
+msgid "No Image"
+msgstr ""
+
+#: views/tabs.php:211
+msgid "Text"
+msgstr ""
+
+#: views/tabs.php:219
+msgid "Text Size"
+msgstr ""
+
+#: views/tabs.php:229
+msgid "No Text"
+msgstr ""
+
+#: views/tabs.php:235
+msgid "Preview"
+msgstr ""
+
+#: views/tabs.php:247
+msgid "Button Position"
+msgstr ""
+
+#: views/tabs.php:253
+msgid "Alignment"
+msgstr ""
+
+#: views/tabs.php:256
+msgid "Left Align"
+msgstr ""
+
+#: views/tabs.php:257
+msgid "Right Align"
+msgstr ""
+
+#: views/tabs.php:258
+msgid "Center"
+msgstr ""
+
+#: views/tabs.php:259
+msgid "None"
+msgstr ""
+
+#: views/tabs.php:265
+msgid "Placement"
+msgstr ""
+
+#: views/tabs.php:268
+msgid "Above Content"
+msgstr ""
+
+#: views/tabs.php:269
+msgid "Below Content"
+msgstr ""
+
+#: views/tabs.php:279
+msgid "Button Display"
+msgstr ""
+
+#: views/tabs.php:284
+msgid "Pages to show on"
+msgstr ""
+
+#: views/tabs.php:286
+msgid "Posts"
+msgstr ""
+
+#: views/tabs.php:287
+msgid "Pages"
+msgstr ""
+
+#: views/tabs.php:288
+msgid "Homepage"
+msgstr ""
+
+#: views/tabs.php:289
+msgid "Category Pages"
+msgstr ""
+
+#: views/tabs.php:290
+msgid "Taxonomy Pages"
+msgstr ""
+
+#: views/tabs.php:294
+msgid "Specific categories to show on"
+msgstr ""
+
+#: views/tabs.php:316
+msgid "Add direct to template"
+msgstr ""
+
+#: views/tabs.php:338
+msgid "Use the shortcode"
+msgstr ""
+
+#: views/tabs.php:369
+msgid "Pro Exclusive Features"
+msgstr ""
+
+#: views/tabs.php:375
+msgid "Encode images"
+msgstr ""
+
+#: views/tabs.php:378 views/tabs.php:389 views/tabs.php:491
+msgid "No"
+msgstr ""
+
+#: views/tabs.php:379 views/tabs.php:390 views/tabs.php:490
+msgid "Yes"
+msgstr ""
+
+#: views/tabs.php:381
+msgid ""
+"Select \"Yes\" if your site is not publicly accessible or if your provider "
+"blocks image requests from third parties or if images are not present in PDF"
+msgstr ""
+
+#: views/tabs.php:386
+msgid "Show Hidden Content"
+msgstr ""
+
+#: views/tabs.php:392
+msgid ""
+"By default PrintFriendly Pro will only show the visible content on the "
+"page. Select \"Yes\", if you want PrintFriendly to show hidden content. "
+"(Ex. Content in hidden tabs)"
+msgstr ""
+
+#: views/tabs.php:398
+msgid "These features require a Pro subscription."
+msgstr ""
+
+#: views/tabs.php:398
+msgid "Learn More"
+msgstr ""
+
+#: views/tabs.php:404 views/tabs.php:604
+msgid "Save Options"
+msgstr ""
+
+#: views/tabs.php:405 views/tabs.php:605
+msgid "Cancel"
+msgstr ""
+
+#: views/tabs.php:417
+msgid "Page header"
+msgstr ""
+
+#: views/tabs.php:426
+msgid "My Website Icon"
+msgstr ""
+
+#: views/tabs.php:454
+msgid "Tagline (optional)"
+msgstr ""
+
+#: views/tabs.php:481
+msgid "Features"
+msgstr ""
+
+#: views/tabs.php:487
+msgid "Track in Google Analytics"
+msgstr ""
+
+#: views/tabs.php:497
+msgid "Click to delete"
+msgstr ""
+
+#: views/tabs.php:500 views/tabs.php:537 views/tabs.php:547 views/tabs.php:558
+msgid "Allow"
+msgstr ""
+
+#: views/tabs.php:501 views/tabs.php:538 views/tabs.php:548 views/tabs.php:559
+msgid "Not Allow"
+msgstr ""
+
+#: views/tabs.php:503 views/tabs.php:529
+msgid "Read documentation about this feature %1$shere%2$s"
+msgstr ""
+
+#: views/tabs.php:508
+msgid "Image size"
+msgstr ""
+
+#: views/tabs.php:511
+msgid "Full Size"
+msgstr ""
+
+#: views/tabs.php:512
+msgid "Large"
+msgstr ""
+
+#: views/tabs.php:513
+msgid "Medium"
+msgstr ""
+
+#: views/tabs.php:514
+msgid "Small"
+msgstr ""
+
+#: views/tabs.php:515
+msgid "Remove Images"
+msgstr ""
+
+#: views/tabs.php:521
+msgid "Image style"
+msgstr ""
+
+#: views/tabs.php:524
+msgid "Center/Block"
+msgstr ""
+
+#: views/tabs.php:525
+msgid "Align Right"
+msgstr ""
+
+#: views/tabs.php:526
+msgid "Align Left"
+msgstr ""
+
+#: views/tabs.php:527
+msgid "Align None"
+msgstr ""
+
+#: views/tabs.php:544
+msgid "PDF"
+msgstr ""
+
+#: views/tabs.php:550
+msgid "Developer Note"
+msgstr ""
+
+#: views/tabs.php:550
+msgid ""
+"On localhost the images can not be included in the PDF. Once the website is "
+"live/public images will be included in the PDF."
+msgstr ""
+
+#: views/tabs.php:555
+msgid "Print"
+msgstr ""
+
+#: views/tabs.php:570
+msgid "Custom CSS"
+msgstr ""
+
+#: views/tabs.php:577
+msgid "Custom CSS URL"
+msgstr ""
+
+#: views/tabs.php:592
+msgid ""
+"Customize the styles of the printed/pdf page using your own CSS. Create "
+"your custom CSS, and put the URL to your Custom CSS file in the box above"
+msgstr ""
+
+#: views/tabs.php:594
+msgid ""
+"Customize the styles of the printed/pdf page using your own CSS. Add your "
+"custom CSS (without the %s tags) in the box above"
+msgstr ""
+
+#: views/tabs.php:619
+msgid "Debug options"
+msgstr ""
+
+#: views/tabs.php:628
+msgid "Currently in Debug Mode. This tab is visible in debug mode only"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"PrintFriendly & PDF button for your website. Optimizes your pages and brand "
+"for print, pdf, and email."
 msgstr ""

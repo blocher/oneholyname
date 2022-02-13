@@ -1,6 +1,8 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.ValidVariableName
 
 use Automattic\Jetpack\Redirect;
+use Automattic\Jetpack\Status;
 
 abstract class Publicize_Base {
 
@@ -21,6 +23,21 @@ abstract class Publicize_Base {
 	*/
 	public $ADMIN_PAGE        = 'wpas';
 	public $POST_MESS         = '_wpas_mess';
+
+	/**
+	 * Post meta key for flagging when the post is a tweetstorm.
+	 *
+	 * @var string
+	 */
+	public $POST_TWEETSTORM = '_wpas_is_tweetstorm';
+
+	/**
+	 * Post meta key for the flagging when the post share feature is disabled.
+	 *
+	 * @var string
+	 */
+	const POST_PUBLICIZE_FEATURE_ENABLED = '_wpas_feature_enabled';
+
 	public $POST_SKIP         = '_wpas_skip_'; // connection id appended to indicate that a connection should NOT be publicized to
 	public $POST_DONE         = '_wpas_done_'; // connection id appended to indicate a connection has already been publicized to
 	public $USER_AUTH         = 'wpas_authorize';
@@ -384,6 +401,22 @@ abstract class Publicize_Base {
 	}
 
 	/**
+	 * Returns a profile picture for the Connection
+	 *
+	 * @param object|array $connection The Connection object (WordPress.com) or array (Jetpack).
+	 * @return string
+	 */
+	private function get_profile_picture( $connection ) {
+		$cmeta = $this->get_connection_meta( $connection );
+
+		if ( isset( $cmeta['profile_picture'] ) ) {
+			return $cmeta['profile_picture'];
+		}
+
+		return '';
+	}
+
+	/**
 	 * Whether the user needs to select additional options after connecting
 	 *
 	 * @param string $service_name 'facebook', 'twitter', etc.
@@ -573,14 +606,15 @@ abstract class Publicize_Base {
 	 * @return array {
 	 *     Array of UI setup data for connection list form.
 	 *
-	 *     @type string 'unique_id'     ID string representing connection
-	 *     @type string 'service_name'  Slug of the connection's service (facebook, twitter, ...)
-	 *     @type string 'service_label' Service Label (Facebook, Twitter, ...)
-	 *     @type string 'display_name'  Connection's human-readable Username: "@jetpack"
-	 *     @type bool   'enabled'       Default value for the connection (e.g., for a checkbox).
-	 *     @type bool   'done'          Has this connection already been publicized to?
-	 *     @type bool   'toggleable'    Is the user allowed to change the value for the connection?
-	 *     @type bool   'global'        Is this connection a global one?
+	 *     @type string 'unique_id'        ID string representing connection
+	 *     @type string 'service_name'     Slug of the connection's service (facebook, twitter, ...)
+	 *     @type string 'service_label'    Service Label (Facebook, Twitter, ...)
+	 *     @type string 'display_name'     Connection's human-readable Username: "@jetpack"
+	 *     @type string 'profile_picture'  Connection profile picture.
+	 *     @type bool   'enabled'          Default value for the connection (e.g., for a checkbox).
+	 *     @type bool   'done'             Has this connection already been publicized to?
+	 *     @type bool   'toggleable'       Is the user allowed to change the value for the connection?
+	 *     @type bool   'global'           Is this connection a global one?
 	 * }
 	 */
 	public function get_filtered_connection_data( $selected_post_id = null ) {
@@ -703,15 +737,16 @@ abstract class Publicize_Base {
 				}
 
 				$connection_list[] = array(
-					'unique_id'     => $unique_id,
-					'service_name'  => $service_name,
-					'service_label' => $this->get_service_label( $service_name ),
-					'display_name'  => $this->get_display_name( $service_name, $connection ),
+					'unique_id'       => $unique_id,
+					'service_name'    => $service_name,
+					'service_label'   => $this->get_service_label( $service_name ),
+					'display_name'    => $this->get_display_name( $service_name, $connection ),
+					'profile_picture' => $this->get_profile_picture( $connection ),
 
-					'enabled'      => $enabled,
-					'done'         => $done,
-					'toggleable'   => $toggleable,
-					'global'       => 0 == $connection_data['user_id'],
+					'enabled'         => $enabled,
+					'done'            => $done,
+					'toggleable'      => $toggleable,
+					'global'          => 0 == $connection_data['user_id'], // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Other types can be used at times.
 				);
 			}
 		}
@@ -852,18 +887,40 @@ abstract class Publicize_Base {
 	}
 
 	/**
-	 * Registers the ->POST_MESS post_meta for use in the REST API.
+	 * Registers the post_meta for use in the REST API.
 	 *
 	 * Registers for each post type that with `publicize` feature support.
 	 */
 	function register_post_meta() {
-		$args = array(
-			'type' => 'string',
-			'description' => __( 'The message to use instead of the title when sharing to Publicize Services', 'jetpack' ),
-			'single' => true,
-			'default' => '',
-			'show_in_rest' => array(
-				'name' => 'jetpack_publicize_message'
+		$message_args = array(
+			'type'          => 'string',
+			'description'   => __( 'The message to use instead of the title when sharing to Publicize Services', 'jetpack' ),
+			'single'        => true,
+			'default'       => '',
+			'show_in_rest'  => array(
+				'name' => 'jetpack_publicize_message',
+			),
+			'auth_callback' => array( $this, 'message_meta_auth_callback' ),
+		);
+
+		$tweetstorm_args = array(
+			'type'          => 'boolean',
+			'description'   => __( 'Whether or not the post should be treated as a Twitter thread.', 'jetpack' ),
+			'single'        => true,
+			'default'       => false,
+			'show_in_rest'  => array(
+				'name' => 'jetpack_is_tweetstorm',
+			),
+			'auth_callback' => array( $this, 'message_meta_auth_callback' ),
+		);
+
+		$publicize_feature_enable_args = array(
+			'type'          => 'boolean',
+			'description'   => __( 'Whether or not the Share Post feature is enabled.', 'jetpack' ),
+			'single'        => true,
+			'default'       => true,
+			'show_in_rest'  => array(
+				'name' => 'jetpack_publicize_feature_enabled',
 			),
 			'auth_callback' => array( $this, 'message_meta_auth_callback' ),
 		);
@@ -873,9 +930,13 @@ abstract class Publicize_Base {
 				continue;
 			}
 
-			$args['object_subtype'] = $post_type;
+			$message_args['object_subtype']                  = $post_type;
+			$tweetstorm_args['object_subtype']               = $post_type;
+			$publicize_feature_enable_args['object_subtype'] = $post_type;
 
-			register_meta( 'post', $this->POST_MESS, $args );
+			register_meta( 'post', $this->POST_MESS, $message_args );
+			register_meta( 'post', $this->POST_TWEETSTORM, $tweetstorm_args );
+			register_meta( 'post', self::POST_PUBLICIZE_FEATURE_ENABLED, $publicize_feature_enable_args );
 		}
 	}
 
@@ -982,10 +1043,11 @@ abstract class Publicize_Base {
 		foreach ( (array) $this->get_services( 'connected' ) as $service_name => $connections ) {
 			foreach ( $connections as $connection ) {
 				$connection_data = '';
-				if ( method_exists( $connection, 'get_meta' ) )
+				if ( is_object( $connection ) && method_exists( $connection, 'get_meta' ) ) {
 					$connection_data = $connection->get_meta( 'connection_data' );
-				elseif ( ! empty( $connection['connection_data'] ) )
+				} elseif ( ! empty( $connection['connection_data'] ) ) {
 					$connection_data = $connection['connection_data'];
+				}
 
 				/** This action is documented in modules/publicize/ui.php */
 				if ( false == apply_filters( 'wpas_submit_post?', $submit_post, $post_id, $service_name, $connection_data ) ) {
@@ -1240,15 +1302,5 @@ abstract class Publicize_Base {
 }
 
 function publicize_calypso_url() {
-	if ( class_exists( 'Jetpack' ) && method_exists( 'Jetpack', 'build_raw_urls' ) ) {
-		$site_suffix = Jetpack::build_raw_urls( home_url() );
-	} elseif ( class_exists( 'WPCOM_Masterbar' ) && method_exists( 'WPCOM_Masterbar', 'get_calypso_site_slug' ) ) {
-		$site_suffix = WPCOM_Masterbar::get_calypso_site_slug( get_current_blog_id() );
-	}
-
-	if ( $site_suffix ) {
-		return Redirect::get_url( 'calypso-marketing-connections', array( 'site' => $site_suffix ) );
-	} else {
-		return Redirect::get_url( 'calypso-marketing-connections-base' );
-	}
+	return Redirect::get_url( 'calypso-marketing-connections', array( 'site' => ( new Status() )->get_site_suffix() ) );
 }

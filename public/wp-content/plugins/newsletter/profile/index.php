@@ -143,9 +143,7 @@ if ($controls->is_action()) {
                         </table>
                     <?php } else { ?>
                     
-                    <p>Switch to "All languages" to manage these options.</p>
-                            
-                   
+                    <?php $controls->switch_to_all_languages_notice(); ?>
                        
                     <?php } ?>
                 </div>

@@ -181,17 +181,23 @@ class Task {
 	 *
 	 * @return null|string Action ID.
 	 */
-	public function register() {
+	public function register() { // phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
 
 		$action_id = null;
 
 		// No processing if ActionScheduler is not usable.
-		if ( ! wp_mail_smtp()->get_tasks()->is_usable() ) {
+		if ( ! Tasks::is_usable() ) {
 			return $action_id;
 		}
 
 		// Save data to tasks meta table.
-		$task_meta     = new Meta();
+		$task_meta = new Meta();
+
+		// No processing if meta table was not created on multisite subsite.
+		if ( is_multisite() && ! $task_meta->table_exists() ) {
+			return $action_id;
+		}
+
 		$this->meta_id = $task_meta->add(
 			[
 				'action' => $this->action,
@@ -203,18 +209,23 @@ class Task {
 			return $action_id;
 		}
 
-		switch ( $this->type ) {
-			case self::TYPE_ASYNC:
-				$action_id = $this->register_async();
-				break;
+		// Prevent 500 errors when Action Scheduler tables don't exist.
+		try {
+			switch ( $this->type ) {
+				case self::TYPE_ASYNC:
+					$action_id = $this->register_async();
+					break;
 
-			case self::TYPE_RECURRING:
-				$action_id = $this->register_recurring();
-				break;
+				case self::TYPE_RECURRING:
+					$action_id = $this->register_recurring();
+					break;
 
-			case self::TYPE_ONCE:
-				$action_id = $this->register_once();
-				break;
+				case self::TYPE_ONCE:
+					$action_id = $this->register_once();
+					break;
+			}
+		} catch ( \RuntimeException $exception ) {
+			$action_id = null;
 		}
 
 		return $action_id;
@@ -235,7 +246,7 @@ class Task {
 
 		return as_enqueue_async_action(
 			$this->action,
-			[ 'tasks_meta_id' => $this->meta_id ],
+			[ $this->meta_id ],
 			Tasks::GROUP
 		);
 	}
@@ -257,7 +268,7 @@ class Task {
 			$this->timestamp,
 			$this->interval,
 			$this->action,
-			[ 'tasks_meta_id' => $this->meta_id ],
+			[ $this->meta_id ],
 			Tasks::GROUP
 		);
 	}
@@ -278,7 +289,7 @@ class Task {
 		return as_schedule_single_action(
 			$this->timestamp,
 			$this->action,
-			[ 'tasks_meta_id' => $this->meta_id ],
+			[ $this->meta_id ],
 			Tasks::GROUP
 		);
 	}

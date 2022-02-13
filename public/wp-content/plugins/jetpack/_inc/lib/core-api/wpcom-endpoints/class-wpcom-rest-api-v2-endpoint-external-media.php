@@ -2,7 +2,7 @@
 /**
  * REST API endpoint for the External Media.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  * @since 8.7.0
  */
 
@@ -21,32 +21,58 @@ class WPCOM_REST_API_V2_Endpoint_External_Media extends WP_REST_Controller {
 	 * @var array
 	 */
 	public $media_schema = array(
-		'type'       => 'object',
-		'required'   => true,
-		'properties' => array(
-			'caption' => array(
-				'type' => 'string',
-			),
-			'guid'    => array(
-				'items' => array(
-					'caption' => array(
-						'type' => 'string',
-					),
-					'name'    => array(
-						'type' => 'string',
-					),
-					'title'   => array(
-						'type' => 'string',
-					),
-					'url'     => array(
-						'format' => 'uri',
-						'type'   => 'string',
+		'type'  => 'array',
+		'items' => array(
+			'type'       => 'object',
+			'required'   => true,
+			'properties' => array(
+				'caption' => array(
+					'type' => 'string',
+				),
+				'guid'    => array(
+					'type'       => 'object',
+					'properties' => array(
+						'caption' => array(
+							'type' => 'string',
+						),
+						'name'    => array(
+							'type' => 'string',
+						),
+						'title'   => array(
+							'type' => 'string',
+						),
+						'url'     => array(
+							'format' => 'uri',
+							'type'   => 'string',
+						),
 					),
 				),
-				'type'  => 'array',
-			),
-			'title'   => array(
-				'type' => 'string',
+				'title'   => array(
+					'type' => 'string',
+				),
+				'meta'    => array(
+					'type'                 => 'object',
+					'additionalProperties' => false,
+					'properties'           => array(
+						'vertical_id'   => array(
+							'type'   => 'string',
+							'format' => 'text-field',
+						),
+						'pexels_object' => array(
+							'type' => 'object',
+						),
+						'orientations'  => array(
+							'type'        => 'array',
+							'items'       => array(
+								'type' => 'string',
+								'enum' => array( 'landscape', 'portrait', 'square' ),
+							),
+							'minItems'    => 1,
+							'maxItems'    => 3,
+							'uniqueItems' => true,
+						),
+					),
+				),
 			),
 		),
 	);
@@ -139,6 +165,16 @@ class WPCOM_REST_API_V2_Endpoint_External_Media extends WP_REST_Controller {
 			array(
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_connection_details' ),
+				'permission_callback' => array( $this, 'permission_callback' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			$this->rest_base . '/connection/(?P<service>google_photos)',
+			array(
+				'methods'             => \WP_REST_Server::DELETABLE,
+				'callback'            => array( $this, 'delete_connection' ),
 				'permission_callback' => array( $this, 'permission_callback' ),
 			)
 		);
@@ -254,7 +290,7 @@ class WPCOM_REST_API_V2_Endpoint_External_Media extends WP_REST_Controller {
 		// Build query string to pass to wpcom endpoint.
 		$service_args = array_filter(
 			$params,
-			function( $key ) {
+			function ( $key ) {
 				return in_array( $key, array( 'search', 'number', 'path', 'page_handle', 'filter' ), true );
 			},
 			ARRAY_FILTER_USE_KEY
@@ -267,7 +303,7 @@ class WPCOM_REST_API_V2_Endpoint_External_Media extends WP_REST_Controller {
 
 		switch ( wp_remote_retrieve_response_code( $response ) ) {
 			case 200:
-				$response = json_decode( wp_remote_retrieve_body( $response ) );
+				$response = json_decode( wp_remote_retrieve_body( $response ), true );
 				break;
 
 			case 401:
@@ -346,21 +382,43 @@ class WPCOM_REST_API_V2_Endpoint_External_Media extends WP_REST_Controller {
 		$wpcom_path = sprintf( '/meta/external-media/connection/%s', $service );
 
 		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-			$request = new \WP_REST_Request( 'GET', '/' . $this->namespace . $wpcom_path );
-			$request->set_query_params( $request->get_params() );
+			$internal_request = new \WP_REST_Request( 'GET', '/' . $this->namespace . $wpcom_path );
+			$internal_request->set_query_params( $request->get_params() );
 
-			return rest_do_request( $request );
+			return rest_do_request( $internal_request );
 		}
 
 		$response = Client::wpcom_json_api_request_as_user( $wpcom_path );
-		$response = json_decode( wp_remote_retrieve_body( $response ) );
 
-		if ( isset( $response->code, $response->message, $response->data ) ) {
-			$response->data = empty( $response->data->status ) ? array( 'status' => $response->data ) : $response->data;
-			$response       = new WP_Error( $response->code, $response->message, $response->data );
+		return json_decode( wp_remote_retrieve_body( $response ), true );
+	}
+
+	/**
+	 * Deletes a Google Photos connection.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return array|WP_Error|WP_REST_Response
+	 */
+	public function delete_connection( WP_REST_Request $request ) {
+		$service    = rawurlencode( $request->get_param( 'service' ) );
+		$wpcom_path = sprintf( '/meta/external-media/connection/%s', $service );
+
+		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			$internal_request = new WP_REST_Request( REQUESTS::DELETE, '/' . $this->namespace . $wpcom_path );
+			$internal_request->set_query_params( $request->get_params() );
+
+			return rest_do_request( $internal_request );
 		}
 
-		return $response;
+		$response = Client::wpcom_json_api_request_as_user(
+			$wpcom_path,
+			'2',
+			array(
+				'method' => REQUESTS::DELETE,
+			)
+		);
+
+		return json_decode( wp_remote_retrieve_body( $response ), true );
 	}
 
 	/**
@@ -435,6 +493,12 @@ class WPCOM_REST_API_V2_Endpoint_External_Media extends WP_REST_Controller {
 				'post_excerpt' => $item['caption'],
 			)
 		);
+
+		if ( ! empty( $item['meta'] ) ) {
+			foreach ( $item['meta'] as $meta_key => $meta_value ) {
+				update_post_meta( $id, $meta_key, $meta_value );
+			}
+		}
 	}
 
 	/**

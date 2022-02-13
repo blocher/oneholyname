@@ -15,5 +15,7 @@ $options = array(
     'tumblr_url' => '',
     'youtube_url' => '',
     'vimeo_url' => '',
-    'soundcloud_url' => ''
+    'soundcloud_url' => '',
+    'telegram_url' => '',
+    'vk_url' => ''
 );

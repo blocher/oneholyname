@@ -55,11 +55,21 @@ abstract class OptionsAbstract implements OptionsInterface {
 	protected $options;
 
 	/**
+	 * An array with mailer supported setting fields.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @var array
+	 */
+	protected $supports;
+
+	/**
 	 * ProviderAbstract constructor.
 	 *
 	 * @since 1.0.0
+	 * @since 2.3.0 Added supports parameter.
 	 *
-	 * @param array $params
+	 * @param array $params The mailer options parameters.
 	 */
 	public function __construct( $params ) {
 
@@ -119,6 +129,8 @@ abstract class OptionsAbstract implements OptionsInterface {
 		if ( ! empty( $params['logo_url'] ) ) {
 			$this->logo_url = esc_url_raw( $params['logo_url'] );
 		}
+
+		$this->supports = ( ! empty( $params['supports'] ) ) ? $params['supports'] : $this->get_supports_defaults();
 
 		$this->options = new Options();
 	}
@@ -265,7 +277,7 @@ abstract class OptionsAbstract implements OptionsInterface {
 					<span class="wp-mail-smtp-setting-toggle-unchecked-label"><?php esc_html_e( 'Off', 'wp-mail-smtp' ); ?></span>
 				</label>
 				<p class="desc">
-					<?php esc_html_e( 'By default TLS encryption is automatically used if the server supports it, which is recommended. In some cases, due to server misconfigurations, this can cause issues and may need to be disabled.', 'wp-mail-smtp' ); ?>
+					<?php esc_html_e( 'By default, TLS encryption is automatically used if the server supports it (recommended). In some cases, due to server misconfigurations, this can cause issues and may need to be disabled.', 'wp-mail-smtp' ); ?>
 				</p>
 			</div>
 		</div>
@@ -344,7 +356,7 @@ abstract class OptionsAbstract implements OptionsInterface {
 						id="wp-mail-smtp-setting-<?php echo esc_attr( $this->get_slug() ); ?>-pass" spellcheck="false" autocomplete="new-password"
 					/>
 					<p class="desc">
-						<?php esc_html_e( 'The password will be stored in plain text. For improved security, we highly recommend using your site\'s WordPress configuration file to set your password.', 'wp-mail-smtp' ); ?>
+						<?php esc_html_e( 'The password is encrypted in the database, but for improved security we recommend using your site\'s WordPress configuration file to set your password.', 'wp-mail-smtp' ); ?>
 						<br>
 						<a href="https://wpmailsmtp.com/docs/how-to-secure-smtp-settings-by-using-constants/" target="_blank" rel="noopener noreferrer">
 							<strong><?php esc_html_e( 'Learn More', 'wp-mail-smtp' ); ?></strong>
@@ -460,18 +472,36 @@ abstract class OptionsAbstract implements OptionsInterface {
 	 * @param string $constant Constant name.
 	 */
 	protected function display_const_set_message( $constant ) {
-		?>
 
-		<p class="desc">
-			<?php
-			printf( /* translators: %1$s - constant that was used; %2$s - file where it was used. */
-				esc_html__( 'The value of this field was set using a constant %1$s most likely inside %2$s of your WordPress installation.', 'wp-mail-smtp' ),
-				'<code>' . esc_attr( $constant ) . '</code>',
-				'<code>wp-config.php</code>'
-			);
-			?>
-		</p>
+		printf( '<p class="desc">%s</p>', $this->options->get_const_set_message( $constant ) ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
 
-		<?php
+	/**
+	 * Return the defaults for the mailer supported settings.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return array
+	 */
+	public function get_supports_defaults() {
+
+		return [
+			'from_email'       => true,
+			'from_name'        => true,
+			'return_path'      => true,
+			'from_email_force' => true,
+			'from_name_force'  => true,
+		];
+	}
+
+	/**
+	 * Get the mailer supported settings.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return array
+	 */
+	public function get_supports() {
+		return apply_filters( 'wp_mail_smtp_providers_provider_get_supports', $this->supports, $this );
 	}
 }

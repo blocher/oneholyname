@@ -231,12 +231,12 @@ class Ga_Helper {
 	private static function get_dashboard_widget_data( $date_range, $metric = null ) {
 		$selected = self::get_selected_account_data( true );
 		if ( self::is_authorized() && self::is_account_selected() ) {
-			$query_params	 = Ga_Stats::get_query( 'main_chart', $selected[ 'view_id' ], $date_range, $metric );
+			$query_params	 = Ga_Stats::get_query( 'main_chart', $selected[ 'view_id' ], $date_range, $metric, true );
 			$stats_data		 = Ga_Admin::api_client()->call( 'ga_api_data', array(
 				$query_params
 			) );
 
-			$boxes_query = Ga_Stats::get_query( 'dashboard_boxes', $selected[ 'view_id' ], $date_range );
+			$boxes_query = Ga_Stats::get_query( 'dashboard_boxes', $selected[ 'view_id' ], $date_range, null, true );
 			$boxes_data	 = Ga_Admin::api_client()->call( 'ga_api_data', array(
 				$boxes_query
 			) );
@@ -436,7 +436,7 @@ class Ga_Helper {
 	 * @return bool
 	 */
 	public static function are_terms_accepted() {
-		return true;
+		return self::get_option( Ga_Admin::GA_SHARETHIS_TERMS_OPTION_NAME );
 	}
 
 	/**
@@ -544,15 +544,29 @@ class Ga_Helper {
 		}
 	}
 
+	/**
+	 * Is this version of WordPress considered old (< 4.1)?
+	 *
+	 * @return bool True if old, False if not.
+	 */
 	public static function is_wp_old() {
 		return version_compare( get_bloginfo( 'version' ), self::GA_WP_MODERN_VERSION, 'lt' );
 	}
 
+	/**
+	 * Should we load GA JavaScript on this property?
+	 *
+	 * @param string $web_property_id
+	 *
+	 * @return bool
+	 */
 	public static function should_load_ga_javascript( $web_property_id ) {
 		return ( self::is_configured( $web_property_id ) && ( self::can_add_ga_code() || self::is_all_feature_disabled() ) );
 	}
 
 	/**
+	 * Get account ID.
+	 *
 	 * @return string
 	 */
 	public static function get_account_id() {
@@ -561,16 +575,30 @@ class Ga_Helper {
 		return ! empty( $account_id[0] ) ? $account_id[0] : '';
 	}
 
-		public static function is_curl_disabled(){
-			return ! function_exists( 'curl_version' );
-		}
+	/**
+	 * Is curl disabled?
+	 *
+	 * @return bool True if disabled, false if enabled.
+	 */
+	public static function is_curl_disabled() {
+		return ! function_exists( 'curl_version' );
+	}
 
-
+	/**
+	 * Get URL with correct protocol.
+	 *
+	 * @return string URL with correct protocol.
+	 */
 	public static function get_plugin_url_with_correct_protocol() {
 		$url = parse_url( GA_PLUGIN_URL );
 		return ( ( is_ssl() ) ? 'https://' : 'http://' ) . $url['host'] . $url['path'];
 	}
 
+	/**
+	 * Get code to manually label classes.
+	 *
+	 * @return string
+	 */
 	public static function get_code_manually_label_classes() {
 		$classes = '';
 		if ( ! self::are_features_enabled() ){
@@ -581,4 +609,135 @@ class Ga_Helper {
 		}
 		return $classes;
 	}
+
+    /**
+     * Get Previous Period for Dates (date start and date end).
+     *
+     * @param string $date_start Date string.
+     * @param string $date_end   Date string.
+     *
+     * @return array Array of start and end dates in Y-m-d format.
+     * @since 2.5.2
+     */
+    public static function getPreviousPeriodForDates($date_start = '', $date_end = '')
+    {
+        try {
+            // Get distance between dates in days.
+            $start = new DateTime($date_start);
+            $end   = new DateTime($date_end);
+        } catch (\Exception $e) {
+            return [
+                'start' => date('Y-m-d', strtotime('-1 week')),
+                'end'   => date('Y-m-d'),
+            ];
+        }
+
+        // Clone $start date into end_previous so we don't modify $start.
+        $end_previous = clone $start;
+
+        // Set the period to the difference between the start/end dates in days.
+        $period = $end->diff($start)->days;
+
+        // Subtract 1 day from $end_previous so it's one day before $start.
+        $end_previous->modify('-1 day');
+
+        // Clone $end_previous so we can subtract $period from it in days.
+        $start_previous = clone $end_previous;
+        $start_previous->modify(sprintf('-%d day', $period));
+
+        return [
+            'start' => $start_previous->format('Y-m-d'),
+            'end'   => $end_previous->format('Y-m-d'),
+        ];
+    }
+
+    /**
+     * Get period between dates in days.
+     *
+     * @param string $date_start Start date string.
+     * @param string $date_end   End date string.
+     *
+     * @return int
+     * @since 2.5.2
+     */
+    public static function getPeriodInDays($date_start = '', $date_end = '')
+    {
+        $date_start = empty($date_start) ? date('Y-m-d', strtotime('-1 week')) : $date_start;
+        $date_end   = empty($date_end) ? date('Y-m-d') : $date_end;
+
+        try {
+            // Get distance between dates in days.
+            $start = new DateTime($date_start);
+            $end   = new DateTime($date_end);
+        } catch (\Exception $e) {
+            return 0;
+        }
+
+        // Set the period to the difference between the start/end dates in days.
+        return intval($start->diff($end)->format('%r%a'));
+    }
+
+    /**
+     * Get period in Days as words.
+     *
+     * @param string $date_start Start date string.
+     * @param string $date_end   End date string.
+     *
+     * @return string Words to indicate days.
+     * @since 2.5.2
+     */
+    public static function getPeriodInDaysWords($date_start = '', $date_end = '')
+    {
+        $days = self::getPeriodInDays($date_start, $date_end);
+
+        $date_end = empty($date_end) ? strtotime('now') : strtotime($date_end);
+
+        // If today is the same as the end date.
+        if (date('Y-m-d', $date_end) === date('Y-m-d')) {
+            if (0 === $days) {
+                return __('Today', 'googleanalytics');
+            }
+
+            if (7 === $days) {
+                return __('This Week', 'googleanalytics');
+            }
+
+            return sprintf(_n('Last %d Day', 'Last %d Days', $days, 'googleanalytics'), $days);
+        }
+
+        return sprintf(_n('%d Day', '%d Days', $days, 'googleanalytics'), $days);
+    }
+
+    /**
+     * Get date range from GET request.
+     *
+     * @return array
+     * @since 2.5.2
+     */
+    public static function getDateRangeFromRequest()
+    {
+        $date_range = filter_input_array(INPUT_GET, [
+            'date_from' => FILTER_SANITIZE_STRING,
+            'date_to'   => FILTER_SANITIZE_STRING,
+        ]);
+
+        // If date_from is after date_to, let's reset 'from' to a week before 'to.'
+        if (0 > Ga_Helper::getPeriodInDays($date_range['date_from'], $date_range['date_to'])) {
+            try {
+                $date = new DateTime($date_range['date_to']);
+                $date->modify('-1 week');
+
+                $date_from = $date->format('Y-m-d');
+            } catch (\Exception $e) {
+                $date_from = date('Y-m-d', strtotime('-1 week'));
+            }
+
+            $date_range['date_from'] = $date_from;
+        }
+
+        return [
+            'from' => $date_range['date_from'],
+            'to'   => $date_range['date_to'],
+        ];
+    }
 }

@@ -4,24 +4,80 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82ce22d8971d1f742e7c2238cf7840d8",
+    "content-hash": "065f055ec7f42c14604615434d627a40",
     "packages": [
         {
-            "name": "imagely/pope-framework",
-            "version": "v0.16",
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.14.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/imagely/pope-framework.git",
-                "reference": "a14bdc1f5153664770df00d53577a9954f1e691c"
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "12ab42bd6e742c70c0a52f7b82477fcd44e64b75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/imagely/pope-framework/zipball/a14bdc1f5153664770df00d53577a9954f1e691c",
-                "reference": "a14bdc1f5153664770df00d53577a9954f1e691c",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/12ab42bd6e742c70c0a52f7b82477fcd44e64b75",
+                "reference": "12ab42bd6e742c70c0a52f7b82477fcd44e64b75",
                 "shasum": "",
                 "mirrors": [
                     {
-                        "url": "https://repo.packagist.com/imagely/dists/%package%/%version%/%reference%.%type%",
+                        "url": "https://repo.packagist.com/imagely/dists/%package%/%version%/r%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ],
+                "exclude-from-classmap": [
+                    "/library/HTMLPurifier/Language/"
+                ]
+            },
+            "notification-url": "https://repo.packagist.com/imagely/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "support": {
+                "issues": "https://github.com/ezyang/htmlpurifier/issues",
+                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.14.0"
+            },
+            "time": "2021-12-25T01:21:49+00:00"
+        },
+        {
+            "name": "imagely/pope-framework",
+            "version": "v0.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LionSher-Technologies/pope-framework/",
+                "reference": "13da4d47779a91fbf07a68062e64974eb1427ef2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.packagist.com/imagely/dists/imagely/pope-framework/0.17.0.0/13da4d47779a91fbf07a68062e64974eb1427ef2.zip",
+                "reference": "13da4d47779a91fbf07a68062e64974eb1427ef2",
+                "mirrors": [
+                    {
+                        "url": "https://repo.packagist.com/imagely/dists/%package%/%version%/r%reference%.%type%",
                         "preferred": true
                     }
                 ]
@@ -43,30 +99,26 @@
                 }
             ],
             "description": "A component framework inspired by Zope 3. Pope is \"PHP's Zope\".",
-            "support": {
-                "source": "https://github.com/imagely/pope-framework/tree/v0.16",
-                "issues": "https://github.com/imagely/pope-framework/issues"
-            },
-            "time": "2020-06-11T20:23:55+00:00"
+            "time": "2020-10-22T19:43:52+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "nikic/php-parser",
-            "version": "v4.5.0",
+            "version": "v4.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "53c2753d756f5adb586dca79c2ec0e2654dd9463"
+                "reference": "210577fe3cf7badcc5814d99455df46564f3c077"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/53c2753d756f5adb586dca79c2ec0e2654dd9463",
-                "reference": "53c2753d756f5adb586dca79c2ec0e2654dd9463",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/210577fe3cf7badcc5814d99455df46564f3c077",
+                "reference": "210577fe3cf7badcc5814d99455df46564f3c077",
                 "shasum": "",
                 "mirrors": [
                     {
-                        "url": "https://repo.packagist.com/imagely/dists/%package%/%version%/%reference%.%type%",
+                        "url": "https://repo.packagist.com/imagely/dists/%package%/%version%/r%reference%.%type%",
                         "preferred": true
                     }
                 ]
@@ -76,8 +128,8 @@
                 "php": ">=7.0"
             },
             "require-dev": {
-                "ircmaxell/php-yacc": "0.0.5",
-                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
+                "ircmaxell/php-yacc": "^0.0.7",
+                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0 || ^9.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -85,7 +137,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.3-dev"
+                    "dev-master": "4.9-dev"
                 }
             },
             "autoload": {
@@ -107,7 +159,11 @@
                 "parser",
                 "php"
             ],
-            "time": "2020-06-03T07:24:19+00:00"
+            "support": {
+                "issues": "https://github.com/nikic/PHP-Parser/issues",
+                "source": "https://github.com/nikic/PHP-Parser/tree/v4.13.2"
+            },
+            "time": "2021-11-30T19:35:32+00:00"
         }
     ],
     "aliases": [],
@@ -116,5 +172,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
 }

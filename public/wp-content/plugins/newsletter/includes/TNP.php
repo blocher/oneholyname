@@ -21,148 +21,62 @@ class TNP {
      */
 
     public static function subscribe($params) {
+        
+        if ($params instanceof TNP_Subscription) {
+            return NewsletterSubscription::instance()->subscribe2($params);
+        }
 
         $logger = new NewsletterLogger('phpapi');
         $logger->debug($params);
 
+        apply_filters('newsletter_api_subscribe', $params);
+        
         $newsletter = Newsletter::instance();
-        $subscription = NewsletterSubscription::instance();
-
-        // default params
-        $defaults = array('send_emails' => true);
-        $params = array_merge($defaults, $params);
-
-        // Messages
-        $options = get_option('newsletter', array());
+        
+        $subscription = NewsletterSubscription::instance()->get_default_subscription();
+        $subscription->spamcheck = isset($params['spamcheck']);
+        $data = $subscription->data;
+        
+        $subscription->send_emails = !empty($params['send_emails']);
 
         // Form field configuration
         $options_profile = get_option('newsletter_profile', array());
+        
+        $data->email = $params['email'];
 
-        $optin = (int) $options['noconfirmation']; // 0 - double, 1 - single
-
-        $email = $newsletter->normalize_email(stripslashes($params['email']));
-
-        // Should never reach this point without a valid email address
-        if ($email == null) {
-            return new WP_Error('-1', 'Email address not valid', array('status' => 400));
-        }
-
-        $user = $newsletter->get_user($email);
-
-        if ($user != null) {
-
-            $newsletter->logger->info('Subscription of an address with status ' . $user->status);
-
-            // Bounced
-            if ($user->status == 'B') {
-                return new WP_Error('-1', 'Bounced address', array('status' => 400));
-            }
-
-            // If asked to put in confirmed status, do not check further
-            if ($params['status'] != 'C' && $optin == 0) {
-
-                // Already confirmed
-                //if ($optin == 0 && $user->status == 'C') {
-                if ($user->status == 'C') {
-
-                    set_transient($user->id . '-' . $user->token, $params, 3600 * 48);
-                    $subscription->set_updated($user);
-
-                    // A second subscription always require confirmation otherwise anywan can change other users' data
-                    $user->status = 'S';
-                    $subscription->send_activation_email($user);
-
-                    return $user;
-                }
-            }
-        }
-
-        if ($user != null) {
-            $newsletter->logger->info("Email address subscribed but not confirmed");
-            $user = array('id' => $user->id);
-        } else {
-            $newsletter->logger->info("New email address");
-        }
-
-        if ($optin) {
-            $params['status'] = 'C';
-        } else {
-            $params['status'] = 'S';
-        }
-
-        // Lists
-
-        if (!isset($params['lists']) || !is_array($params['lists'])) {
-            $params['lists'] = array();
-        }
-
-        // Public lists: rebuild the array keeping only the valid lists
-        $lists = $newsletter->get_lists_public();
-
-        // Public list IDs
-        $public_lists = array();
-        foreach ($lists as $list) {
-            $public_lists[] = $list->id;
-        }
-
-        // Keep only the public lists
-        $params['lists'] = array_intersect($public_lists, $params['lists']);
-
-        // Pre assigned lists
-        $lists = $newsletter->get_lists();
-        foreach ($lists as $list) {
-            if ($list->forced) {
-                $params['lists'][] = $list->id;
-            }
-        }
-
-        // Keep only the public profile fields
-        for ($i = 1; $i <= NEWSLETTER_PROFILE_MAX; $i ++) {
-            // If the profile cannot be set by subscriber, skip it.
-            if ($subscription->options_profile['profile_' . $i . '_status'] == 0) {
-                unset($params['profile_' . $i]);
-            }
-        }
-
-        apply_filters('newsletter_api_subscribe', $params);
-
-        $full_name = '';
         if (isset($params['name'])) {
-            $params['name'] = $newsletter->normalize_name($params['name']);
-            $full_name .= $params['name'];
+            $data->name = $params['name'];
         }
 
         if (isset($params['surname'])) {
-            $params['surname'] = $newsletter->normalize_name($params['surname']);
-            $full_name .= ' ' . $params['surname'];
+            $data->surname = $params['surname'];
+        }
+        
+        // Lists
+        if (isset($params['lists']) && is_array($params['lists'])) {
+            $public_lists = array_keys($newsletter->get_lists_public());
+            $list_ids = array_intersect($public_lists, $params['lists']);
+            
+            foreach ($list_ids as $list_id) {
+                $data->lists['' . $list_id] = 1;
+            }
+        } 
+        
+        for ($i = 1; $i <= NEWSLETTER_PROFILE_MAX; $i++) {
+            // If the profile cannot be set by  subscriber, skip it.
+            if ($options_profile['profile_' . $i . '_status'] == 0) {
+                continue;
+            }
+            if (isset($params['profile_' . $i])) {
+                $data->profiles['' . $i] = stripslashes($params['profile_' . $i]);
+            }
         }
 
-        $ip = $newsletter->get_remote_ip();
+        $data->ip = $newsletter->get_remote_ip();
 
-        NewsletterSubscription::instance()->valid_subscription_or_die($email, $full_name, $ip);
+        $user = NewsletterSubscription::instance()->subscribe2($subscription);
 
-        $user = TNP::add_subscriber($params);
-
-        if (is_wp_error($user)) {
-            return ( $user );
-        }
-
-        // Notification to admin (only for new confirmed subscriptions)
-        if ($user->status == 'C') {
-            do_action('newsletter_user_confirmed', $user);
-            $subscription->notify_admin_on_subscription($user);
-            setcookie('newsletter', $user->id . '-' . $user->token, time() + 60 * 60 * 24 * 365, '/');
-        }
-
-        // skip messages if send_emails = false
-        if (!$params['send_emails']) {
-            return $user;
-        }
-
-        $message_type = ( $user->status == 'C' ) ? 'confirmed' : 'confirmation';
-        $subscription->send_message($message_type, $user);
-
-        return null;
+        return $user;
     }
 
     /*
@@ -230,6 +144,18 @@ class TNP {
         if (!empty($params['gender'])) {
             $user['sex'] = $newsletter->normalize_sex($params['gender']);
         }
+
+	    if (!empty($params['country'])) {
+		    $user['country'] = sanitize_text_field($params['country']);
+	    }
+
+	    if (!empty($params['region'])) {
+		    $user['region'] = sanitize_text_field($params['region']);
+	    }
+
+	    if (!empty($params['city'])) {
+		    $user['city'] = sanitize_text_field($params['city']);
+	    }
 
         for ($i = 1; $i <= NEWSLETTER_PROFILE_MAX; $i ++) {
             if (isset($params['profile_' . $i])) {

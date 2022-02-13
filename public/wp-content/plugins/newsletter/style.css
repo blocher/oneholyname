@@ -1,13 +1,13 @@
 /*
 
 THIS FILE IS OVERWRITTEN EVERY TIME YOU UPDATE THE PLUGIN.
-USE THE CUSOTM CSS OPTION IN THE SUBSCRIPTION SETTING PANEL FOR YOUR
+USE THE CUSTOM CSS OPTION IN THE SUBSCRIPTION SETTING PANEL FOR YOUR
 CUSTOM CSS RULES.
 
 */
 
 .tnp-subscription {
-    font-size: 13px;
+    /*font-size: 13px;*/
     display: block;
     margin: 15px auto;
     max-width: 500px;
@@ -24,7 +24,7 @@ CUSTOM CSS RULES.
 .tnp-subscription label {
     display: block;
     color: inherit;
-    font-size: 14px;
+    /*font-size: 14px;*/
     font-weight: 700;
     line-height: normal;
     padding: 5px;

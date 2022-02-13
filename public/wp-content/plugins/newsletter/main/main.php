@@ -34,6 +34,10 @@ if (!$controls->is_action()) {
             $controls->data['return_path'] = $this->normalize_email($controls->data['return_path']);
         }
 
+        $controls->data['scheduler_max'] = (int) $controls->data['scheduler_max'];
+        if ($controls->data['scheduler_max'] < 12)
+            $controls->data['scheduler_max'] = 12;
+
 
         if (!$this->is_email($controls->data['reply_to'], true)) {
             $controls->errors .= __('Reply to email is not correct.', 'newsletter') . '<br>';
@@ -67,7 +71,7 @@ if (!$controls->is_action()) {
         $page['comment_status'] = 'closed';
         $page['ping_status'] = 'closed';
         $page['post_category'] = array(1);
-        
+
         $current_language = $this->get_current_language();
         $this->switch_language('');
         // Insert the post into the database
@@ -76,7 +80,7 @@ if (!$controls->is_action()) {
 
         $controls->data['page'] = $page_id;
         $this->merge_options($controls->data);
-        
+
         $controls->messages = 'A new page has been created';
     }
 }
@@ -167,7 +171,9 @@ if (!empty($return_path)) {
                             </th>
                             <td>
                                 <?php $controls->text_email('sender_email', 40); ?>
-
+                                <div class="description">
+                                    <a href="https://www.thenewsletterplugin.com/documentation/installation/newsletter-configuration/#sender" target="_blank">Emails delivered with a different address?</a>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -232,15 +238,17 @@ if (!empty($return_path)) {
                 </div>
 
                 <div id="tabs-speed">
-
+ 
                     <table class="form-table">
                         <tr>
                             <th>
                                 <?php _e('Max emails per hour', 'newsletter') ?>
-                                <?php $controls->field_help('https://www.thenewsletterplugin.com/documentation/delivery-and-spam/newsletter-delivery-engine/') ?>
+                                <?php $controls->field_help('https://www.thenewsletterplugin.com/documentation/installation/newsletter-configuration/#speed') ?>
                             </th>
                             <td>
-                                <?php $controls->text('scheduler_max', 5); ?>
+                                <?php $controls->text('scheduler_max', 5); ?> (min. 10)
+                                <p class="description">
+                                    <a href="?page=newsletter_system_status#tnp-speed">See the collected statistics</a>
                             </td>
                         </tr>
                     </table>
@@ -256,21 +264,6 @@ if (!empty($return_path)) {
                     </p>
 
                     <table class="form-table">
-                        <tr>
-                            <th><?php _e('Disable standard styles', 'newsletter') ?></th>
-                            <td>
-                                <?php $controls->yesno('css_disabled'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><?php _e('Custom styles', 'newsletter') ?></th>
-                            <td>
-                                <?php if (apply_filters('newsletter_enqueue_style', true) === false) { ?>
-                                    <p><strong>Warning: Newsletter styles and custom styles are disable by your theme or a plugin.</strong></p>
-                                <?php } ?>
-                                <?php $controls->textarea('css'); ?>
-                            </td>
-                        </tr>
                         <tr>
                             <th><?php _e('Allowed roles', 'newsletter') ?></th>
                             <td>
@@ -289,55 +282,17 @@ if (!empty($return_path)) {
 
                             </td>
                         </tr>
-
+                        
                         <tr>
                             <th>
-                                <?php _e('Log level', 'newsletter') ?>
+                                <?php _e('Tracking default', 'newsletter') ?>
+                                <?php $controls->field_help('https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-configuration#tracking') ?>
                             </th>
-                            <td>
-                                <?php $controls->log_level('log_level'); ?>
-                            </td>
-                        </tr>
-                        <!--
-                        <tr>
-                            <th>
-                        <?php _e('Disable the scheduler notice', 'newsletter') ?>
-                            </th>
-                            <td>
-                        <?php $controls->yesno('disable_cron_notice'); ?>
-                            </td>
-                        </tr>
-                        -->
-                        <tr>
-                            <th><?php _e('IP addresses', 'newsletter') ?></th>
-                            <td>
-                                <?php $controls->select('ip', array('' => __('Store', 'newsletter'), 'anonymize' => __('Anonymize', 'newsletter'), 'skip' => __('Do not store', 'newsletter'))); ?>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th><?php _e('Newsletters tracking default', 'newsletter') ?></th>
                             <td>
                                 <?php $controls->yesno('track'); ?>
-                                <p class="description">It can be changed on each newsletter.</p>
                             </td>
                         </tr>
-
-                        <tr>
-                            <th><?php _e('Debug mode', 'newsletter') ?></th>
-                            <td>
-                                <?php $controls->yesno('debug', 40); ?>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th><?php _e('Email encoding', 'newsletter') ?></th>
-                            <td>
-                                <?php $controls->select('content_transfer_encoding', array('' => 'Default', '8bit' => '8 bit', 'base64' => 'Base 64', 'binary' => 'Binary', 'quoted-printable' => 'Quoted printable', '7bit' => '7 bit')); ?>
-                                <?php $controls->help('https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-configuration#encoding') ?>
-                            </td>
-                        </tr>
-
+                        
                         <tr>
                             <th>
                                 <?php _e('Execute shortcodes on newsletters', 'newsletter') ?>
@@ -345,9 +300,67 @@ if (!empty($return_path)) {
                             </th>
                             <td>
                                 <?php $controls->yesno('do_shortcodes', 40); ?>
-                                <?php $controls->field_help("https://www.thenewsletterplugin.com/documentation/newsletter-configuration#shortcodes") ?>
                             </td>
                         </tr>
+                        
+                        <tr>
+                            <th>
+                                <?php _e('Log level', 'newsletter') ?>
+                                <?php $controls->field_help('https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-configuration#log') ?>
+                            </th>
+                            <td>
+                                <?php $controls->log_level('log_level'); ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th><?php _e('Standard styles', 'newsletter') ?></th>
+                            <td>
+                                <?php $controls->disabled('css_disabled'); ?>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th><?php _e('Custom styles', 'newsletter') ?></th>
+                            <td>
+                                <?php if (apply_filters('newsletter_enqueue_style', true) === false) { ?>
+                                    <p><strong>Warning: Newsletter styles and custom styles are disable by your theme or a plugin.</strong></p>
+                                <?php } ?>
+                                <?php $controls->textarea('css'); ?>
+                            </td>
+                        </tr>
+                        
+                        
+                        <tr>
+                            <th><?php _e('IP addresses', 'newsletter') ?></th>
+                            <td>
+                                <?php $controls->select('ip', array('' => __('Store', 'newsletter'), 'anonymize' => __('Anonymize', 'newsletter'), 'skip' => __('Do not store', 'newsletter'))); ?>
+                            </td>
+                        </tr>
+
+                        
+
+                        <tr>
+                            <th>
+                                <?php _e('Debug mode', 'newsletter') ?>
+                                <?php $controls->field_help('https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-configuration#debug') ?>
+                            </th>
+                            <td>
+                                <?php $controls->yesno('debug', 40); ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <?php _e('Email encoding', 'newsletter') ?>
+                                <?php $controls->field_help('https://www.thenewsletterplugin.com/plugins/newsletter/newsletter-configuration#encoding') ?>
+                            </th>
+                            <td>
+                                <?php $controls->select('content_transfer_encoding', array('' => 'Default', '8bit' => '8 bit', 'base64' => 'Base 64', 'binary' => 'Binary', 'quoted-printable' => 'Quoted printable', '7bit' => '7 bit')); ?>
+                            </td>
+                        </tr>
+
+                        
                     </table>
 
                 </div>
@@ -355,9 +368,9 @@ if (!empty($return_path)) {
 
             </div> <!-- tabs -->
 
-            <p>
+            <div class="tnp-buttons">
                 <?php $controls->button_save(); ?>
-            </p>
+            </div>
 
         </form>
 

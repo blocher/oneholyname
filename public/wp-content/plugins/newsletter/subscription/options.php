@@ -72,6 +72,7 @@ if ($controls->is_action()) {
             $addresses = array();
             foreach ($users as &$user) {
                 $addresses[] = $user->email;
+                $user->language = $current_language;
                 $res = $module->send_message('confirmation', $user);
                 if (!$res) {
                     $controls->errors = 'The email address ' . $user->email . ' failed.';
@@ -93,6 +94,8 @@ if ($controls->is_action()) {
             $addresses = array();
             foreach ($users as $user) {
                 $addresses[] = $user->email;
+                // Force the language to send the message coherently with the current panel view
+                $user->language = $current_language;
                 $res = $module->send_message('confirmed', $user);
                 if (!$res) {
                     $controls->errors = 'The email address ' . $user->email . ' failed.';
@@ -150,13 +153,6 @@ if ($controls->is_action()) {
                                 <?php $controls->yesno('optin_override'); ?>
                             </td>
                         </tr>
-                        <tr>
-                            <th><?php $controls->field_label(__('Repeated subscriptions', 'newsletter'), '/documentation/subscription/subscription/') ?></th>
-                            <td>
-                                <?php //$controls->select('multiple', array('0'=>__('No', 'newsletter'), '1'=>__('Yes', 'newsletter'), '2'=>__('On new lists added', 'newsletter'))); ?> 
-                                <?php $controls->select('multiple', array('0'=>__('No', 'newsletter'), '1'=>__('Yes', 'newsletter'))); ?> 
-                            </td>
-                        </tr>
                         
                         <tr>
                             <th><?php _e('Notifications', 'newsletter') ?></th>
@@ -167,7 +163,7 @@ if ($controls->is_action()) {
                         </tr>
                     </table>
                     <?php } else { ?>
-                    <p>Switch to "All languages" to manage these options.</p>
+                        <?php $controls->switch_to_all_languages_notice(); ?>
                     <?php } ?>
                     
                 </div>
@@ -185,12 +181,12 @@ if ($controls->is_action()) {
                         
                     </table>
 
-                    <h3>Special cases</h3>
-
                     <table class="form-table">
                         <tr>
-                            <th><?php _e('Error page', 'newsletter') ?></th>
+                            <th><?php _e('Repeated subscriptions', 'newsletter')?></th>
                             <td>
+                                <?php $controls->select('multiple', array('0'=>__('Not allowed', 'newsletter'), '1'=>__('Allowed', 'newsletter'))); ?> 
+                                <br><br>
                                 <?php $controls->wp_editor('error_text'); ?>
                             </td>
                         </tr>

@@ -4,15 +4,14 @@
  *
  * @since 8.4.0
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Automattic\Jetpack\Extensions\Podcast_Player;
 
-use WP_Error;
+use Automattic\Jetpack\Blocks;
 use Jetpack_Gutenberg;
 use Jetpack_Podcast_Helper;
-use Jetpack_AMP_Support;
 
 const FEATURE_NAME = 'podcast-player';
 const BLOCK_NAME   = 'jetpack/' . FEATURE_NAME;
@@ -26,12 +25,12 @@ if ( ! class_exists( 'Jetpack_Podcast_Helper' ) ) {
  * we can disable registration if we need to.
  */
 function register_block() {
-	jetpack_register_block(
+	Blocks::jetpack_register_block(
 		BLOCK_NAME,
 		array(
 			'attributes'      => array(
 				'url'                    => array(
-					'type' => 'url',
+					'type' => 'string',
 				),
 				'itemsToShow'            => array(
 					'type'    => 'integer',
@@ -41,12 +40,19 @@ function register_block() {
 					'type'    => 'boolean',
 					'default' => true,
 				),
+				'showEpisodeTitle'       => array(
+					'type'    => 'boolean',
+					'default' => true,
+				),
 				'showEpisodeDescription' => array(
 					'type'    => 'boolean',
 					'default' => true,
 				),
 			),
 			'render_callback' => __NAMESPACE__ . '\render_block',
+			// Since Gutenberg #31873.
+			'style'           => 'wp-mediaelement',
+
 		)
 	);
 }
@@ -71,10 +77,15 @@ function render_error( $message ) {
 /**
  * Podcast Player block registration/dependency declaration.
  *
- * @param array $attributes Array containing the Podcast Player block attributes.
+ * @param array  $attributes Array containing the Podcast Player block attributes.
+ * @param string $content    Fallback content - a direct link to RSS, as rendered by save.js.
  * @return string
  */
-function render_block( $attributes ) {
+function render_block( $attributes, $content ) {
+	// Don't render an interactive version of the block outside the frontend context.
+	if ( ! jetpack_is_frontend() ) {
+		return $content;
+	}
 
 	// Test for empty URLS.
 	if ( empty( $attributes['url'] ) ) {
@@ -86,10 +97,21 @@ function render_block( $attributes ) {
 		return render_error( __( 'Your podcast URL is invalid and couldn\'t be embedded. Please double check your URL.', 'jetpack' ) );
 	}
 
+	if ( isset( $attributes['selectedEpisodes'] ) && count( $attributes['selectedEpisodes'] ) ) {
+		$guids       = array_map(
+			function ( $episode ) {
+				return $episode['guid'];
+			},
+			$attributes['selectedEpisodes']
+		);
+		$player_args = array( 'guids' => $guids );
+	} else {
+		$player_args = array();
+	}
+
 	// Sanitize the URL.
 	$attributes['url'] = esc_url_raw( $attributes['url'] );
-
-	$player_data = Jetpack_Podcast_Helper::get_player_data( $attributes['url'] );
+	$player_data       = ( new Jetpack_Podcast_Helper( $attributes['url'] ) )->get_player_data( $player_args );
 
 	if ( is_wp_error( $player_data ) ) {
 		return render_error( $player_data->get_error_message() );
@@ -138,8 +160,8 @@ function render_player( $player_data, $attributes ) {
 	$player_inline_style  = trim( "{$secondary_colors['style']} ${background_colors['style']}" );
 	$player_inline_style .= get_css_vars( $attributes );
 
-	$block_classname = Jetpack_Gutenberg::block_classes( FEATURE_NAME, $attributes, array( 'is-default' ) );
-	$is_amp          = ( class_exists( 'Jetpack_AMP_Support' ) && Jetpack_AMP_Support::is_amp_request() );
+	$block_classname = Blocks::classes( FEATURE_NAME, $attributes, array( 'is-default' ) );
+	$is_amp          = Blocks::is_amp_request();
 
 	ob_start();
 	?>
@@ -271,22 +293,10 @@ function render( $name, $template_props = array(), $print = true ) {
 		$name = $name . '.php';
 	}
 
-	$template_path = dirname( __FILE__ ) . '/templates/' . $name;
+	$template_path = __DIR__ . '/templates/' . $name;
 
 	if ( ! file_exists( $template_path ) ) {
 		return '';
-	}
-
-	/*
-	 * Optionally provided an assoc array of data to pass to template.
-	 * IMPORTANT: It will be extracted into variables.
-	 */
-	if ( is_array( $template_props ) ) {
-		/*
-		 * It ignores the `discouraging` sniffer rule for extract, since it's needed
-		 * to make the templating system works.
-		 */
-		extract( $template_props ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 	}
 
 	if ( $print ) {
